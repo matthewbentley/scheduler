@@ -15,8 +15,8 @@
 October 1, 2012}
 \end{flushright}
 \end{titlepage}
-\tableofcontents{}
-\newpage
+%\tableofcontents{}
+%\newpage
 \section*{Introduction Overview}
 Currently, there only exist functional but not particularly elegant ways for students to visualize their class schedules. For our project, we want to make a better Case Scheduler, one which works fast and is easy for students to use.\\
 
@@ -40,7 +40,7 @@ Currently, there only exist functional but not particularly elegant ways for stu
 \section*{Database Requirements Specifications}
 \subsection*{Objects and Relationships}
 \begin{enumerate}[1.]
-\item Courses
+\item Course Offering: The database will have an instance of course offering for each course offered by CWRU. We considered having a overreaching "Course" object where Course Offering is-a Course. However since the purpose of our application is mainly as a scheduler we are more concerned with attribute specific to each offering, namely when the course is held, we decided to just have the course offering. A course offering will have at least the following attributes: offering id, term, subject, catalog number, title, label, component, status, dates, units (max), days/times, room, total capacity, current enrollment, prerequisites, and description.\\\\ In explanation, the "label" attribute corresponds to a short combination of the of the subject, catalog number, and title. The catalog number corresponds to the course number within that courses department (e.g. 314 for EECS 341). The "component" attribute represents the type of the course, whether it's a lecture, recitation, or similar. The "status" attribute represents whether the course is  open, closed, or other. "Current Enrollment" signifies how many other students are registered for the course offering. "Description" is a paragraph explanation of the course provided by the department or professor.
 \item Users
 \item Instructors
 \item Teaches Relationship
