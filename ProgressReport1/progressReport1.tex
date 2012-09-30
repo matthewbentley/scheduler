@@ -61,10 +61,10 @@ Currently, there only exist functional but not particularly elegant ways for stu
 \end{enumerate}
 \subsection*{Integrity Constraints}
 \begin{enumerate}
-\item Users must have at least one course, or the user is deleted
-\item Lists of courses cannot be more than 4 years old
-\item Users cannot be inactive for more than 4 years
-\item Courses with no users can be removed after the semester during which they were active
+\item Users must be enrolled in at least one course offering. If, for some reason, a user is no longer enrolled in any course offering, then that user is removed from the database. If the user wants to use an application after being deleted, than a new "user" object for that user will be created upon log-in, as if that user was a first time user.
+\item This application may have to handle up to all CWRU community members and several schedules per user. In order to maintain a flexible ceiling on the database, users that have been inactive for more than four years. If a user is removed and one of the course offerings that that user was enrolled in no longer has any users enrolled in it, then that course offering is deleted as well.
+\item If, at any time, a course offering has no users enrolled in it, and the current semester is after the semester that course offering took place in, then that course offering will be removed.
+\item Instructors are allowed to not teach a course offering at any given time. However, if an instructor continuously does not teach a course for five years, then that instructor is removed.
 \end{enumerate}
 
 \end{document}
