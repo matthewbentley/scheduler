@@ -25,15 +25,24 @@ Currently, there only exist functional but not particularly elegant ways for stu
 \noindent We will be using two technologies to implement this scheduler. First, we will be using Python and the Django framework for programming our web application. Second, we will be using MySQL for our database.
 \section*{Application Requirements Specifications}
 \begin{enumerate}[1.]
-\item Maintains a per user list of courses
-\item Searches for courses
-\item Add course to users' list
-\item Remove course from users' list
-\item Display course information on a calendar-formatted schedule, including course name, times, instructor, and location.
-\item Allows course schedule to be easily printable
-\item Maintains users' lists across SIS updates
-\item Displays more detailed course information when requested
-\item Low response times under reasonable user load (less than 1 second)
+\item Maintains a per user list of courses.\\
+This is the main focus of our project. Our object is to create a place to which students are able to come and put in and plan their schedule. In order for this to happen, we must maintain per-user lists of courses. These lists of courses will be maintained for four years, after which point they will be discarded. We will allow for creation of lists for the current semester, as well as the next semester once the data is available from the Student Information System.
+\item Searches for courses\\
+In order to create their lists of courses, users must be able to find the courses they wish to take. Our system will support searching by course name and will match queries based on course name, description, and instructor.
+\item Add course to users' list.\\
+Once found, a course must be able to be added to a user's currently active list. It should stay there until removed either by them or by the system.
+\item Remove course from users' list.\\
+As a user's courses can change during the planning stages or during drop/add, users should be able to remove courses which they have added from their lists.
+\item Display course information on a calendar-formatted schedule, including course name, times, instructor, and location.\\
+This format seems to be the easiest and most convenient to view, and gives users a quick and easy-to-use overview of their courses for the week.
+\item Allows course schedule to be easily printable.\\
+The current system makes it exceedingly difficult to print one's schedule. We are making sure that by design our system will be formatted for printing without users having to do anything.
+\item Maintains users' lists across SIS updates.\\
+As the list of courses is subject to change as courses are added or removed in SIS, we will make sure that our application remains robust across these changes and that when responding to changes in the schedule of classes xml file, we do not inadvertently break anyone's schedule.
+\item Displays more detailed course information when requested.\\
+As there is a wealth of information about the courses in SIS, we plan to make that data consumable by our users by adding a detail page to each course.
+\item Low response times under reasonable user load (less than 1 second).\\
+At the current time, scheduler.case.edu can take upwards of 15 seconds to properly aggregate and display all of a user's classes. Our system will have much faster response times.
 \item Allows users to have multiple course lists corresponding to different semesters
 \item Supports user specified custom events, which will be treated like new courses
 \end{enumerate}
