@@ -56,8 +56,8 @@ Currently, there only exist functional but not particularly elegant ways for stu
 \end{enumerate}
 \subsection*{Actions and Events}
 \begin{enumerate}[1.]
-\item Select Semester - displays a different schedule depending on the selected semester
-\item User login - displays the user's last used schedule
+\item This application will display users' schedule based on the currently selected semester, with the default semester being the current semester at the time of the user login. The application will have a drop down list or similar form that will allow users' to select any other schedule in which the user has a course. As can be seen above, the database does not have an actual "schedule" object. To craft various semester schedules, the course offering relations will just be queried for term and the user's schedules will be constructed off of that. All of a user's schedules will be stored until that user is deleted, see \textit{Integrity Constraints} for user deletion policies.
+\item An event that will happen every time the application is used by any user is a user login. To use this application a user must have a CWRU ID and password, and will log in with the CWRU Single Sign-On Service. By logging in, the application will be able to identify the user and load all of that user's schedules.
 \end{enumerate}
 \subsection*{Integrity Constraints}
 \begin{enumerate}
