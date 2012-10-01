@@ -1,5 +1,6 @@
 \documentclass[pdftex,12pt,letter]{article}
 
+\usepackage{graphicx}
 \usepackage{enumerate}
 \makeatletter
   \renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
@@ -25,28 +26,31 @@ Currently, there only exist functional but not particularly elegant ways for stu
 \noindent We will be using two technologies to implement this scheduler. First, we will be using Python and the Django framework for programming our web application. Second, we will be using MySQL for our database.
 \section*{Application Requirements Specifications}
 \begin{enumerate}[1.]
-\item Maintains a per user list of courses.\\
+\item The system will maintain a per-user list of courses.\\\\
 This is the main focus of our project. Our object is to create a place to which students are able to come and put in and plan their schedule. In order for this to happen, we must maintain per-user lists of courses. These lists of courses will be maintained for four years, after which point they will be discarded. We will allow for creation of lists for the current semester, as well as the next semester once the data is available from the Student Information System.
-\item Searches for courses\\
-In order to create their lists of courses, users must be able to find the courses they wish to take. Our system will support searching by course name and will match queries based on course name, description, and instructor.
-\item Add course to users' list.\\
-Once found, a course must be able to be added to a user's currently active list. It should stay there until removed either by them or by the system.
-\item Remove course from users' list.\\
+\item The system will allow the user to search the catalog for courses.\\\\
+In order to create their lists of courses, users must be able to find the courses they wish to take. Our system will support searching by course name and will match queries based on course name, description, and instructor. The search results will be displayed in a convenient list view, with the differences clearly marked (course name, meeting time, instructor, etc). The current Case Scheduler view is shown below.\\
+\includegraphics[width=130mm]{add_course.png}
+\item The system will allow courses to be added to users' active schedule.\\\\
+Once found, a course must be able to be added to a user's currently active schedule. It should stay there until removed either by them or by the system. The functionality of this will be very similar to the functionality of the current Case Scheduler, as shown in the above graphic, but will have a reworked user interface designed by our team.
+\item The system should support removing a course from a particular schedule.\\\\
 As a user's courses can change during the planning stages or during drop/add, users should be able to remove courses which they have added from their lists.
-\item Display course information on a calendar-formatted schedule, including course name, times, instructor, and location.\\
-This format seems to be the easiest and most convenient to view, and gives users a quick and easy-to-use overview of their courses for the week.
-\item Allows course schedule to be easily printable.\\
+\item The system will display course information on a weekly calendar-formatted schedule, including course name, times, instructor, and location.\\\\
+This format seems to be the easiest and most convenient to view, and gives users a quick and easy-to-use overview of their courses for the week. In the future, other layouts such as a list-type view, day-by-day view, and monthly view. Our implementation of the weekly view will look similar to the below graphic, although with a rewritten user interface backend.\\
+\includegraphics[width=130mm]{main_schedule.png}
+\item The system should display itself in a manner which facilitates printing.\\\\
 The current system makes it exceedingly difficult to print one's schedule. We are making sure that by design our system will be formatted for printing without users having to do anything.
-\item Maintains users' lists across SIS updates.\\
+\item The system should maintain users' lists across SIS updates.\\\\
 As the list of courses is subject to change as courses are added or removed in SIS, we will make sure that our application remains robust across these changes and that when responding to changes in the schedule of classes xml file, we do not inadvertently break anyone's schedule.
-\item Displays more detailed course information when requested.\\
-As there is a wealth of information about the courses in SIS, we plan to make that data consumable by our users by adding a detail page to each course.
-\item Low response times under reasonable user load (less than 1 second).\\
-At the current time, scheduler.case.edu can take upwards of 15 seconds to properly aggregate and display all of a user's classes. Our system will have much faster response times.
-\item Allows users to have multiple course lists corresponding to different semesters.\\
-This is necessary in order to allow users to plan a next semester while having a schedule for their current semester. In addition, it allows them to go back and browse the courses they have taken in previous semesters.
-\item Supports user specified custom events, which will be treated like new courses.\\
-In order to be a one-stop schedule manager, as well as to remain more feature-complete than the current case scheduler, we will be adding support for custom events such as TA sessions, jobs, and other user-defined events. These custom events will have all of the behavior of courses, but will be visible only to their creator, i.e they will not appear in searches.
+\item Clicking on courses will bring up more detailed course information.\\\\
+As there is a wealth of information about the courses in SIS, we plan to make that data consumable by our users by adding a detail page to each course. This detail page will include such items as classroom, teacher, and meeting times, among others.
+\item Under reasonable load, the system should have loading times of less than one second.\\\\
+At the current time, scheduler.case.edu can take upwards of 15 seconds to properly aggregate and display all of a user's classes. This frustrates users and is a design flaw which should be easily remediable. Our system will have much faster response times, ensuring greater user satisfaction and a more usable product.
+\item The system will allow users to change their current working semester, and will maintain schedules up to 4 years in the past.\\\\
+This is necessary in order to allow users to plan a next semester while having a schedule for their current semester. The second SIS data is available, we will make it available to the students and allow them to start planning their next semester. In addition, the ability to go and see what courses they have taken in previous semesters provides value because students will no longer have to do the time-consuming process of using SIS.
+\item The system supports the creation of custom events.\\\\
+In order to be a one-stop schedule manager, as well as to remain more feature-complete than the current case scheduler, we will be adding support for custom events such as TA sessions, jobs, and other user-defined events. These custom events will have all of the behavior of courses, but will be visible only to their creator, i.e they will not appear in searches. The add dialog will look similar to below.\\
+\includegraphics[width=130mm]{add_event.png}
 \end{enumerate}
 \section*{Database Requirements Specifications}
 \subsection*{Objects and Relationships}
