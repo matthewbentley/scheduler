@@ -43,8 +43,10 @@ As the list of courses is subject to change as courses are added or removed in S
 As there is a wealth of information about the courses in SIS, we plan to make that data consumable by our users by adding a detail page to each course.
 \item Low response times under reasonable user load (less than 1 second).\\
 At the current time, scheduler.case.edu can take upwards of 15 seconds to properly aggregate and display all of a user's classes. Our system will have much faster response times.
-\item Allows users to have multiple course lists corresponding to different semesters
-\item Supports user specified custom events, which will be treated like new courses
+\item Allows users to have multiple course lists corresponding to different semesters.\\
+This is necessary in order to allow users to plan a next semester while having a schedule for their current semester. In addition, it allows them to go back and browse the courses they have taken in previous semesters.
+\item Supports user specified custom events, which will be treated like new courses.\\
+In order to be a one-stop schedule manager, as well as to remain more feature-complete than the current case scheduler, we will be adding support for custom events such as TA sessions, jobs, and other user-defined events. These custom events will have all of the behavior of courses, but will be visible only to their creator, i.e they will not appear in searches.
 \end{enumerate}
 \section*{Database Requirements Specifications}
 \subsection*{Objects and Relationships}
