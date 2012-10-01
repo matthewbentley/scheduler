@@ -63,11 +63,11 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \end{enumerate}
 \subsection*{Queries and Transactions}
 \begin{enumerate}[1.]
-\item Get\_List Query - Very frequent, once ppv
-\item Lookup\_Course - Even more frequent, multiples times ppv
-\item Add\_Course - Less frequent, less than once ppv
-\item Remove\_Course - Infrequent, much less than once ppv
-\item Lookup\_Instructor - Infrequent, less than 1 in 10 pv's
+\item Get\_List:  Since the application is centered around displaying a graphical representation of a list of courses, we will need to retrieve the list of courses associated with the current user.  Since we will not be storing this list in cookies, we will need to retrieve it from the database every time we seek to display it.  This will be required approximately once per page-view.  This will require as input the user ID (Case ID), and produce as output a list of course ids.
+\item Lookup\_Course:  Since the application will need to display information about each course in the list of courses, we will need to retrieve this information.  This information will include things like course title, course description, instructor, course time, and course location.  Since most lists will contain more than one course, we will need to perform this query more than one time per page view.  This query will require as input a course ID, and will return several columns which will be used to build the calendar.
+\item Add\_Course:  Since the application requires that a user build a list of courses, the user will be need to be able to build the list of courses by adding to it.  We will add courses to the user lists using this transaction.  This transaction will take as input the user ID and a course ID and will add the course ID to the list of courses for the user in question.  It will not return anything.  This will be done much less than once per page view, since the average user will need to view their courses more than once, but will only need to add them one time each.
+\item Remove\_Course:  The opposite of Add\_Course, sometimes users will need to remove courses that they've already added.  This will happen even less often than Add\_Course, because most users will only add courses that they plan to view in the future.  Most users do not drop courses, and so most users will only need to add courses.  This will happen far less than once per page view.  This transaction will take as input the User ID and Course ID, and will delete the row from the table pairing users and courses, and will not return anything.
+\item Lookup\_Instructor:  One feature that users might desire is the ability to lookup all courses that a particular instructor is teaching.  This means that we will want to index the courses table by instructor as well as by course ID.  This query will be used much less frequently than the other queries and transactions because the primary feature of the application is display of a calendar, not viewing the courses taught by a particular instructor.  This transaction will take as input the instructor name, and will return a list of course IDs taught by that instructor.
 \end{enumerate}
 \subsection*{Actions and Events}
 \begin{enumerate}[1.]
