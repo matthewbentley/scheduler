@@ -1,4 +1,10 @@
 *.log
 *.pot
 *.pyc
+*.aux
+*.bbl
+*.blg
+*.gz
+*.dvi
+*.pdf
 local_settings.py
