@@ -1,6 +1,7 @@
 \documentclass[pdftex,12pt,letter]{article}
 
 \usepackage{graphicx}
+\usepackage{placeins}
 \usepackage{enumerate}
 \makeatletter
   \renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
@@ -82,6 +83,72 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \item Instructors are allowed to not teach a course offering at any given time. However, if an instructor continuously does not teach a course for five years, then that instructor is removed.
 \end{enumerate}
 \section*{ER Diagram}
-\includegraphics{ERDiagram.png}
+\includegraphics[width=120mm]{ERDiagram.png}
+\FloatBarrier
+\pagebreak
+\section*{Relational Model}
+\begin{verbatim} 
+CREATE_TABLE User
+  (userid CHAR(6),
+  login date CHAR(10) NOT NULL,
+  PRIMARY KEY (userid))
+  
+CREATE_TABLE CustomEvent
+	(userid CHAR(6) NOT NULL,
+	days/times CHAR(20),
+	location CHAR(40),
+	title CHAR(40),
+	description CHAR(120),
+	PRIMARY KEY (userid, title)
+	FOREIGN KEY (userid) REFERENCES User
+		ON DELETE CASCADE
 
+CREATE_TABLE Enrolled_In
+  (userid CHAR(6),
+  coid CHAR(8),
+  PRIMARY KEY (coid, userid),
+  FOREIGN KEY (userid) REFERENCES User,
+      ON DELETE CASCADE
+  FOREIGN KEY (coid) REFERENCES CourseOffering,
+      ON DELETE CASCADE)
+      
+CREATE_TABLE CourseOffering
+  (coid CHAR(8),
+  status CHAR(20),
+  room	CHAR(20),
+  total_capacity INTEGER,
+  days/times CHAR(20),
+  current_enrollment INTEGER,
+  term CHAR(16),
+  instructorId CHAR(8) NOT NULL,
+  catalogNumber CHAR(12) NOT NULL,
+  PRIMARY KEY (coid),
+  FOREIGN KEY (instructorId) REFERENCES Instructor
+  		ON DELETE CASCADE
+  FOREIGN KEY (catalogNumber) REFERENCES Course
+  		ON DELETE CASCADE
+  		
+CREATE TABLE Course
+	(catalogNumber CHAR(12),
+	title CHAR(40),
+	component CHAR(20),
+	units REAL,
+	PRIMARY KEY (catalogNumber))
+	
+CREATE TABLE Has_Prerequisite
+	(prereqCnumber CHAR(12),
+	prereqForCnumber CHAR(12),
+	PRIMARY KEY (prereqForCnumber, prereqCnumber),
+	FOREIGN KEY (prereqForCnumber) REFERENCES Course
+		ON DELETE CASCADE
+	FOREIGN KEY (prereqCnumber) REFERENCES Course
+		ON DELETE CASCADE)
+		
+CREATE TABLE Instructor
+	(instructorId CHAR(8),
+	email CHAR(20),
+	officeHours CHAR(20),
+	officeLocal CHAR(20),
+	phoneNumber INTEGER)
+  \end{verbatim}
 \end{document}
