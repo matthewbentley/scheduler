@@ -56,11 +56,15 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \section*{Database Requirements Specifications}
 \subsection*{Objects and Relationships}
 \begin{enumerate}[1.]
-\item Course Offering: The database will have an instance of course offering for each course offered by CWRU. We considered having a overreaching "Course" object where Course Offering is-a Course. However since the purpose of our application is mainly as a scheduler we are more concerned with attribute specific to each offering, namely when the course is held, we decided to just have the course offering. A course offering will have at least the following attributes: offering id, term, subject, catalog number, title, label, component, status, dates, units (max), days/times, room, total capacity, current enrollment, prerequisites, and description.\\\\ In explanation, the "label" attribute corresponds to a short combination of the of the subject, catalog number, and title. The catalog number corresponds to the course number within that courses department (e.g. 314 for EECS 341). The "component" attribute represents the type of the course, whether it's a lecture, recitation, or similar. The "status" attribute represents whether the course is  open, closed, or other. "Current Enrollment" signifies how many other students are registered for the course offering. "Description" is a paragraph explanation of the course provided by the department or professor.
+\item Course Offering: The database will have an instance of course offering for each course offered by CWRU. Every course offering is-a course, which is described below. This entity it important to our application because a course offering is the typical item that a user will actually had to his or her schedule. A course offering will have at least the following attributes: offering id, term, subject, status, dates, days/times, room, total capacity, current enrollment, and description.\\\\  In explanation, the "component" attribute represents the type of the course, whether it's a lecture, recitation, or similar. The "status" attribute represents whether the course is  open, closed, or other, which is important for a user to know when scheduling for a certain course. "Current Enrollment" signifies how many other students are registered for the course offering. "Description" is a paragraph explanation of the course provided by the department or professor, also important info for a user browsing through various courses.
+\item Course: every course offering is-a course. A course entity is useful to have for this application because it will allows the application to more easily display all of the course offering for a selected course. The course entity will have the following attributes: title, catalog number, component, units (max), and label. In explanation, the "label" attribute corresponds to a short combination of the of the subject, catalog number, and title. The catalog number corresponds to the course number within that courses department (e.g. 314 for EECS 341). Courses will also have prerequisite as specified by the Has\_Prerequisite relationship, detailed below.
+\item Has\_Prerequisite Relationship: This relationship involves only Course entities. Any one course may have multiple prerequisites and may be a prerequisite for multiple courses. This relationship will allow the application to easily display and direct users to what prerequisites a given course may have.
 \item User: Every user will log onto our application with their case id and password (using the single sign on service as provided by CWRU). This process allows us to keep an object representation of each user. This application doesn't need much information about each user, so it will just keep track of the user's case id and last login date. We keep track of their login date so we can safely delete a user and any relationships that user participated in after the user has not logged in for four years.
 \item Instructor: Our application will allows users to find basic information about CWRU instructors, such as office location, office hours, and contact information. To adequately display this information, the instructor object will have at least the following attributes: instructor ID, office location, office hours, phone number, and email.
 \item Teaches Relationship: Every course offering will be taught by an instance of instructor, and this relation models that, simply by storing the id's for the course offering and the instructor that teaches it. We assume a course offering is not taught by more than one instructor, an assumption that is sufficient for a scheduling application.
 \item Enrolled-in Relationship: Multiple students can take multiple different courses, and courses can have many students enrolled in it, up to that courses capacity. This relationship is fairly simple in that it just keeps track of a student and a course that student is enrolled in. However, it is also an extremely important relationship because it allows us to populate a students schedule.
+\item Custom Event: Like the current Case Scheduler, our application will allow users to add their own recurring custom events to the schedule. A good example might be an extra-curricular actives such as band rehearsals or sport practices. As such, the databases needs a separate entity to store these events. This entity will have the following attributes: days/times, location, title, semester, and description. This entity will be a weak entity and each custom event will be connected to a single user through the Has relationship.
+\item Has Relationship: The Has relationship, again, connects users to the custom events they have created. This relationship is a one-to-many relationship, so a user may have many custom events, and it requires full participation on the part of the custom event entities.
 \end{enumerate}
 \subsection*{Queries and Transactions}
 \begin{enumerate}[1.]
@@ -69,6 +73,7 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \item Add\_Course:  Since the application requires that a user build a list of courses, the user will be need to be able to build the list of courses by adding to it.  We will add courses to the user lists using this transaction.  This transaction will take as input the user ID and a course ID and will add the course ID to the list of courses for the user in question.  It will not return anything.  This will be done much less than once per page view, since the average user will need to view their courses more than once, but will only need to add them one time each.
 \item Remove\_Course:  The opposite of Add\_Course, sometimes users will need to remove courses that they've already added.  This will happen even less often than Add\_Course, because most users will only add courses that they plan to view in the future.  Most users do not drop courses, and so most users will only need to add courses.  This will happen far less than once per page view.  This transaction will take as input the User ID and Course ID, and will delete the row from the table pairing users and courses, and will not return anything.
 \item Lookup\_Instructor:  One feature that users might desire is the ability to lookup all courses that a particular instructor is teaching.  This means that we will want to index the courses table by instructor as well as by course ID.  This query will be used much less frequently than the other queries and transactions because the primary feature of the application is display of a calendar, not viewing the courses taught by a particular instructor.  This transaction will take as input the instructor name, and will return a list of course IDs taught by that instructor.
+\item Create\_Event: Users will be allowed to create their own custom events to add to any schedule they desire. The application will use the event's semester attribute to determine which schedule to add the event to.
 \end{enumerate}
 \subsection*{Actions and Events}
 \begin{enumerate}[1.]
@@ -81,6 +86,8 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \item This application may have to handle up to all CWRU community members and several schedules per user. In order to maintain a flexible ceiling on the database, users that have been inactive for more than four years. If a user is removed and one of the course offerings that that user was enrolled in no longer has any users enrolled in it, then that course offering is deleted as well.
 \item If, at any time, a course offering has no users enrolled in it, and the current semester is after the semester that course offering took place in, then that course offering will be removed.
 \item Instructors are allowed to not teach a course offering at any given time. However, if an instructor continuously does not teach a course for five years, then that instructor is removed.
+\item Every custom event must be involved in a Has relationship with some user.
+\item Every course offering must satisfy the is-a course relationship.
 \end{enumerate}
 \section*{ER Diagram}
 \includegraphics[width=120mm]{ERDiagram.png}
@@ -98,8 +105,9 @@ CREATE_TABLE CustomEvent
 	days/times CHAR(20),
 	location CHAR(40),
 	title CHAR(40),
+	semester CHAR(12),
 	description CHAR(120),
-	PRIMARY KEY (userid, title)
+	PRIMARY KEY (userid, title, semester)
 	FOREIGN KEY (userid) REFERENCES User
 		ON DELETE CASCADE
 
@@ -120,6 +128,7 @@ CREATE_TABLE CourseOffering
   days/times CHAR(20),
   current_enrollment INTEGER,
   term CHAR(16),
+  description CHAR(400),
   instructorId CHAR(8) NOT NULL,
   catalogNumber CHAR(12) NOT NULL,
   PRIMARY KEY (coid),
