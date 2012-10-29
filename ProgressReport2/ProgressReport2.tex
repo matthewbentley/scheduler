@@ -160,4 +160,59 @@ CREATE TABLE Instructor
 	officeLocal CHAR(20),
 	phoneNumber INTEGER)
   \end{verbatim}
+\subsection*{Justification of Relational Model}
+\begin{itemize}
+\item User HAS Custom Event (1:N, full participation from Custom Event to Has)
+\subitem This relationship is satisfied by two pieces: first, the Custom Event has a key for the id of the user to which it is attached. This satisfies the 1:N part of the relationship. Second, the id is listed as NOT NULL, which enforces the full participation.
+\item User Enrolled-In Course Offering (M:N)
+\subitem This relationship is satisfied by the inclusion of the Enrolled-In table, which contains a user id and an offering id.
+\item Instructor Teaches Course Offering (1:N, full participation from Instructor to Course Offering)
+\subitem This relationship is satisfied by two pieces: first, each Course Offering has an Instructor id key corresponding to the instructor who teaches the class. This satisfies the 1:N part of the relationship. The full participation from Course Offering to Teaches is enforced by the NOT NULL on the Instructor ID.
+\item Course Offering IS-A Course
+\subitem The IS-A relationship here is satisfied by having each Course Offering contain a catalog number, which connects it to a specific instance of a course. It thus becomes an instance of that course.
+\item Course Has\_Prerequisite
+\subitem The Has\_Prerequisite relationship is satisfied by the inclusion of the Has\_Prerequisite table. It contains two keys, one key for the course in question, and another for the course for which it is a prerequisite. In this way, one course can have multiple prerequisites and can also be a prerequisite for multiple classes.
+\end{itemize}
+\section*{Installing on a DBMS}
+We successfully installed mysql on a linux machine that one of our group members owns.  The machine is running Ubuntu, so the installation was a very straightforward process.  We simply ran 'apt-get install mysql-server'.  After that, we needed to create the scheduler database, which was done simply:\\\\
+\begin{verbatim}
+CREATE DATABASE scheduler;
+USE scheduler;
+\end{verbatim}
+
+Then it got fairly complicated.  It became apparent (see figure 1) that the syntax we've been using wasn't correct.  In mysql, foreign key constraints need to be declared after the keys themselves; in the SQL we learned, they could be declared at the end of the CREATE TABLE statement.  This correction was necessary throughout the set of table creations.  About halfway through it became clear how the SQL needed to be modified.  We then used DESCRIBE calls to ensure that everything was set up correctly.
+\begin{flushleft}
+\begin{figure}
+\includegraphics[width=140mm]{db1.png}
+\figurename{ 1}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db2.png}
+\figurename{ 2}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db3.png}
+\figurename{ 3}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db4.png}
+\figurename{ 4}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db5.png}
+\figurename{ 5}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db6.png}
+\figurename{ 6}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db7.png}
+\figurename{ 7}
+\end{figure}
+\begin{figure}
+\includegraphics[width=140mm]{db8.png}
+\figurename{ 8}
+\end{figure}
+\end{flushleft}
 \end{document}
