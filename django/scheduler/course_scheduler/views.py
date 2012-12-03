@@ -15,7 +15,8 @@ def add(request):
     return render(request, 'add.html', {'crit' : request.GET.get('Search', None), "classes" : classes})
 
 def info(request):
-    return render(request, 'info.html')
+    course = request.GET.get('course')
+    return render(request, 'info.html', {'course' : course})
     
 class SearchForm(forms.Form):
         criterion = forms.CharField(max_length=100)
