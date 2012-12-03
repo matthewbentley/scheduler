@@ -106,16 +106,16 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'sampleDjango.urls'
+ROOT_URLCONF = 'scheduler.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'sampleDjango.wsgi.application'
+WSGI_APPLICATION = 'scheduler.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'C:\Users\Stuart Long\Documents\Code\sampleDjango\poll\templates',
+    'course_scheduler/templates/',
 )
 
 INSTALLED_APPS = (
@@ -129,7 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'poll',
+    'scheduler.course_scheduler',
 )
 
 # A sample logging configuration. The only tangible logging
