@@ -12,7 +12,7 @@ def add(request):
         criterion = request.GET.get('Search', None)
         #classes = Class.objects.filter(classname__contains=criterion)
         classes = Class.objects.order_by('class_number')[:5]
-        numb = {len(Class.objects.all())}
+        numb = len(Class.objects.all())
         
         return render(request, 'add.html', {"numb1" : numb, "classes" : classes})
     raise Http404
