@@ -47,67 +47,70 @@ b = BeautifulSoup(xml_file, "lxml")
 
 print 'file parsed'
 
-classes = b.term.classes.find_all('class')
+for curr_term in b.find_all('term'):
 
-for c in classes:
-    c_num = c.catalognbr.contents[0]
-    d = c.subject.contents[0]
-    name = c.coursetitlelong.contents[0]
-    try:
-        desc = c.description.contents[0]
-    except AttributeError:
+    classes = curr_term.classes.find_all('class')
+    term_name = unicode(curr_term.descr.contents[0])
+
+    for c in classes:
+        c_num = c.catalognbr.contents[0]
+        d = c.subject.contents[0]
+        name = c.coursetitlelong.contents[0]
         try:
-            desc = c.classnotes.contents[0]
+            desc = c.description.contents[0]
         except AttributeError:
-            desc = ""
+            try:
+                desc = c.classnotes.contents[0]
+            except AttributeError:
+                desc = ""
 
-    try:
-        c_num = int(c_num)
-        d = unicode(d)
-        name = unicode(name)
-        if len(desc) > 4096:
-            desc = desc[:4095]
-        desc = unicode(desc)
-        print 'adding:  ' + ' '.join([unicode(c_num), unicode(d), unicode(name), unicode(desc)])
-    except ValueError,UnicodeEncodeError:
-        continue
-
-    c_model = Class(class_number=c_num, dept=d, classname=name, description=desc)
-    c_model.save()
-
-    try:
-        meetings = c.meetings.find_all('meeting')
-    except AttributeError:
-        continue
-
-    print 'meetings for this class:'
-
-    for meeting in meetings:
-        print meeting
-        dates = meeting.meetingdates.contents[0]
-        times = meeting.daystimes.contents[0]
-        room = unicode(meeting.room.contents[0])
-        s_date = dates.split("-")[0].strip()
-        e_date = dates.split("-")[1].strip()
-        weekdays = times.split(" ")[0]
         try:
-            s_time = times.split(" ")[1].strip()
-            e_time = times.split("-")[1].strip()
-            s_time, e_time = format_times(s_time, e_time)
-            if s_time == "" or e_time == "":
-                continue
-        except IndexError:
+            c_num = int(c_num)
+            d = unicode(d)
+            name = unicode(name)
+            if len(desc) > 4096:
+                desc = desc[:4095]
+            desc = unicode(desc)
+            print 'adding:  ' + ' '.join([unicode(c_num), unicode(d), unicode(name), unicode(desc), unicode(term_name)])
+        except ValueError,UnicodeEncodeError:
             continue
 
-        s_date = format_date(s_date)
-        e_date = format_date(e_date)
+        c_model = Class(class_number=c_num, dept=d, classname=name, description=desc, term=term_name)
+        c_model.save()
 
-        print 'adding:  ' + ' '.join([str(s_date), str(e_date), str(weekdays), str(room), str(s_time), str(e_time)])
-        m = MeetingTime(meeting_class = c_model, meeting_date = s_date, meeting_end_date = e_date, meeting_recur_type = weekdays, meeting_location = room, meeting_time = s_time, meeting_end = e_time)
-        m.save()
+        try:
+            meetings = c.meetings.find_all('meeting')
+        except AttributeError:
+            continue
 
-        insts = unicode(meeting.instructor.contents[0])
-        for inst_name in insts.split(","):
-            inst, created = Instructor.objects.get_or_create(name=inst_name)
-            instructs = Instructs(instructor=inst, meeting = m)
-            instructs.save()
+        print 'meetings for this class:'
+
+        for meeting in meetings:
+            print meeting
+            dates = meeting.meetingdates.contents[0]
+            times = meeting.daystimes.contents[0]
+            room = unicode(meeting.room.contents[0])
+            s_date = dates.split("-")[0].strip()
+            e_date = dates.split("-")[1].strip()
+            weekdays = times.split(" ")[0]
+            try:
+                s_time = times.split(" ")[1].strip()
+                e_time = times.split("-")[1].strip()
+                s_time, e_time = format_times(s_time, e_time)
+                if s_time == "" or e_time == "":
+                    continue
+            except IndexError:
+                continue
+
+            s_date = format_date(s_date)
+            e_date = format_date(e_date)
+
+            print 'adding:  ' + ' '.join([str(s_date), str(e_date), str(weekdays), str(room), str(s_time), str(e_time)])
+            m = MeetingTime(meeting_class = c_model, meeting_date = s_date, meeting_end_date = e_date, meeting_recur_type = weekdays, meeting_location = room, meeting_time = s_time, meeting_end = e_time)
+            m.save()
+
+            insts = unicode(meeting.instructor.contents[0])
+            for inst_name in insts.split(","):
+                inst, created = Instructor.objects.get_or_create(name=inst_name)
+                instructs = Instructs(instructor=inst, meeting = m)
+                instructs.save()

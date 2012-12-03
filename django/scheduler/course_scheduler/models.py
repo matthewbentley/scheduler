@@ -5,6 +5,7 @@ class Class(models.Model):
     dept = models.CharField(max_length=10)
     classname = models.CharField(max_length=350)
     description = models.CharField(max_length = 4096)
+    term = models.CharField(max_length = 30)
 
 class MeetingTime(models.Model):
     meeting_class = models.ForeignKey('Class')
