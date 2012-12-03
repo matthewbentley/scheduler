@@ -15,7 +15,7 @@ def add(request):
     return render(request, 'add.html', {'crit' : request.GET.get('Search', None), "classes" : classes})
 
 def info(request):
-    course = request.GET.get('course')
+    course = request.GET.get('course', NONE)
     return render(request, 'info.html', {'course' : course})
     
 class SearchForm(forms.Form):
