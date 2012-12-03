@@ -14,8 +14,8 @@
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
 </form>
-	<h>numb: {% for item in numb1 %}{{item}}{% endfor %}</h>
-	
+	<h>numb: </h>
+	{% for item in numb1 %}<p>{{item}}</p>{% endfor %}
     <table border="1">
     <tr>
     	<th style="width:300px; text-align:left;">Course</th>
@@ -25,7 +25,7 @@
     {% for class in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td>{{class.classname}}</td>
+			<td>0</td>
 			<td>1</td>
 			<td>2</td>
 			</tr>
