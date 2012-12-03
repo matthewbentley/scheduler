@@ -21,7 +21,7 @@
     	<th style="width:300px; text-align:left;">Course</th>
     	<th style="width:100px;">Staff</th>
     </tr>
-    {% for c in Class.objects.all %}
+    {% for c in classes %}
     	<tr>
     	<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
 		<td>{{c.classname}}</td>
