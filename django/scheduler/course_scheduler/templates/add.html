@@ -22,12 +22,14 @@
     	<th style="width:100px;">Staff</th>
     </tr>
     {% for c in classes %}
-    	<tr>
-    	<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-		<td>{{c.classname}}</td>
-    	<td>1</td>
-    	<td>2</td>
-		</tr>
+		{% for class in c %}
+			<tr>
+			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
+			<td>{{class.classname}}</td>
+			<td>1</td>
+			<td>2</td>
+			</tr>
+		{% endfor %}
     {% endfor %}
     </table>
 </div>
