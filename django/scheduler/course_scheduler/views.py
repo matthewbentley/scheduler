@@ -8,14 +8,11 @@ def schedule(request):
     return render(request, 'schedule.html')
 
 def add(request):
-    if request.method == 'GET':
-        criterion = request.GET.get('Search', None)
-        #classes = Class.objects.filter(classname__contains=criterion)
-        classes = Class.objects.order_by('class_number')[:5]
-        numb = len(Class.objects.all())
+    criterion = request.GET.get('Search', None)
+    classes = Class.objects.order_by('class_number')[:5]
+    numb = len(Class.objects.all())
         
-        return render(request, 'add.html', {"numb1" : numb, "classes" : classes})
-    raise Http404
+    return render(request, 'add.html', {"numb1" : numb, "classes" : classes})
 
 def info(request):
     course = request.GET.get('course', NONE)
