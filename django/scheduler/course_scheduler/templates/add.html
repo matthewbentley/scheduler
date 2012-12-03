@@ -14,14 +14,15 @@
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
 </form>
-	<h>numb: {{numb1}}</h>
+	<h>numb: {% for item in numb1 %}{{item}}{% endfor %}</h>
 	
     <table border="1">
     <tr>
     	<th style="width:300px; text-align:left;">Course</th>
     	<th style="width:100px;">Staff</th>
+		<th style="width:100px;">Times</th>
     </tr>
-    {% for c in classes %}
+    {% for class in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
 			<td>{{class.classname}}</td>
