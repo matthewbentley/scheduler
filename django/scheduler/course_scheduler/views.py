@@ -10,9 +10,8 @@ def add(request):
     classes = {len(Class.objects.all())}
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
-        #classes = Class.objects.filter(classname__contains=criterion)
-        classes = Class.objects.all()
-        classes = {len(Class.objects.all())}
+        classes = Class.objects.filter(classname__contains=criterion)
+        #classes = Class.objects.all()
         
     return render(request, 'add.html', {'crit' : request.GET.get('Search', None), "classes" : classes})
 
