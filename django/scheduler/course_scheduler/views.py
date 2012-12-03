@@ -11,7 +11,7 @@ def add(request):
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
         #classes = Class.objects.filter(classname__contains=criterion)
-        classes = {len(Class.objects.all())}
+        classes = Class.objects.all()
         numb = {len(Class.objects.all())}
         
         return render(request, 'add.html', {"numb" : numb, "classes" : classes})
