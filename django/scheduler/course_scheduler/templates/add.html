@@ -15,7 +15,10 @@
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
 </form>
 	<h>numb: </h>
-	{% for item in numb1 %}<p>{{item}}</p>{% endfor %}
+	{% for item in numb1 %}<p>
+		{{item}}
+		</p>
+	{% endfor %}
     <table border="1">
     <tr>
     	<th style="width:300px; text-align:left;">Course</th>
@@ -31,6 +34,11 @@
 			</tr>
     {% endfor %}
     </table>
+	<ul>
+	    {% for class in classes %}
+			<li>{{ class.classname }}</li>
+		{% endfor %}
+	</ul>
 </div>
 </body>
 </html>
