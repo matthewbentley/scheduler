@@ -14,7 +14,7 @@
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
 </form>
-	<h>numb: {{numb}}</h>
+	<h>numb: {{len(Class.obects.all)}}</h>
 	
     <table border="1">
     <tr>
@@ -27,6 +27,7 @@
 		<td>{{c.classname}}</td>
     	<td>1</td>
     	<td>2</td>
+		</tr>
     {% endfor %}
     </table>
 </div>
