@@ -12,9 +12,9 @@ def add(request):
         criterion = request.GET.get('Search', None)
         #classes = Class.objects.filter(classname__contains=criterion)
         classes = Class.objects.all()
-        numb = len(Class.objects.all())
+        numb = {len(Class.objects.all())}
         
-        return render(request, 'add.html', {"numb" : len(Class.objects.all()), "classes" : classes})
+        return render(request, 'add.html', {"numb" : numb, "classes" : classes})
     raise Http404
 
 def info(request):
