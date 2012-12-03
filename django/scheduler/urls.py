@@ -1,21 +1,29 @@
-from django.conf.urls.defaults import patterns, include, url
+'''
+Created on Nov 14, 2012
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+@author: Stuart Long
+'''
+
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'scheduler.views.home', name='home'),
-    # url(r'^scheduler/', include('scheduler.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
-	
-	url(r'^scheduler/$', 'course_scheduler.views.schedule', name='base'),
-    url(r'^scheduler/add/$', 'course_scheduler.views.add', name='add'),
-    #url(r'^scheduler/add/search/$', 'course_scheduler.views.search', name='search'),
+   # url(r'^$',
+   #     ListView.as_view(
+   #         queryset=Poll.objects.order_by('-pub_date')[:5],
+   #         context_object_name='latest_poll_list',
+   #         template_name='schedule.html'),
+   #     name='index'),
+   # url(r'^(?P<pk>\d+)/$',
+   #     DetailView.as_view(
+   #         model=Poll,
+   #         template_name='schedule.html'),
+   #     name='detail'),
+   # url(r'^$',
+   #     DetailView.as_view(
+   #         model=Poll,
+   #         template_name='schedule.html'),
+   #     name='results'),
+    url(r'^scheduler/$', 'poll.views.schedule', name='base'),
+    url(r'^scheduler/add/$', 'poll.views.add', name='add'),
+    url(r'^scheduler/info$', 'poll.views.info', name='info'),
 )
