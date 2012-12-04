@@ -13,7 +13,7 @@
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
 
-	<h>numb: {{numb}}</h>
+	<h>numb: {{number}}</h>
     <table border="1">
     <tr>
     	<th style="width:300px; text-align:left;">Course</th>
@@ -25,7 +25,7 @@
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
 			<td>{{class.classname}}</td>
 			<td>{{class.dept}}</td>
-			<td>{{class.term}}</td>
+			<td>{{class.class_number}}</td>
 			</tr>
     {% endfor %}
     </table>

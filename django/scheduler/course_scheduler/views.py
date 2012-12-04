@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django import forms
 from course_scheduler.models import Class
 from django.http import Http404
+from django.db.models import Q
 
 def schedule(request):
     return render(request, 'schedule.html')
@@ -10,7 +11,8 @@ def schedule(request):
 def add(request):
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
-        classes = Class.objects.order_by('class_number')[:5]
+        classes = Class.objects.get(Q(classname__contains=criterion) | Q(dept__contains=criterion) | Q(class_number__contains=criterion))
+        #classes = Class.objects.order_by('class_number')[:5]
         numb = len(Class.objects.all())
     
     return render(request, 'add.html', {'number' : numb, 'classes' : classes})
