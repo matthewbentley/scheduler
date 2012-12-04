@@ -68,7 +68,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 }
 
 .day {
-	background-color: #99bb99;
+	background-color: #FF0000;;
 	border: 1px solid #000000;	
 	background-image: url(images/daybg.png);
 	/*height: 1120px;*/
