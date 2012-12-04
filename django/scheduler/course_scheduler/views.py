@@ -20,6 +20,11 @@ def schedule(request):
     if cookie != "":
         setcookie = True
 
+    if request.method == 'POST':
+        name = request.GET.get('class', None)
+        recur = request.GET.get('recur
+        meetTime=MeetingTime.objects.get(meeting_class__classname=r
+
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     if not created
@@ -133,3 +138,7 @@ def inssearch(request):
         return render(request, 'inssearch.html')
     else:
         return render(request, 'inssearch.html', {'id' : id})
+
+def addcourse(request):
+    if request.method == 'POST':
+        MeetingTime.objects.get(meeting_class__classname=
