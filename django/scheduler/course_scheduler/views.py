@@ -20,11 +20,6 @@ def schedule(request):
     if cookie != "":
         setcookie = True
 
-    if request.method == 'POST':
-        name = request.GET.get('class', None)
-        recur = request.GET.get('recur
-        meetTime=MeetingTime.objects.get(meeting_class__classname=r
-
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     if not created
@@ -144,5 +139,6 @@ def addcourse(request):
         name = request.POST['class']
         recur = request.POST['recur']
         time = request.POST['time']
-        MeetingTime.objects.get(meeting_class__classname=name, meeting_event__recur_type=recur, meeting_event__start_time=time)
-        Enrollment.objects.get_or_create(student__case_id=id, course
+        CourseEnrollment.objects.get_or_create(student__case_id=id, course__meeting_class__classname=name, course__meeting_event__recur_type=recur, course__meeting_event__start_time=time)
+        return schedule(request)
+    raise Http404
