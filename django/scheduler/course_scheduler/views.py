@@ -12,7 +12,7 @@ def schedule(request):
 def add(request):
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
-        patt = re.compile('\w\w\w\w (\w\w\w\w)|(\w\w\w\w\w)')
+        patt = re.compile('\w\w\w\w (\w\w\w)|(\w\w\w\w)')
         if criterion != None:
             if patt.match(criterion):
                 arr = criterion.split(' ')
