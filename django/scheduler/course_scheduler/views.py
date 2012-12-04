@@ -38,6 +38,6 @@ def info(request):
 def instructor(request):
     ins = request.GET.get('instructor', None)
     if ins != None:
-        prof = Instructor.objects.get(name=prof)
+        prof = Instructor.objects.get(name=ins)
         return render(request, 'instructor.html', {'prof' : prof})
     return render(request, 'instructor.html')
