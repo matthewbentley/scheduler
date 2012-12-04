@@ -19,7 +19,7 @@
 		<th style="width:100px;">Times</th>
     </tr>
     {% for time in classes %}
-		{% for class in time.class_set.all %}
+		{% for class in time.meeting_class_set.all %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
 			<td>{{class.dept}} {{class.class_number}}: {{class.classname}}</td>
