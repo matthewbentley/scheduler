@@ -145,4 +145,4 @@ def addcourse(request):
         recur = request.POST['recur']
         time = request.POST['time']
         MeetingTime.objects.get(meeting_class__classname=name, meeting_event__recur_type=recur, meeting_event__start_time=time)
-        
+        Enrollment.objects.get_or_create(student__case_id=id, course
