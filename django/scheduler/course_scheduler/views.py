@@ -23,7 +23,7 @@ def schedule(request):
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     if not created
-        classes = Enrollment.objects.filter(student=stu.case_id)
+        classes = CourseEnrollment.objects.filter(student=stu.case_id)
 
     response = render(request, 'schedule.html', {'classes' : classes, 'id' : id})
     if setcookie == True:
