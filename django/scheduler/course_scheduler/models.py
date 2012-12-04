@@ -14,13 +14,11 @@ class Event(models.Model):
     end_date = models.DateField()
     recur_type = models.CharField(max_length=12)
 
-class CustomEvent(models.Model):
+class CustomEvent(Event):
     event_name = models.CharField(max_length=120)
-    event = models.ForeignKey('Event')
 
-class MeetingTime(models.Model):
+class MeetingTime(Event):
     meeting_class = models.ForeignKey('Class')
-    meeting_event = models.ForeignKey('Event')
     meeting_location = models.CharField(max_length=50)
 
 class Instructor(models.Model):
