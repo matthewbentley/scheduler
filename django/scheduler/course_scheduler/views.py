@@ -21,7 +21,7 @@ def add(request):
                 classes = MeetingTime.objects.filter(Q(meeting_class__classname__icontains=criterion) | Q(meeting_class__dept__icontains=criterion) | Q(meeting_class__class_number__icontains=criterion))
                 numb = len(Class.objects.all())
     
-            return render(request, 'add.html', {'numb' : len(MeetingTime.metting_class.all()), 'classes' : classes})
+            return render(request, 'add.html', {'numb' : len(MeetingTime.meeting_class.all()), 'classes' : classes})
         else:
             return render(request, 'add.html')
 
