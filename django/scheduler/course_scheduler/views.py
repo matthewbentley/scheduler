@@ -9,8 +9,11 @@ def schedule(request):
 
 def add(request):
     criterion = request.GET.get('Search', None)
-    classes = Class.objects.order_by('class_number')[:5]
+    classes = Class.objects.order_by('class_number')
     numb = len(Class.objects.all())
+
+    for c in classes:
+        print c.classname
         
     return render(request, 'add.html', {'numb1' : numb, 'classes' : classes})
 
