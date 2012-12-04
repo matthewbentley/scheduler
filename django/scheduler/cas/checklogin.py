@@ -18,10 +18,8 @@ def check_login(request, SERVICE_URL):
     status, id, cookie = pycas.login(CAS_SERVER, SERVICE_URL, cookies, ticket, secure=0, opt="gateway")
     if (status == CAS_OK):
         return True, id, cookie
-    elif (status == CAS_COOKIE_INVALID):
-        return True, id, ""
     else:
-        return False, status, ""
+        return False, "", ""
 
 def redirect_to_cas(SERVICE_URL):
     CAS_SERVER  = "http://login.case.edu"

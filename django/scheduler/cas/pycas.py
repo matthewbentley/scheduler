@@ -187,58 +187,56 @@ def do_redirect(cas_host, service_url, opt, secure):
 #  Retrieve id from pycas cookie and test data for validity
 # (to prevent mailicious users from falsely authenticating).
 #  Return status and id (id will be empty string if unknown).
-def decode_cookie(cookie_vals,lifetime=None):
+def decode_cookie(cookie_val,lifetime=None):
 
 	#  Test for now cookies
-	if cookie_vals==None:
+	if cookie_val==None:
 		return COOKIE_NONE, ""
-	cookieval = "dicks"
 	#  Test each cookie value
 	cookie_attrs = []
-	for cookie_val in cookie_vals:
-		#  Remove trailing ;
-		if cookie_val and cookie_val[-1]==";":
-			cookie_val = cookie_val[0:-1]
-		#  Test for pycas gateway cookie
-		if cookie_val=="gateway":
-			cookie_attrs.append(COOKIE_GATEWAY)
-		
-		#  Test for valid pycas authentication cookie.
-		else:
-			# Separate cookie parts
-			oldhash     = cookie_val[0:8]
-			timestr, id = split2(cookie_val[8:],":")
-			#  Verify hash
-			newhash=makehash(timestr + ":" + id)
-			import sys
-			cookieval = oldhash + ":" + timestr + ":" + id + ":" + newhash
-			if oldhash==makehash(timestr + ":" + id):
-				#  Check lifetime
-				if lifetime:
-					if str(int(time.time()+int(lifetime)))<timestr:
-						#  OK:  Cookie still valid.
-						cookie_attrs.append(COOKIE_AUTH)
-					else:
-						# ERROR:  Cookie exceeded lifetime
-						cookie_attrs.append(COOKIE_EXPIRED)
-				else:
-					#  OK:  Cookie valid (it has no lifetime)
+	#for cookie_val in cookie_vals:
+	#  Remove trailing ;
+	if cookie_val and cookie_val[-1]==";":
+		cookie_val = cookie_val[0:-1]
+	#  Test for pycas gateway cookie
+	if cookie_val=="gateway":
+		cookie_attrs.append(COOKIE_GATEWAY)
+	
+	#  Test for valid pycas authentication cookie.
+	else:
+		# Separate cookie parts
+		oldhash     = cookie_val[0:8]
+		timestr, id = split2(cookie_val[8:],":")
+		#  Verify hash
+		newhash=makehash(timestr + ":" + id)
+		#import sys
+		#cookieval = oldhash + ":" + timestr + ":" + id + ":" + newhash
+		#cookieval += cookie_val
+		if oldhash==makehash(timestr + ":" + id):
+			#  Check lifetime
+			if lifetime:
+				if str(int(time.time()+int(lifetime)))<timestr:
+					#  OK:  Cookie still valid.
 					cookie_attrs.append(COOKIE_AUTH)
-
+				else:
+					# ERROR:  Cookie exceeded lifetime
+					cookie_attrs.append(COOKIE_EXPIRED)
 			else:
-				#  ERROR:  Cookie value are not consistent
-				cookie_attrs.append(COOKIE_INVALID)
-
+				#  OK:  Cookie valid (it has no lifetime)
+				cookie_attrs.append(COOKIE_AUTH)
+		else:
+			#  ERROR:  Cookie value are not consistent
+			cookie_attrs.append(COOKIE_INVALID)
 	#  Return status according to attribute values
 
 	#  Valid authentication cookie takes precedence
 	if COOKIE_AUTH in cookie_attrs:
-		return COOKIE_AUTH, cookieval
+		return COOKIE_AUTH, id
 	#  Gateway cookie takes next precedence
 	if COOKIE_GATEWAY in cookie_attrs:
 		return COOKIE_GATEWAY, ""
 	#  If we've gotten here, there should be only one attribute left.
-	return cookie_attrs[0], cookieval
+	return cookie_attrs[0], ""
 
 
 #  Validate ticket using cas 1.0 protocol
@@ -348,7 +346,7 @@ def login(cas_host, service_url, cookies, ticket, lifetime=None, secure=1, proto
 		return CAS_OK, id, ""
 
 	if cookie_status==COOKIE_INVALID:
-		return CAS_COOKIE_INVALID, id, ""
+		return CAS_COOKIE_INVALID, "", ""
 
 	#  Check ticket ticket returned by CAS server, ticket status can be
 	#     TICKET_OK      - a valid authentication ticket from CAS server
