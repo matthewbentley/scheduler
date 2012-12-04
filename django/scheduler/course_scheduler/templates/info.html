@@ -8,10 +8,11 @@
 </head>
 <body>
 <div class="container">
-<h>{{theCourse}}</h>
 {% for instruct in classes %}
-	<h>{{instruct.meeting.meeting_class.classname}}</h>
+	<h>{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.meeting_class.classname}}</h>
+	<p>{{instruct.meeting.meeting_recur_type}} {{instruct.meeting.meeting_time}}<br>
+		{{instruct.meeting.meeting_location}} {{instruct.instructor.name}}<br><br>
+		Description:<br>{{instruct.meeting.meeting_class.description}}</p>
 {% endfor %}
-</div>
 </body>
 </html>
