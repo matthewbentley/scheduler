@@ -11,7 +11,7 @@ def schedule(request):
 def add(request):
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
-        if criterion not None:
+        if criterion != None:
             classes = Class.objects.get(Q(classname__contains=criterion) | Q(dept__contains=criterion) | Q(class_number__contains=criterion))
             #classes = Class.objects.order_by('class_number')[:5]
             numb = len(Class.objects.all())
