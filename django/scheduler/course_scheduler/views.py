@@ -138,8 +138,8 @@ def addcourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
         caseId = request.POST['id']
-        stu = Student.object.get(case_id=caseId)
-        eve = Event.object.get(id=eventID)
+        stu = Student.objects.get(case_id=caseId)
+        eve = Event.objects.get(id=eventID)
         enroll = Enrollment(stu, eve)
         enroll.save()
         return HttpResponseRedirect('/scheduler/')
