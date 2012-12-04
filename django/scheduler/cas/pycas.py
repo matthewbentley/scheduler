@@ -200,7 +200,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 		if cookie_val and cookie_val[-1]==";":
 			cookie_val = cookie_val[0:-1]
         import sys
-        print (cookie_val, file=cookiesFile)
+        print (cookie_val, file='cookiesFile')
 		#  Test for pycas gateway cookie
 		if cookie_val=="gateway":
 			cookie_attrs.append(COOKIE_GATEWAY)
