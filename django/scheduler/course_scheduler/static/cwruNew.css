@@ -79,7 +79,12 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 .times {
 	height: 1270px;
-	width=60px;
+	width: 60px;
+	background-color: #58026D;
+	font-size:80%;
+	padding-left:5px;
+	margin-right:1px;
+	text-align: right;
 }
 
 #header {
