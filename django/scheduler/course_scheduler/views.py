@@ -139,7 +139,7 @@ def addcourse(request):
         eventId = request.POST['eventID']
         caseId = request.POST['id']
         stu = Student.objects.get(case_id=caseId)
-        eve = Event.objects.get(id=eventID)
+        eve = Event.objects.get(id=eventId)
         enroll = Enrollment(stu, eve)
         enroll.save()
         return HttpResponseRedirect('/scheduler/')
