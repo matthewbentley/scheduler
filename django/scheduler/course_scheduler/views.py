@@ -34,6 +34,10 @@ def info(request):
         classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
         return render(request, 'info.html', {'course' : theCourse, 'classes' : classes})
     return render(request, 'info.html')
-    
-class SearchForm(forms.Form):
-        criterion = forms.CharField(max_length=100)
+
+def instructor(request):
+    ins = request.GET.get('instructor', None)
+    if ins != None:
+        prof = Instructor.objects.get(name=prof)
+        return render(request, 'instructor.html', {'prof' : prof})
+    return render(request, 'instructor.html')
