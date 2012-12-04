@@ -7,13 +7,20 @@ class Class(models.Model):
     description = models.CharField(max_length = 4096)
     term = models.CharField(max_length = 30)
 
+class Event(models.Model):
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    recur_type = models.CharField(max_length=12)
+
+class CustomEvent(models.Model):
+    event_name = models.CharField(max_length=120)
+    event = models.ForeignKey('Event')
+
 class MeetingTime(models.Model):
     meeting_class = models.ForeignKey('Class')
-    meeting_time = models.TimeField()
-    meeting_end = models.TimeField()
-    meeting_date = models.DateField()
-    meeting_end_date = models.DateField()
-    meeting_recur_type = models.CharField(max_length=12)
+    meeting_event = models.ForeignKey('Event')
     meeting_location = models.CharField(max_length=50)
 
 
@@ -31,4 +38,4 @@ class Student(models.Model):
 
 class Enrollment(models.Model):
     student = models.ForeignKey('Student')
-    course = models.ForeignKey('MeetingTime')
+    course = models.ForeignKey('Event')
