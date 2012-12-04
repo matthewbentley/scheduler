@@ -6,41 +6,23 @@
 ## import sys
 ## sys.stderr = sys.stdout
 
-# Copyright (C) 2006  Jon Rifkin
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-
-
 #-----------------------------------------------------------------------
 #  Usage
 #-----------------------------------------------------------------------
 #
 #  Purpose
-#      Authenticate users against a CAS server from your python cgi scripts.
+#      Authenticate users against a CAS server. Rewritten for use with Django and mod_wsgi.
 #
 #  Using in your script
 #
 #      import pycas
-#      status, id, cookie = pycas.login(CAS_SERVER,THIS_SCRIPT)
+#      status, id, cookie = pycas.login(CAS_SERVER,SERVICE_URL)
 #
 #  Required Parameters
 #
 #      - CAS_SERVER : the url of your CAS server
 #                     (for example, https://login.yoursite.edu).
-#      - THIS_SCRIPT: the url of the calling python cgi script.
+#      - SERVICE_URL: the url of the service to which to return.
 #
 #  Returned Values
 #
@@ -60,8 +42,8 @@
 #      - opt:       set to 'renew' or 'gateway' for these CAS options.
 #
 #        Examples:
-#          status, id, cookie = pycas.login(CAS_SERVER,THIS_SCRIPT,protocol=1,secure=0)
-#          status, id, cookie = pycas.login(CAS_SERVER,THIS_SCRIPT,path="/cgi-bin/accts")
+#          status, id, cookie = pycas.login(CAS_SERVER,SERVICE_URL,protocol=1,secure=0)
+#          status, id, cookie = pycas.login(CAS_SERVER,SERVICE_URL,path="/cgi-bin/accts")
 #
 #   Status Codes are listed below.
 #
@@ -83,7 +65,7 @@ CAS_COOKIE_EXPIRED   = 1  #  PYCAS cookie exceeded its lifetime.
 CAS_COOKIE_INVALID   = 2  #  PYCAS cookie is invalid (probably corrupted).
 CAS_TICKET_INVALID   = 3  #  CAS server ticket invalid.
 CAS_GATEWAY          = 4  #  CAS server returned without ticket while in gateway mode.
-CAS_NOTLOGGED        = 5
+CAS_NOTLOGGED        = 5  #  User has neither a valid cookie nor a valid ticket, send to CAS.
 
 #  Status codes returned internally by function get_cookie_status().
 COOKIE_AUTH    = 0        #  PYCAS cookie is valid.
@@ -167,19 +149,19 @@ def make_pycas_cookie(val, domain, path, secure, expires=None):
 		cookie += ";expires=" + expires
 	return cookie
 
-#  Send redirect to client.
-def do_redirect(cas_host, service_url, opt, secure):
-	cas_url  = cas_host + "/cas/login?service=" + service_url
-	if opt in ("renew","gateway"):
-		cas_url += "&%s=true" % opt
-	html = ""
-	#  Print redirect page to browser
-	if opt=="gateway":
-		domain,path = urlparse.urlparse(service_url)[1:3]
-		html = make_pycas_cookie("gateway", domain, path, secure)
-	html += "If your browser does not redirect you, then please follow <a href=" + cas_url + ">this link</a>."
-	return html
-	#raise SystemExit
+#  Send redirect to client. No longer needed.
+# def do_redirect(cas_host, service_url, opt, secure):
+	# cas_url  = cas_host + "/cas/login?service=" + service_url
+	# if opt in ("renew","gateway"):
+		# cas_url += "&%s=true" % opt
+	# html = ""
+	# #  Print redirect page to browser
+	# if opt=="gateway":
+		# domain,path = urlparse.urlparse(service_url)[1:3]
+		# html = make_pycas_cookie("gateway", domain, path, secure)
+	# html += "If your browser does not redirect you, then please follow <a href=" + cas_url + ">this link</a>."
+	# return html
+	# #raise SystemExit
 
 
 
@@ -188,13 +170,12 @@ def do_redirect(cas_host, service_url, opt, secure):
 # (to prevent mailicious users from falsely authenticating).
 #  Return status and id (id will be empty string if unknown).
 def decode_cookie(cookie_val,lifetime=None):
-
-	#  Test for now cookies
-	if cookie_val==None:
+	#  Test for no cookies
+	if cookie_val=="":
 		return COOKIE_NONE, ""
 	#  Test each cookie value
 	cookie_attrs = []
-	#for cookie_val in cookie_vals:
+	
 	#  Remove trailing ;
 	if cookie_val and cookie_val[-1]==";":
 		cookie_val = cookie_val[0:-1]
@@ -279,21 +260,21 @@ def validate_cas_2(cas_host, service_url, ticket, opt):
 		return TICKET_OK, id
 
 
-#  Read cookies from env variable HTTP_COOKIE.
-def get_cookies(environ):
-	#  Read all cookie pairs
-	try:
-		cookie_pairs = environ['HTTP_COOKIE'].split()
-	except KeyError:
-		cookie_pairs = []
-	cookies = {}
-	for cookie_pair in cookie_pairs:
-		key,val = split2(cookie_pair.strip(),"=")
-		if cookies.has_key(key):
-			cookies[key].append(val)
-		else:
-			cookies[key] = [val,]
-	return cookies
+#  Read cookies from env variable HTTP_COOKIE. No longer needed.
+# def get_cookies(environ):
+	# #  Read all cookie pairs
+	# try:
+		# cookie_pairs = environ['HTTP_COOKIE'].split()
+	# except KeyError:
+		# cookie_pairs = []
+	# cookies = {}
+	# for cookie_pair in cookie_pairs:
+		# key,val = split2(cookie_pair.strip(),"=")
+		# if cookies.has_key(key):
+			# cookies[key].append(val)
+		# else:
+			# cookies[key] = [val,]
+	# return cookies
 
 
 #  Check pycas cookie
