@@ -192,7 +192,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 	#  Test for now cookies
 	if cookie_vals==None:
 		return COOKIE_NONE, ""
-	cookieval = ""
+	cookieval = "dicks"
 	#  Test each cookie value
 	cookie_attrs = []
 	for cookie_val in cookie_vals:
@@ -233,7 +233,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 
 	#  Valid authentication cookie takes precedence
 	if COOKIE_AUTH in cookie_attrs:
-		return COOKIE_AUTH, id
+		return COOKIE_AUTH, cookieval
 	#  Gateway cookie takes next precedence
 	if COOKIE_GATEWAY in cookie_attrs:
 		return COOKIE_GATEWAY, ""
