@@ -21,9 +21,9 @@
     {% for instructs in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td><a href="/info?course={{instructs.meeting.meeting_class.dept}}~!~{{instructs.meeting.meeting_class.class_number}}">{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</a></td>
+			<td><a href="scheduler/info?course={{instructs.meeting.meeting_class.dept}}~!~{{instructs.meeting.meeting_class.class_number}}">{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</a></td>
 			<!--<td>{{instructs.instructor.name}}</td>-->
-			<td><a href="/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
+			<td><a href="scheduler/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
 			<td>{{instructs.meeting.meeting_recur_type}} {{instructs.meeting.meeting_time}}</td>
 			</tr>
     {% endfor %}
