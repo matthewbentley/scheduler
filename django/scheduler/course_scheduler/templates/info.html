@@ -11,12 +11,12 @@
 <p>&nbsp;</p>
 {% for instruct in classes %}
 	<table border="1" style="margin-right: 10px; margin-bottom: 20px; width=500px">
-	<tr><td colspan="2">{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
+	<tr style="width=500px"><td colspan="2">{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
 	<tr><td colspan="2">{{instruct.meeting.meeting_recur_type}} {{instruct.meeting.meeting_time}}</td></tr>
-	<tr><td>{{instruct.meeting.meeting_location}}</td><td>  <a href="scheduler/instructor?instructor={{instruct.instructor.name}}">{{instruct.instructor.name}}</a></td></tr>
+	<tr><td>{{instruct.meeting.meeting_location}}</td><td>  <a href="../instructor?instructor={{instruct.instructor.name}}">{{instruct.instructor.name}}</a></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td colspan="2">Description:<br>{{instruct.meeting.meeting_class.description}}</td></tr>
+	<p>&nbsp;</p>
 {% endfor %}
-<p>&nbsp;</p>
 </body>
 </html>
