@@ -1,24 +1,25 @@
+import sys
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 import pycas
+from pycas import CAS_OK, CAS_COOKIE_EXPIRED, CAS_COOKIE_INVALID
+from pycas import CAS_TICKET_INVALID, CAS_GATEWAY, CAS_NOTLOGGED, CAS_MSG
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
-def check_login(request)
+def check_login(request, SERVICE_URL):
     CAS_SERVER  = "http://login.case.edu"
-    SERVICE_URL = "http://concertina.case.edu/"
-    token = request.GET.get('token', None)
+    ticket = request.GET.get('ticket', None)
     cookies = {}
     if request.COOKIES != None:
         cookies = request.COOKIES
-    if token == None:
-        token = ""
-    status, id, cookie = pycas.login(CAS_SERVER, SERVICE_URL, cookies, token, secure=0, opt="gateway")
+    if ticket == None:
+        ticket = ""
+    status, id, cookie = pycas.login(CAS_SERVER, SERVICE_URL, cookies, ticket, secure=0, opt="gateway")
     if (status == CAS_OK):
         return True, id, cookie
     else:
         return False, "", ""
 
-def redirect_to_cas()
+def redirect_to_cas(SERVICE_URL):
     CAS_SERVER  = "http://login.case.edu"
-    SERVICE_URL = "http://concertina.case.edu/"
-    return = HttpResponseRedirect(CAS_SERVER + "/cas/login?service=" + SERVICE_URL)
+    return HttpResponseRedirect(CAS_SERVER + "/cas/login?service=" + SERVICE_URL)

@@ -13,14 +13,14 @@ from checklogin import check_login
 from checklogin import redirect_to_cas
 
 def schedule(request):
-    status, id, cookie = check_login(request)
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/')
     setcookie = False
     if status == False:
-        return redirect_to_cas()
+        return redirect_to_cas('http://concertina.case.edu/scheduler/')
     if cookie != "":
         setcookie = True
 
-    if setcookie = True:
+    if setcookie == True:
         response = render(request, 'schedule.html', {'id' : id})
         response.__setitem__('Set-Cookie', cookie)
         return response
@@ -28,10 +28,10 @@ def schedule(request):
         return render(request, 'schedule.html', {'id' : id})
 
 def add(request):
-    status, id, cookie = check_login(request)
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/add/')
     setcookie = False
     if status == False:
-        return redirect_to_cas()
+        return redirect_to_cas('http://concertina.case.edu/scheduler/add/')
     if cookie != "":
         setcookie = True
 
@@ -57,10 +57,10 @@ def add(request):
             return render(request, 'add.html')
 
 def info(request):
-    status, id, cookie = check_login(request)
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/info/')
     setcookie = False
     if status == False:
-        return redirect_to_cas()
+        return redirect_to_cas('http://concertina.case.edu/scheduler/info/')
     if cookie != "":
         setcookie = True
 
@@ -77,10 +77,10 @@ def info(request):
     return render(request, 'info.html')
 
 def instructor(request):
-    status, id, cookie = check_login(request)
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas()
+        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 

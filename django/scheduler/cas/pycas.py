@@ -199,7 +199,8 @@ def decode_cookie(cookie_vals,lifetime=None):
 		#  Remove trailing ;
 		if cookie_val and cookie_val[-1]==";":
 			cookie_val = cookie_val[0:-1]
-
+        import sys
+        sys.stderr.write(cookie_val)
 		#  Test for pycas gateway cookie
 		if cookie_val=="gateway":
 			cookie_attrs.append(COOKIE_GATEWAY)
@@ -321,7 +322,7 @@ def get_ticket_status(cas_host,service_url,protocol,opt,ticket):
 			print ticket
 			return ticket_status, ""
 	else:
-        print "no ticket"
+        	#print "no ticket"
 		return TICKET_NONE, ""
 
 
@@ -333,7 +334,7 @@ def get_ticket_status(cas_host,service_url,protocol,opt,ticket):
 #
 #   Returns status, id, pycas_cookie.
 #
-def login(cas_host, service_url, cookies, token, lifetime=None, secure=1, protocol=2, path="/", opt=""):
+def login(cas_host, service_url, cookies, ticket, lifetime=None, secure=1, protocol=2, path="/", opt=""):
 
 	#  Check cookie for previous pycas state, with is either
 	#     COOKIE_AUTH    - client already authenticated by pycas.
@@ -346,8 +347,8 @@ def login(cas_host, service_url, cookies, token, lifetime=None, secure=1, protoc
 	if cookie_status==COOKIE_AUTH:
 		return CAS_OK, id, ""
 
-	if cookie_status==COOKIE_INVALID:
-		return CAS_COOKIE_INVALID, "", ""
+	#if cookie_status==COOKIE_INVALID:
+	#	return CAS_OK, "", ""
 
 	#  Check ticket ticket returned by CAS server, ticket status can be
 	#     TICKET_OK      - a valid authentication ticket from CAS server
