@@ -23,7 +23,6 @@ class MeetingTime(models.Model):
     meeting_event = models.ForeignKey('Event')
     meeting_location = models.CharField(max_length=50)
 
-
 class Instructor(models.Model):
     email = models.CharField(max_length=10)
     name = models.CharField(max_length = 50, primary_key=True)
@@ -36,6 +35,10 @@ class Instructs(models.Model):
 class Student(models.Model):
     case_id = models.CharField(max_length=6, primary_key=True)
 
-class Enrollment(models.Model):
+class CourseEnrollment(models.Model):
     student = models.ForeignKey('Student')
-    course = models.ForeignKey('Event')
+    course = models.ForeignKey('MeetingTime')
+
+class CustomEventEnrollment(models.Model):
+    student = models.ForeignKey('Student')
+    event = models.ForeignKey('CustomEvent')
