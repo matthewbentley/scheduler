@@ -11,11 +11,14 @@ def schedule(request):
 def add(request):
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
-        classes = Class.objects.get(Q(classname__contains=criterion) | Q(dept__contains=criterion) | Q(class_number__contains=criterion))
-        #classes = Class.objects.order_by('class_number')[:5]
-        numb = len(Class.objects.all())
+        if criterion not None:
+            classes = Class.objects.get(Q(classname__contains=criterion) | Q(dept__contains=criterion) | Q(class_number__contains=criterion))
+            #classes = Class.objects.order_by('class_number')[:5]
+            numb = len(Class.objects.all())
     
-    return render(request, 'add.html', {'number' : numb, 'classes' : classes})
+            return render(request, 'add.html', {'number' : numb, 'classes' : classes})
+        else:
+            return render(request, 'add.html')
 
 def info(request):
     course = request.GET.get('course', NONE)
