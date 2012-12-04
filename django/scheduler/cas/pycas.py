@@ -192,7 +192,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 	#  Test for now cookies
 	if cookie_vals==None:
 		return COOKIE_NONE, ""
-
+	cookieval = ""
 	#  Test each cookie value
 	cookie_attrs = []
 	for cookie_val in cookie_vals:
@@ -202,7 +202,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 		#  Test for pycas gateway cookie
 		if cookie_val=="gateway":
 			cookie_attrs.append(COOKIE_GATEWAY)
-
+		
 		#  Test for valid pycas authentication cookie.
 		else:
 			# Separate cookie parts
@@ -211,7 +211,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 			#  Verify hash
 			newhash=makehash(timestr + ":" + id)
 			import sys
-			print >> sys.stderr, oldhash + ":" + timestr + ":" + id + ":" + newhash
+			cookieval = oldhash + ":" + timestr + ":" + id + ":" + newhash
 			if oldhash==makehash(timestr + ":" + id):
 				#  Check lifetime
 				if lifetime:
@@ -238,7 +238,7 @@ def decode_cookie(cookie_vals,lifetime=None):
 	if COOKIE_GATEWAY in cookie_attrs:
 		return COOKIE_GATEWAY, ""
 	#  If we've gotten here, there should be only one attribute left.
-	return cookie_attrs[0], ""
+	return cookie_attrs[0], cookieval
 
 
 #  Validate ticket using cas 1.0 protocol
@@ -347,8 +347,8 @@ def login(cas_host, service_url, cookies, ticket, lifetime=None, secure=1, proto
 	if cookie_status==COOKIE_AUTH:
 		return CAS_OK, id, ""
 
-	#if cookie_status==COOKIE_INVALID:
-	#	return CAS_OK, "", ""
+	if cookie_status==COOKIE_INVALID:
+		return CAS_COOKIE_INVALID, id, ""
 
 	#  Check ticket ticket returned by CAS server, ticket status can be
 	#     TICKET_OK      - a valid authentication ticket from CAS server
