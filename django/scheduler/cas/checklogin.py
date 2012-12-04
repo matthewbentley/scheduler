@@ -21,7 +21,7 @@ def check_login(request, SERVICE_URL):
     elif (status == CAS_COOKIE_INVALID):
         return True, "Cookie Invalid", ""
     else:
-        return False, "", ""
+        return True, CAS_MSG[status], ""
 
 def redirect_to_cas(SERVICE_URL):
     CAS_SERVER  = "http://login.case.edu"
