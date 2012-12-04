@@ -8,12 +8,13 @@
 </head>
 <body>
 <div class="container">
-
+{{numb1}}
+{{classes}}
 <form action="../add" action="get">{% csrf_token %}
 <!--{{ form.as_p }}-->
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
-</form>
+
 	<h>numb: </h>
 	{% for item in numb1 %}<br><p> why is this invalid
 		{{item}}
@@ -39,6 +40,7 @@
 			<li>{{ class.classname }}</li>
 		{% endfor %}
 	</ul>
+	</form>
 </div>
 </body>
 </html>
