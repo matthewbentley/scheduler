@@ -12,7 +12,7 @@ def add(request):
     classes = Class.objects.order_by('class_number')
     numb = len(Class.objects.all())
         
-    return render(request, 'add.html', {'numb1' : 'hey', 'classes' : classes})
+    return render(request, 'add.html', {'numb1' : "hey", "classes" : classes})
 
 def info(request):
     course = request.GET.get('course', NONE)
