@@ -18,12 +18,12 @@
     	<th style="width:100px;">Staff</th>
 		<th style="width:100px;">Times</th>
     </tr>
-    {% for time in classes %}
+    {% for instructs in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td>{{time.meeting_class.dept}} {{time.meeting_class.class_number}}: {{time.meeting_class.classname}}</td>
-			<td>mhm</td>
-			<td>{{time.meeting_time}}</td>
+			<td>{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</td>
+			<td>{{instructs.instructor.name}}/td>
+			<td>{{instructs.meeting.meeting_time}}</td>
 			</tr>
     {% endfor %}
     </table>
