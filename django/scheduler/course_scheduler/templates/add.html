@@ -25,11 +25,9 @@
 			<td><a href="/scheduler/info?course={{instructs.meeting.meeting_class.dept}}~!~{{instructs.meeting.meeting_class.class_number}}">{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</a></td>
 			<!--<td>{{instructs.instructor.name}}</td>-->
 			<td><a href="/scheduler/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
-			<td>{{instructs.meeting.meeting_event.recur_type}} {{instructs.meeting.meeting_event.start_time}}</td>
+			<td>{{instructs.meeting.recur_type}} {{instructs.meeting.start_time}}</td>
 			<td><form name="add" action="/addcourse" method="post">
-			<input type="hidden" name="class" value="{{instructs.meeting.meeting_class.classname}}"/>
-			<input type="hidden" name="recur" value="{{instructs.meeting.meeting_event.recur_type}}"/>
-			<input type="hidden" name="time" value="{{instructs.meeting.meeting_event.start_time}}"/>
+			<input type="hidden" name="eventID" value="{{instructs.meeting.ptr_id}}"/>
 			<input type="hidden" name="id" value="{{id}}"/>
 			<input type="submit" value="Add Course">
 			</form></td>
