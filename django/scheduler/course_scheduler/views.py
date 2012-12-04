@@ -138,7 +138,9 @@ def addcourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
         caseId = request.POST['id']
-        enroll = Enrollment(caseId, eventId)
+        stu = Student.object.get(case_id=caseId)
+        eve = Event.object.get(id=eventID)
+        enroll = Enrollment(stu, eve)
         enroll.save()
         return HttpResponseRedirect('/scheduler/')
     raise Http404
