@@ -85,7 +85,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	color: #FF0000;
 	font-size:80%;
 	padding-left:5px;
-	text-align: left;
+	margin-right:1px;
+	text-align: right;
 }
 
 #header {
