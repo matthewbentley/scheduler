@@ -17,6 +17,7 @@
     	<th style="width:300px; text-align:left;">Course</th>
     	<th style="width:100px;">Staff</th>
 		<th style="width:100px;">Times</th>
+		<th style="width:100px;">&nbsp;</th>
     </tr>
     {% for instructs in classes %}
 			<tr>
@@ -25,6 +26,14 @@
 			<!--<td>{{instructs.instructor.name}}</td>-->
 			<td><a href="/scheduler/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
 			<td>{{instructs.meeting.meeting_recur_type}} {{instructs.meeting.meeting_time}}</td>
+			<td><a href="/scheduler?class={{instructs.meeting.meeting_class.classname}}?recur={{instructs.meeting.meeting_recur_type}}?time={{instructs.meeting.meeting_time}}>Add this course</a></td>
+			<td><form name="add" action="/addcourse" method="post">
+			<input type="hidden" name="class" value="{{instructs.meeting.meeting_class.classname}}"/>
+			<input type="hidden" name="recur" value="{{instructs.meeting.meeting_recur_type}}"/>
+			<input type="hidden" name="time" value="{{instructs.meeting.meeting_time}}"/>
+			<input type="hidden" name="id" value="{{id}}"/>
+			<input type="submit" value="Add Course">
+			</form></td>
 			</tr>
     {% endfor %}
     </table>
