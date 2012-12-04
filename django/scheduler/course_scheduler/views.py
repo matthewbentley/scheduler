@@ -1,7 +1,7 @@
 #from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from course_scheduler.models import Class, MeetingTime, Instructs, Instructor
+from course_scheduler.models import *
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -20,7 +20,12 @@ def schedule(request):
     if cookie != "":
         setcookie = True
 
-    response = render(request, 'schedule.html', {'id' : id})
+    stu, created = Student.objects.get_or_create(case_id=id)
+    classes = []
+    if not created
+        classes = Enrollment.objects.filter(student=stu.case_id)
+
+    response = render(request, 'schedule.html', {'classes' : classes, 'id' : id})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
@@ -97,7 +102,7 @@ def inscourse(request):
         return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
-        
+
     ins = request.GET.get('name', None)
     if ins != None:
         classes = Instructs.objects.filter(instructor=ins)
