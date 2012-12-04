@@ -22,7 +22,7 @@
 			<tr>
 			<p>hey</p>
 			</tr>
-		{% for class in time.meeting_class_set.all %}
+		{% for class in time.meeting_class.all %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
 			<td>{{class.dept}} {{class.class_number}}: {{class.classname}}</td>
