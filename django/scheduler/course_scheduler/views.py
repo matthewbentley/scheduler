@@ -20,12 +20,10 @@ def schedule(request):
     if cookie != "":
         setcookie = True
 
+    response = render(request, 'schedule.html', {'id' : id})
     if setcookie == True:
-        response = render(request, 'schedule.html', {'id' : id})
         response.__setitem__('Set-Cookie', cookie)
-        return response
-    else:
-        return render(request, 'schedule.html', {'id' : id})
+    return response
 
 def add(request):
     status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/add/')
@@ -47,14 +45,13 @@ def add(request):
                 #classes = MeetingTime.objects.filter(Q(meeting_class__classname__icontains=criterion) | Q(meeting_class__dept__icontains=criterion) | Q(meeting_class__class_number__icontains=criterion))
                 classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
                 numb = len(Class.objects.all())
+
+            response = render(request, 'add.html', {'classes' : classes, 'id' : id})
             if setcookie == True:
-                response = render(request, 'add.html', {'classes' : classes, 'id' : id})
                 response.__setitem__('Set-Cookie', cookie)
-                return response
-            else:
-                return render(request, 'add.html', {'classes' : classes, 'id' : id})
+            return response
         else:
-            return render(request, 'add.html')
+            return render(request, 'add.html', {'id' : id})
 
 def info(request):
     status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/info/')
@@ -68,13 +65,12 @@ def info(request):
     if theCourse != None:
         arr = theCourse.split('~!~')
         classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+
+        response = render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
         if setcookie == True:
-            response = render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
             response.__setitem__('Set-Cookie', cookie)
-            return response
-        else:
-            return render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
-    return render(request, 'info.html')
+        return response
+    return render(request, 'info.html', {'id' : id})
 
 def instructor(request):
     status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
@@ -87,28 +83,48 @@ def instructor(request):
     ins = request.GET.get('instructor', None)
     if ins != None:
         prof = Instructor.objects.get(name=ins)
+
+        response = render(request, 'instructor.html', {'prof' : prof, 'id' : id})
         if setcookie == True:
-            response = render(request, 'instructor.html', {'prof' : prof, 'id' : id})
             response.__setitem__('Set-Cookie', cookie)
-            return response
-        else:
-            return render(request, 'instructor.html', {'prof' : prof, 'id' : id})
-    return render(request, 'instructor.html')
+        return response
+    return render(request, 'instructor.html', {'id' : id})
 
 def inscourse(request):
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+        
     ins = request.GET.get('name', None)
     if ins != None:
         classes = Instructs.objects.filter(instructor=ins)
-        return render(request, 'add.html', {'classes' : classes})
-    return render(request, 'add.html')
+
+        response = render(request, 'add.html', {'classes' : classes, 'id' : id})
+        if setcookie == True:
+            response.__setitem__('Set-Cookie', cookie)
+        return response
+    return render(request, 'add.html', {'id' : id})
 
 def inssearch(request):
-        if request.method == 'GET':
-            name = request.GET.get('name', None)
-            if name != None:
-                profs = Instructor.objects.filter(Q(name__icontains=name) | Q(email__icontains=name))
-        
-                return render(request, 'inssearch.html', {'profs' : profs})
-            return render(request, 'inssearch.html')
-        else:
-            return render(request, 'inssearch.html')
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+
+    if request.method == 'GET':
+        name = request.GET.get('name', None)
+        if name != None:
+            profs = Instructor.objects.filter(Q(name__icontains=name) | Q(email__icontains=name))
+
+            response = render(request, 'inssearch.html', {'profs' : profs, 'id' : id})
+            if setcookie == True:
+                response.__setitem__('Set-Cookie', cookie)
+            return response
+        return render(request, 'inssearch.html')
+    else:
+        return render(request, 'inssearch.html', {'id' : id})
