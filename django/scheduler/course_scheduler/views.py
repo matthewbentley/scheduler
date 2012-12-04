@@ -1,4 +1,4 @@
-#from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
 from course_scheduler.models import *
@@ -138,5 +138,5 @@ def addcourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
         Enrollment.objects.get_or_create(student__case_id=id, event__id=eventID)
-        return schedule(request)
+        return HttpResponseRedirect('/scheduler/')
     raise Http404
