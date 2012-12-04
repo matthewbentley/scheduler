@@ -107,8 +107,7 @@ def main():
                 e_date = format_date(e_date)
 
                 print 'adding:  ' + ' '.join([str(s_date), str(e_date), str(weekdays), str(room), str(s_time), str(e_time)])
-                (event, created) = Event.objects.get_or_create(start_date = s_date, end_date = e_date, recur_type = weekdays, start_time = s_time, end_time = e_time)
-                m = MeetingTime(meeting_class = c_model, meeting_location = room, meeting_event = event)
+                m = MeetingTime(meeting_class = c_model, meeting_location = room, start_date = s_date, end_date = e_date, recur_type = weekdays, start_time = s_time, end_time = e_time)
                 m.save()
 
                 insts = unicode(meeting.instructor.contents[0])

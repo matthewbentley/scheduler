@@ -14,13 +14,11 @@ class Event(models.Model):
     end_date = models.DateField()
     recur_type = models.CharField(max_length=12)
 
-class CustomEvent(models.Model):
+class CustomEvent(Event):
     event_name = models.CharField(max_length=120)
-    event = models.ForeignKey('Event')
 
-class MeetingTime(models.Model):
+class MeetingTime(Event):
     meeting_class = models.ForeignKey('Class')
-    meeting_event = models.ForeignKey('Event')
     meeting_location = models.CharField(max_length=50)
 
 class Instructor(models.Model):
@@ -35,10 +33,6 @@ class Instructs(models.Model):
 class Student(models.Model):
     case_id = models.CharField(max_length=6, primary_key=True)
 
-class CourseEnrollment(models.Model):
+class Enrollment(models.Model):
     student = models.ForeignKey('Student')
-    course = models.ForeignKey('MeetingTime')
-
-class CustomEventEnrollment(models.Model):
-    student = models.ForeignKey('Student')
-    event = models.ForeignKey('CustomEvent')
+    event = models.ForeignKey('Event')
