@@ -1,7 +1,7 @@
 #from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from course_scheduler.models import Class, MeetingTime, Instructs
+from course_scheduler.models import Class, MeetingTime, Instructs, Instructor
 from django.http import Http404
 from django.db.models import Q
 import re
