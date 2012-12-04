@@ -210,8 +210,8 @@ def decode_cookie(cookie_vals,lifetime=None):
 			timestr, id = split2(cookie_val[8:],":")
 			#  Verify hash
 			newhash=makehash(timestr + ":" + id)
-            import sys
-            print >> sys.stderr, oldhash + ":" + timestr + ":" + id + ":" + newhash
+			import sys
+			print >> sys.stderr, oldhash + ":" + timestr + ":" + id + ":" + newhash
 			if oldhash==makehash(timestr + ":" + id):
 				#  Check lifetime
 				if lifetime:
