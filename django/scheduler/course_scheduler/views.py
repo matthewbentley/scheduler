@@ -28,8 +28,12 @@ def add(request):
             return render(request, 'add.html')
 
 def info(request):
-    course = request.GET.get('course', NONE)
-    return render(request, 'info.html', {'course' : course})
+    theCourse = request.GET.get('course', None)
+    if theCourse != None:
+        arr = theCourse.split('~!~')
+        classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+        return render(request, 'info.html', {'classes' : classes})
+    return render(request, 'info.html')
     
 class SearchForm(forms.Form):
         criterion = forms.CharField(max_length=100)
