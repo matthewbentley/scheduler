@@ -20,16 +20,11 @@
     </tr>
     {% for time in classes %}
 			<tr>
-			<p>{{numb}}</p>
-			</tr>
-		{% for class in time.meeting_class.all %}
-			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td>{{class.dept}} {{class.class_number}}: {{class.classname}}</td>
+			<td>{{time.meeting_class.dept}} {{time.meeting_class.class_number}}: {{time.meeting_class.classname}}</td>
 			<td>mhm</td>
 			<td>{{time.meeting_time}}</td>
 			</tr>
-		{% endfor %}
     {% endfor %}
     </table>
 	</form>
