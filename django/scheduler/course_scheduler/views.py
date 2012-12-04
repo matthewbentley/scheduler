@@ -3,13 +3,38 @@ from django.shortcuts import render
 from django import forms
 from course_scheduler.models import Class, MeetingTime, Instructs
 from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.db.models import Q
 import re
+import sys
+sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
+from checklogin import check_login
+from checklogin import redirect_to_cas
 
 def schedule(request):
-    return render(request, 'schedule.html')
+    status, id, cookie = check_login(request)
+    setcookie = False
+    if status == False:
+        return redirect_to_cas()
+    if cookie != "":
+        setcookie = True
+
+    if setcookie = True:
+        response = render(request, 'schedule.html', {'id' : id})
+        response.__setitem__('Set-Cookie', cookie)
+        return response
+    else:
+        return render(request, 'schedule.html', {'id' : id})
 
 def add(request):
+    status, id, cookie = check_login(request)
+    setcookie = False
+    if status == False:
+        return redirect_to_cas()
+    if cookie != "":
+        setcookie = True
+
     if request.method == 'GET':
         criterion = request.GET.get('Search', None)
         patt = re.compile('\w\w\w\w ((\w\w\w)|(\w\w\w\w))')
@@ -22,22 +47,50 @@ def add(request):
                 #classes = MeetingTime.objects.filter(Q(meeting_class__classname__icontains=criterion) | Q(meeting_class__dept__icontains=criterion) | Q(meeting_class__class_number__icontains=criterion))
                 classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
                 numb = len(Class.objects.all())
-    
-            return render(request, 'add.html', {'classes' : classes})
+            if setcookie == True:
+                response = render(request, 'add.html', {'classes' : classes, 'id' : id})
+                response.__setitem__('Set-Cookie', cookie)
+                return response
+            else:
+                return render(request, 'add.html', {'classes' : classes, 'id' : id})
         else:
             return render(request, 'add.html')
 
 def info(request):
+    status, id, cookie = check_login(request)
+    setcookie = False
+    if status == False:
+        return redirect_to_cas()
+    if cookie != "":
+        setcookie = True
+
     theCourse = request.GET.get('course', None)
     if theCourse != None:
         arr = theCourse.split('~!~')
         classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
-        return render(request, 'info.html', {'course' : theCourse, 'classes' : classes})
+        if setcookie == True:
+            response = render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
+            response.__setitem__('Set-Cookie', cookie)
+            return response
+        else:
+            return render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
     return render(request, 'info.html')
 
 def instructor(request):
+    status, id, cookie = check_login(request)
+    setcookie = False
+    if status == False:
+        return redirect_to_cas()
+    if cookie != "":
+        setcookie = True
+
     ins = request.GET.get('instructor', None)
     if ins != None:
         prof = Instructor.objects.get(name=prof)
-        return render(request, 'instructor.html', {'prof' : prof})
+        if setcookie == True:
+            response = render(request, 'instructor.html', {'prof' : prof, 'id' : id})
+            response.__setitem__('Set-Cookie', cookie)
+            return response
+        else:
+            return render(request, 'instructor.html', {'prof' : prof, 'id' : id})
     return render(request, 'instructor.html')
