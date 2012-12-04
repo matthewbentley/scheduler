@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="container">
+<div class="content">
 <br>
 {% for instruct in classes %}
 	<table border="1" style="margin-right: 10px; margin-bottom: 10px; width:500px">
@@ -17,5 +18,7 @@
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td colspan="2">Description:<br>{{instruct.meeting.meeting_class.description}}</td></tr>
 {% endfor %}
+</div>
+</div>
 </body>
 </html>

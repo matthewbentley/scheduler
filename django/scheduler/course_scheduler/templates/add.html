@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="container">
+<div class="content">
 <form action="../add" action="get">{% csrf_token %}
 <!--{{ form.as_p }}-->
 <p><label for="c_name">Search:</label>
@@ -29,6 +30,7 @@
     {% endfor %}
     </table>
 	</form>
+	</div>
 </div>
 </body>
 </html>
