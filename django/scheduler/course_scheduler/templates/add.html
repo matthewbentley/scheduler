@@ -9,8 +9,7 @@
 <body>
 <div class="container">
 <div class="content">
-<form action="../add" action="get">{% csrf_token %}
-<!--{{ form.as_p }}-->
+<form action="/scheduler/add" action="get">{% csrf_token %}
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
     <table border="1">

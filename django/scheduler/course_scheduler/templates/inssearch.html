@@ -1,0 +1,27 @@
+% load url from future %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Add a course</title>
+<LINK href="{{ STATIC_URL }}add.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+<div class="content">
+<form action="/scheduler/inssearch" action="get">{% csrf_token %}
+<p><label for="c_name">Search:</label>
+<input id="insName" type="text" name="name" maxlength="100" /></p>
+    <table border="1">
+    <tr>
+    	<th style="width:500px; text-align:left;">Name</th>
+    </tr>
+    {% for prof in profs %}
+			<tr><td><a href="/scheduler/instructor?instructor={{prof.name}}">{{prof.name}}</a></td></tr>
+    {% endfor %}
+    </table>
+	</form>
+	</div>
+	</div>
+	</body>
+	</html>

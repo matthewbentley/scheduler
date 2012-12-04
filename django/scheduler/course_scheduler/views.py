@@ -48,3 +48,14 @@ def inscourse(request):
         classes = Instructs.objects.filter(instructor=ins)
         return render(request, 'add.html', {'classes' : classes})
     return render(request, 'add.html')
+
+def inssearch(request):
+        if request.method == 'GET':
+            name = request.GET.get('name', None)
+            if name != None:
+                profs = Instructor.objects.filter(Q(name__icontains=name) | Q(email__icontains=name))
+        
+                return render(request, 'inssearch.html', {'profs' : profs})
+            return render(request, 'inssearch.html')
+        else:
+            return render(request, 'inssearch.html')

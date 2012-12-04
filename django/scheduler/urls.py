@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^scheduler/info$', 'course_scheduler.views.info', name='info'),
     url(r'^scheduler/instructor$', 'course_scheduler.views.instructor', name='instructor'),
     url(r'^scheduler/login', 'course_scheduler.views.login', name='login'),
-    url(r'^scheduler/inscourse$', 'course_scheduler.views.inscourse', name='inscourse'),                   
+    url(r'^scheduler/inscourse$', 'course_scheduler.views.inscourse', name='inscourse'),
+    url(r'^scheduler/inssearch$', 'course_scheduler.views.inssearch', name='insearch'),
 )
