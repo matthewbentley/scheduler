@@ -10,6 +10,7 @@ def check_login(request, SERVICE_URL):
     CAS_SERVER  = "http://login.case.edu"
     ticket = request.GET.get('ticket', None)
     cookies = {}
+    print >> sys.stderr, "testing"
     if request.COOKIES != None:
         cookies = request.COOKIES
     if ticket == None:
