@@ -41,3 +41,10 @@ def instructor(request):
         prof = Instructor.objects.get(name=ins)
         return render(request, 'instructor.html', {'prof' : prof})
     return render(request, 'instructor.html')
+
+def inscourse(request):
+    ins = request.GET.get('name', None)
+    if ins != None:
+        classes = Instructs.objects.filter(instructor=ins)
+        return render(request, 'add.html', {'classes' : classes})
+    return render(request, 'add.html')
