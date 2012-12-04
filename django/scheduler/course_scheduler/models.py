@@ -19,7 +19,7 @@ class MeetingTime(models.Model):
 
 class Instructor(models.Model):
     email = models.CharField(max_length=10)
-    name = models.CharField(max_length = 50)
+    name = models.CharField(max_length = 50, primary_key=True)
     office = models.CharField(max_length = 15)
 
 class Instructs(models.Model):
@@ -27,7 +27,7 @@ class Instructs(models.Model):
     meeting = models.ForeignKey('MeetingTime')
 
 class Student(models.Model):
-    case_id = models.CharField(max_length=6)
+    case_id = models.CharField(max_length=6, primary_key=True)
 
 class Enrollment(models.Model):
     student = models.ForeignKey('Student')
