@@ -19,7 +19,7 @@ def check_login(request, SERVICE_URL):
     if (status == CAS_OK):
         return True, id, cookie
     elif (status == CAS_COOKIE_INVALID):
-        return True, id, ""
+        return False, id, ""
     else:
         return False, "", ""
 
