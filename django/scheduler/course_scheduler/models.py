@@ -31,4 +31,4 @@ class Student(models.Model):
 
 class Enrollment(models.Model):
     student = models.ForeignKey('Student')
-    course = models.ForeignKey('Class')
+    course = models.ForeignKey('MeetingTime')
