@@ -8,12 +8,12 @@ def schedule(request):
     return render(request, 'schedule.html')
 
 def add(request):
-    criterion = request.GET.get('Search', None)
-    classes = Class.objects.order_by('class_number')
-    numb = len(Class.objects.all())
-
-     return render(request, 'add.html', {})   
-    #return render(request, 'add.html', {"number" : "hey", "classes" : classes})
+    if request.method == 'GET':
+        criterion = request.GET.get('Search', None)
+        classes = Class.objects.order_by('class_number')[:5]
+        numb = len(Class.objects.all())
+    
+    return render(request, 'add.html', {'number' : numb, 'classes' : classes})
 
 def info(request):
     course = request.GET.get('course', NONE)
