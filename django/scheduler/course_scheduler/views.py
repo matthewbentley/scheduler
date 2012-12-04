@@ -137,7 +137,8 @@ def inssearch(request):
 def addcourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
-        enroll = Enrollment(id, eventId)
+        caseId = request.POST['id']
+        enroll = Enrollment(caseId, eventId)
         enroll.save()
         return HttpResponseRedirect('/scheduler/')
     raise Http404
