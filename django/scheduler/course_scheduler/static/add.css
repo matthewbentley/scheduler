@@ -36,7 +36,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 /* ~~ this fixed width container surrounds all other elements ~~ */
 .container {
-	width: 400px;
+	width: 600px;
 	background: #005599;
 	padding-left: 10px;
 }
