@@ -2,7 +2,7 @@
 /* CSS Document */
 body {
 	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-	background: #42413C;
+	background: #FF0000;
 	margin: 0;
 	padding: 0;
 	color: #000;
@@ -23,11 +23,11 @@ a img { /* this selector removes the default blue border displayed in some brows
 }
 /* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
 a:link {
-	color: #6E6C64;
+	color: #FF0000;
 	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
 }
 a:visited {
-	color: #6E6C64;
+	color: #FF0000;
 	text-decoration: underline;
 }
 a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
@@ -36,9 +36,9 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 /* ~~ this fixed width container surrounds all other elements ~~ */
 .container {
-	width: 600px;
-	background: #005599;
-	padding-left: 10px;
+	width: 1024px;
+	background: #FFFF00;
+	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout */
 }
 
 /* ~~ This is the layout information. ~~ 
@@ -47,8 +47,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 */
 .content {
-
-	padding: 10px 10px 10px 10px
+	color: #FF0000;
+	padding-left: 10px 0;
 }
 
 /* ~~ miscellaneous float/clear classes ~~ */
@@ -65,4 +65,50 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	height:0;
 	font-size: 1px;
 	line-height: 0px;
+}
+
+.day {
+	background-color: #FF0000;;
+	border: 1px solid #000000;	
+	background-image: url(images/daybg.png);
+	/*height: 1120px;*/
+	height: 1270px;
+	width: 130px;
+		
+	vertical-align: top;
+}
+
+.times {
+	height: 1270px;
+	width=60px;
+	background-image: url(images/timesHDS.png);
+}
+
+#header {
+	font-size: 15px;
+	height: 30px;
+	padding-left: 15px;
+	padding-right: 15px;	
+	width: 1024px;
+	background-color: #000000;
+	border-bottom: 1px solid #5c6871;	
+}
+
+#top {
+	position: fixed;
+	z-index: 10000;
+	top: 0px;
+	color: #FFFFFF;	
+	height: 45px;
+}
+
+.fill {
+	width: 600px;
+}
+
+.menuitem {
+	font-size: 13px;
+	text-align: left;
+	vertical-align: bottom;
+	padding-right: 10px;
 }

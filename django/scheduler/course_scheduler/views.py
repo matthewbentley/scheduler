@@ -1,7 +1,7 @@
 #from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from course_scheduler.models import Class, MeetingTime, Instructs
+from course_scheduler.models import Class, MeetingTime, Instructs, Instructor
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -86,7 +86,7 @@ def instructor(request):
 
     ins = request.GET.get('instructor', None)
     if ins != None:
-        prof = Instructor.objects.get(name=prof)
+        prof = Instructor.objects.get(name=ins)
         if setcookie == True:
             response = render(request, 'instructor.html', {'prof' : prof, 'id' : id})
             response.__setitem__('Set-Cookie', cookie)
@@ -94,3 +94,21 @@ def instructor(request):
         else:
             return render(request, 'instructor.html', {'prof' : prof, 'id' : id})
     return render(request, 'instructor.html')
+
+def inscourse(request):
+    ins = request.GET.get('name', None)
+    if ins != None:
+        classes = Instructs.objects.filter(instructor=ins)
+        return render(request, 'add.html', {'classes' : classes})
+    return render(request, 'add.html')
+
+def inssearch(request):
+        if request.method == 'GET':
+            name = request.GET.get('name', None)
+            if name != None:
+                profs = Instructor.objects.filter(Q(name__icontains=name) | Q(email__icontains=name))
+        
+                return render(request, 'inssearch.html', {'profs' : profs})
+            return render(request, 'inssearch.html')
+        else:
+            return render(request, 'inssearch.html')

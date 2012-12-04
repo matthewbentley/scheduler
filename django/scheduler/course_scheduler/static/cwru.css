@@ -95,13 +95,14 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 #top {
 	position: fixed;
+	z-index: 10000;
 	top: 0px;
 	color: #FFFFFF;	
 	height: 45px;
 }
 
 .fill {
-	width: 864px;
+	width: 600px;
 }
 
 .menuitem {

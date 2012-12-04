@@ -4,12 +4,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Add a course</title>
-<LINK href="{{ STATIC_URL }}add.css" rel="stylesheet" type="text/css">
+<LINK href="{{ STATIC_URL }}addHDS.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="container">
-<form action="../add" action="get">{% csrf_token %}
-<!--{{ form.as_p }}-->
+<div class="content">
+<form action="/scheduler/add" action="get">{% csrf_token %}
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
     <table border="1">
@@ -21,14 +21,15 @@
     {% for instructs in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td><a href="../info?course={{instructs.meeting.meeting_class.dept}}~!~{{instructs.meeting.meeting_class.class_number}}">{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</a></td>
+			<td><a href="/scheduler/info?course={{instructs.meeting.meeting_class.dept}}~!~{{instructs.meeting.meeting_class.class_number}}">{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</a></td>
 			<!--<td>{{instructs.instructor.name}}</td>-->
-			<td>{{instructs.instructor.name}}</td>
+			<td><a href="/scheduler/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
 			<td>{{instructs.meeting.meeting_recur_type}} {{instructs.meeting.meeting_time}}</td>
 			</tr>
     {% endfor %}
     </table>
 	</form>
+	</div>
 </div>
 </body>
 </html>
