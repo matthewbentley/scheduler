@@ -14,7 +14,7 @@ def add(request):
         criterion = request.GET.get('Search', None)
         patt = re.compile('\w\w\w\w (\w\w\w\w)|(\w\w\w\w\w)')
         if criterion != None:
-            if patt.matches(criterion):
+            if patt.match(criterion):
                 arr = criterion.split(' ')
                 classes = Class.objects.filter(dept__icontains=arr[0], class_number__icontains=arr[1])
             else:
