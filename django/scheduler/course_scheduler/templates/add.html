@@ -8,33 +8,12 @@
 </head>
 <body>
 <div class="container">
-{{number}}
-{{classes}}
-    <table border="1">
-    <tr>
-    	<th style="width:300px; text-align:left;">Course</th>
-    	<th style="width:100px;">Staff</th>
-		<th style="width:100px;">Times</th>
-    </tr>
-    {% for class in classes %}
-			<tr>
-			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td>{{class}}</td>
-			<td>1</td>
-			<td>2</td>
-			</tr>
-    {% endfor %}
-    </table>
 <form action="../add" action="get">{% csrf_token %}
 <!--{{ form.as_p }}-->
 <p><label for="c_name">Search:</label>
 	<input id="criterion" type="text" name="Search" maxlength="100" /></p>
 
-	<h>numb: </h>
-	{% for item in numb1 %}<br><p> why is this invalid
-		{{item}}
-		</p><br>
-	{% endfor %}
+	<h>numb: {{numb}}</h>
     <table border="1">
     <tr>
     	<th style="width:300px; text-align:left;">Course</th>
@@ -44,17 +23,12 @@
     {% for class in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td>0</td>
-			<td>1</td>
-			<td>2</td>
+			<td>{{class.classname}}</td>
+			<td>{{class.dept}}</td>
+			<td>{{class.term}}</td>
 			</tr>
     {% endfor %}
     </table>
-	<ul>
-	    {% for class in classes %}
-			<li>{{ class.classname }}</li>
-		{% endfor %}
-	</ul>
 	</form>
 </div>
 </body>
