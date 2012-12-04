@@ -26,12 +26,11 @@
 			<!--<td>{{instructs.instructor.name}}</td>-->
 			<td><a href="/scheduler/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
 			<td>{{instructs.meeting.recur_type}} {{instructs.meeting.start_time}}</td>
-			<td>{{instructs.meeting.id}}</td>
-			<!--<td><form name="add" action="/scheduler/addcourse" method="post">
-			<input type="hidden" name="eventID" value="{{instructs.meeting.ptr_id}}"/>
+			<td><form name="add" action="/scheduler/addcourse" method="post">
+			<input type="hidden" name="eventID" value="{{instructs.meeting.id}}"/>
 			<input type="hidden" name="id" value="{{id}}"/>
 			<input type="submit" value="Add Course">
-			</form></td>-->
+			</form></td>
 			</tr>
     {% endfor %}
     </table>
