@@ -22,7 +22,7 @@ def schedule(request):
 
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
-    if not created
+    if created != True
         classes = CourseEnrollment.objects.filter(student=stu.case_id)
 
     response = render(request, 'schedule.html', {'classes' : classes, 'id' : id})
