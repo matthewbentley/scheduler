@@ -10,11 +10,11 @@
 <div class="container">
 {% for instruct in classes %}
 	<table border="1">
-	<tr><td>{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
+	<tr><td colspan="2">{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
 	<tr><td>{{instruct.meeting.meeting_recur_type}}</td><td> {{instruct.meeting.meeting_time}}</td></tr>
 	<tr><td>{{instruct.meeting.meeting_location}}</td><td>  {{instruct.instructor.name}}</td></tr>
 	<tr/>
-	<tr><td>Description:</td></tr><tr><td>{{instruct.meeting.meeting_class.description}}</td></tr>
+	<tr><td>Description:<br>{{instruct.meeting.meeting_class.description}}</td></tr>
 {% endfor %}
 </body>
 </html>
