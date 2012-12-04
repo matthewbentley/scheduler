@@ -81,7 +81,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 .times {
 	height: 1270px;
 	width=60px;
-	background-image: url(images/timesHDS.png);
+	background-color: #FFFF00;
+	color: #FF0000;
 }
 
 #header {
