@@ -11,8 +11,9 @@ def add(request):
     criterion = request.GET.get('Search', None)
     classes = Class.objects.order_by('class_number')
     numb = len(Class.objects.all())
-        
-    return render(request, 'add.html', {"number" : "hey", "classes" : classes})
+
+     return render(request, 'add.html', {})   
+    #return render(request, 'add.html', {"number" : "hey", "classes" : classes})
 
 def info(request):
     course = request.GET.get('course', NONE)
