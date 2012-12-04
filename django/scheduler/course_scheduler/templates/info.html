@@ -4,13 +4,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Add a course</title>
-<LINK href="{{ STATIC_URL }}add.css" rel="stylesheet" type="text/css">
+<LINK href="{{ STATIC_URL }}addHDS.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="container">
+<div class="content">
+<br>
 {% for instruct in classes %}
-	<h>{{instructs.meeting.meeting_class.classname}}</h>
+	<table border="1" style="margin-right: 10px; margin-bottom: 10px; width:500px">
+	<tr><td colspan="2" >{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
+	<tr><td colspan="2">{{instruct.meeting.meeting_recur_type}} {{instruct.meeting.meeting_time}}</td></tr>
+	<tr><td>{{instruct.meeting.meeting_location}}</td><td>  <a href="instructor?instructor={{instruct.instructor.name}}">{{instruct.instructor.name}}</a></td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td colspan="2">Description:<br>{{instruct.meeting.meeting_class.description}}</td></tr>
 {% endfor %}
+</div>
 </div>
 </body>
 </html>

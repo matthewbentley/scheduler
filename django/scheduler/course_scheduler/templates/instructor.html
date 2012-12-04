@@ -1,0 +1,19 @@
+{% load url from future %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Add a course</title>
+<LINK href="{{ STATIC_URL }}addHDS.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+<div class="content">
+<h2>{{prof.name}}</h2>
+<p>{% if prof.email %} {{prof.email}} {% else %} No email listed {% endif %}<br>
+{% if prof.office  %} {{prof.office}} {% else %} No office listed {% endif %}</p>
+<a href="inscourse?name={{prof.name}}">View all classes</a>
+</div>
+</div>
+</body>
+</html>

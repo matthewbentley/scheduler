@@ -2,7 +2,7 @@
 /* CSS Document */
 body {
 	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-	background: #42413C;
+	background: #58026D;
 	margin: 0;
 	padding: 0;
 	color: #000;
@@ -23,11 +23,11 @@ a img { /* this selector removes the default blue border displayed in some brows
 }
 /* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
 a:link {
-	color: #42413C;
+	color: #FFD700;
 	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
 }
 a:visited {
-	color: #6E6C64;
+	color: #FFD700;
 	text-decoration: underline;
 }
 a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
@@ -37,7 +37,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 /* ~~ this fixed width container surrounds all other elements ~~ */
 .container {
 	width: 1024px;
-	background: #005599;
+	background: #05296E;
 	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout */
 }
 
@@ -67,7 +67,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 }
 
 .day {
-	background-color: #99bb99;
+	background-color: #FFD700;
 	border: 1px solid #000000;	
 	background-image: url(images/daybg.png);
 	/*height: 1120px;*/
@@ -80,6 +80,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 .times {
 	height: 1270px;
 	width: 60px;
+	background-color: #58026D;
 	font-size:80%;
 	padding-left:5px;
 	margin-right:1px;

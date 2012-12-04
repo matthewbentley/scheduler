@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>CWRU Scheduler</title>
-<LINK href="{{ STATIC_URL }}cwru.css" rel="stylesheet" type="text/css">
+<LINK href="{{ STATIC_URL }}cwruHDS.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -14,7 +14,8 @@
 		<div id="top">
 			<table id="header">
 				<tr>
-					<td class="menuitem"><a href="add">Add a Course</a></td>
+					<td class="menuitem" style="width:80px"><a href="add">Add a Course</a></td>
+					<td class="menuitem" style="width:150px"><a href="inssearch">Search for a Professor</a></td>
 					<td class="fill"></td>
 				</tr>
 			</table>		
@@ -22,7 +23,7 @@
 
   <div class="content">
   	<p>&nbsp;</p>
-    <h1>Scheduler</h1>
+    <h1>{{id}} Scheduler</h1>
  	<div>
     <table cellpadding="0" cellspacing="0" >
     	<tr>
@@ -37,9 +38,23 @@
 		</tr>
 		<tr>
 			<td class="times">
-				<div id="times">
-					&nbsp;
-				</div>
+			<div style="position:absolute;top:115px">6:00am</div>
+			<div style="position:absolute;top:195px">7:00am</div>
+			<div style="position:absolute;top:270px">8:00am</div>
+			<div style="position:absolute;top:345px">9:00am</div>
+			<div style="position:absolute;top:415px">10:00am</div>
+			<div style="position:absolute;top:495px">11:00am</div>
+			<div style="position:absolute;top:570px">12:00pm</div>
+			<div style="position:absolute;top:645px">1:00pm</div>
+			<div style="position:absolute;top:715px">2:00pm</div>
+			<div style="position:absolute;top:795px">3:00pm</div>
+			<div style="position:absolute;top:870px">4:00pm</div>
+			<div style="position:absolute;top:945px">5:00pm</div>
+			<div style="position:absolute;top:1015px">6:00pm</div>
+			<div style="position:absolute;top:1095px">7:00pm</div>
+			<div style="position:absolute;top:1165px">8:00pm</div>
+			<div style="position:absolute;top:1245px">9:00pm</div>
+			<div style="position:absolute;top:1310px">10:00pm</div>
 			</td>
 			<td class="day">
 				<div id="firstday">
