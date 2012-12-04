@@ -141,4 +141,8 @@ def inssearch(request):
 
 def addcourse(request):
     if request.method == 'POST':
-        MeetingTime.objects.get(meeting_class__classname=
+        name = request.POST['class']
+        recur = request.POST['recur']
+        time = request.POST['time']
+        MeetingTime.objects.get(meeting_class__classname=name, meeting_event__recur_type=recur, meeting_event__start_time=time)
+        
