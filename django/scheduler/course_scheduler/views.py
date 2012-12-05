@@ -35,7 +35,7 @@ def schedule(request):
             top = event.start_time.hour - 6
             top += event.start_time.minute / 60.0
             top *= 75
-            top += 125
+            top += 135
             height = event.start_time.hour + (event.start_time.minute / 60.0)
             height = (event.end_time.hour + event.end_time.minute / 60.0) - height
             height *= 60
