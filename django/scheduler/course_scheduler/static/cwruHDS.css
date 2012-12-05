@@ -119,6 +119,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 }
 
 .event {
+	text-align: center;
 	position:absolute;
 	width:130px;
 	background-color:#0000FF;
