@@ -71,14 +71,14 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	border: 1px solid #000000;	
 	background-image: url(images/daybg.png);
 	/*height: 1120px;*/
-	height: 1270px;
+	height: 1195px;
 	width: 130px;
 		
 	vertical-align: top;
 }
 
 .times {
-	height: 1270px;
+	height: 1195px;
 	width: 60px;
 	background-color: #6677cc;
 	color: #000000;
