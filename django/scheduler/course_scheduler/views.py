@@ -24,9 +24,10 @@ def schedule(request):
     classes = []
     toSend = {}
     if created == False:
-        events = Enrollment.objects.filter(student__case_id=id)
+        enrolls = Enrollment.objects.filter(student__case_id=id)
 
-        for event in events:
+        for enroll in enrolls:
+            event = Event.objects.get(id=enroll.event_id)
             top = event.start_time.hour - 6
             top += event.start_time.minute / 60.0
             top *= 75
