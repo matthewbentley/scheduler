@@ -175,7 +175,8 @@ def removecourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
         caseId = request.POST['id']
-        enroll = Enrollment.objects.get(student_id=caseId, event_id=eventId)
+        stu = Student.objects.get(case_id=caseId)
+        enroll = Enrollment.objects.get(student_id=stu.pk, event_id=eventId)
         enroll.delete()
         return HttpResponseRedirect('/scheduler/')
     raise Http404
