@@ -66,7 +66,7 @@ def add(request):
                 numb = len(Class.objects.all())
 
             for c in classes:
-                if Enrollment.objects.filter(student_id=id, event_id=c.pk).exists():
+                if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
                     toSend[c] = True
                 else:
                     toSend[c] = False
