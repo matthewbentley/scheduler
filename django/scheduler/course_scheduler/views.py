@@ -91,7 +91,14 @@ def info(request):
         arr = theCourse.split('~!~')
         classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
 
-        response = render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
+        toSend = {}
+        for c in classes:
+            if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+                toSend[c] = True
+            else:
+                toSend[c] = False
+                    
+        response = render(request, 'info.html', {'classes' : toSend, 'id' : id})
         if setcookie == True:
             response.__setitem__('Set-Cookie', cookie)
         return response
