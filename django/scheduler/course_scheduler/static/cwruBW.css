@@ -56,7 +56,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 */
 .content {
-	padding-left: 10px 0;
+	padding: 10px 10px 10px 10px
 }
 
 /* ~~ miscellaneous float/clear classes ~~ */
