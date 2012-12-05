@@ -23,11 +23,11 @@ a img { /* this selector removes the default blue border displayed in some brows
 }
 /* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
 a:link {
-	color: #aaaaaa;
+	color: #000000;
 	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
 }
 a:visited {
-	color: #aaaaaa;
+	color: #000000;
 	text-decoration: underline;
 }
 a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
@@ -109,9 +109,6 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 .fill {
 	width: 600px;
 }
-
-#daylink a:link {color:#000000;text-decoration: underline;}
-#daylink a:visited {color:#000000;text-decoration: underline;}
 
 .menuitem {
 	font-size: 13px;
