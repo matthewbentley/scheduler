@@ -59,10 +59,6 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	padding: 10px 10px 10px 10px;
 }
 
-.content2 {
-	padding: 10px 0px;
-}
-
 /* ~~ miscellaneous float/clear classes ~~ */
 .fltrt {  /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
 	float: right;
@@ -96,8 +92,6 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	background-color: #6677cc;
 	color: #000000;
 	font-size:80%;
-	padding-left:5px;
-	margin-right:1px;
 	text-align: right;
 }
 
