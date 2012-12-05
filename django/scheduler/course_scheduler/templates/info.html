@@ -17,19 +17,19 @@
 	<tr><td>{{instruct.meeting.meeting_location}}</td><td>  <a href="instructor?instructor={{instruct.instructor.name}}">{{instruct.instructor.name}}</a></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td colspan="2">Description:<br>{{instruct.meeting.meeting_class.description}}</td></tr>
-	<tr><td colspan="2">
+	<tr><td>
 			{% if bool %}
-				<td><form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+				<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 				<input type="hidden" name="eventID" value="{{instructs.meeting.id}}"/>
 				<input type="hidden" name="id" value="{{id}}"/>
 				<input type="submit" value="Remove Course" align="middle">
-				</form></td>
+				</form>
 			{% else %}
-				<td><form name="add" action="/scheduler/addcourse" method="post">{% csrf_token %}
+				<form name="add" action="/scheduler/addcourse" method="post">{% csrf_token %}
 				<input type="hidden" name="eventID" value="{{instructs.meeting.id}}"/>
 				<input type="hidden" name="id" value="{{id}}"/>
 				<input type="submit" value="Add Course" align="middle">
-				</form></td>
+				</form>
 			{% endif %}
 {% endfor %}
 </div>
