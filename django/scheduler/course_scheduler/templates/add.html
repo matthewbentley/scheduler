@@ -22,15 +22,23 @@
     {% for instructs in classes %}
 			<tr>
 			<!--<td><a href="../info?course={{c}}"</a>{{c}}</td>-->
-			<td><a href="/scheduler/info?course={{instructs.meeting.meeting_class.dept}}~!~{{instructs.meeting.meeting_class.class_number}}">{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instructs.meeting.meeting_class.classname}}</a></td>
+			<td><a href="/scheduler/info?course={{instructs.0.meeting.meeting_class.dept}}~!~{{instructs.0.meeting.meeting_class.class_number}}">{{instructs.0.meeting.meeting_class.dept}} {{instructs.0.meeting.meeting_class.class_number}}: {{instructs.0.meeting.meeting_class.classname}}</a></td>
 			<!--<td>{{instructs.instructor.name}}</td>-->
-			<td><a href="/scheduler/instructor?instructor={{instructs.instructor.name}}">{{instructs.instructor.name}}</a></td>
-			<td>{{instructs.meeting.recur_type}} {{instructs.meeting.start_time}} - {{instructs.meeting.end_time}}</td>
-			<td><form name="add" action="/scheduler/addcourse" method="post">{% csrf_token %}
-			<input type="hidden" name="eventID" value="{{instructs.meeting.id}}"/>
-			<input type="hidden" name="id" value="{{id}}"/>
-			<input type="submit" value="Add Course">
-			</form></td>
+			<td><a href="/scheduler/instructor?instructor={{instructs.0.instructor.name}}">{{instructs.0.instructor.name}}</a></td>
+			<td>{{instructs.0.meeting.recur_type}} {{instructs.0.meeting.start_time}} - {{instructs.0.meeting.end_time}}</td>
+			{% if instructs.1 %}
+				<td><form name="delete" action="/scheduler/deletecourse" method="post">{% csrf_token %}
+				<input type="hidden" name="eventID" value="{{instructs.0.meeting.id}}"/>
+				<input type="hidden" name="id" value="{{id}}"/>
+				<input type="submit" value="Remove Course">
+				</form></td>
+			{% else %}
+				<td><form name="add" action="/scheduler/addcourse" method="post">{% csrf_token %}
+				<input type="hidden" name="eventID" value="{{instructs.0.meeting.id}}"/>
+				<input type="hidden" name="id" value="{{id}}"/>
+				<input type="submit" value="Add Course">
+				</form></td>
+			{% endif %}
 			</tr>
     {% endfor %}
     </table>

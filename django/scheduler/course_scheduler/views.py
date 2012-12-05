@@ -55,6 +55,7 @@ def add(request):
         criterion = request.GET.get('Search', None)
         patt = re.compile('\w\w\w\w ((\w\w\w)|(\w\w\w\w))')
         if criterion != None:
+            toSend = {}
             if patt.match(criterion):
                 arr = criterion.split(' ')
                 #classes = MeetingTime.objects.filter(meeting_class__dept__icontains=arr[0], meeting_class__class_number__icontains=arr[1])
@@ -64,7 +65,13 @@ def add(request):
                 classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
                 numb = len(Class.objects.all())
 
-            response = render(request, 'add.html', {'classes' : classes, 'id' : id})
+            for c in classes:
+                if Enrollment.objects.filter(student_id=id, event_id=c.pk).exists():
+                    toSend[c] = True
+                else:
+                    toSend[c] = False
+
+            response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
             if setcookie == True:
                 response.__setitem__('Set-Cookie', cookie)
             return response
