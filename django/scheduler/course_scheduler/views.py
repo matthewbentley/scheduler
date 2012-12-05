@@ -11,6 +11,7 @@ import sys
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
 from checklogin import redirect_to_cas
+import random
 
 def schedule(request):
     status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/')
@@ -19,7 +20,7 @@ def schedule(request):
         return redirect_to_cas('http://concertina.case.edu/scheduler/')
     if cookie != "":
         setcookie = True
-
+	colors = ['FF0000', '32E01B', '003CFF', 'FF9D00', '00B7FF', '9D00FF', 'FF00EA', 'B5AA59', '79BF6B', 'CFA27E']
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     toSend = {}
@@ -36,7 +37,10 @@ def schedule(request):
             height = (event.end_time.hour + event.end_time.minute / 60.0) - height
             height *= 60
             height *= 1.2
-            toSend[event] = [top, height]
+			randColor = random.randint(0, len(colors)-1)
+			color = colors[randColor]
+			del colors[randColor]
+            toSend[event] = [top, height, color]
 
     response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
     if setcookie == True:
