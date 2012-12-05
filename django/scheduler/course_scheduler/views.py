@@ -37,8 +37,8 @@ def schedule(request):
             height = (event.end_time.hour + event.end_time.minute / 60.0) - height
             height *= 60
             height *= 1.2
-			randColor = random.randint(0, len(colors)-1)
-			color = colors[randColor]
+            randColor = random.randint(0, len(colors)-1)
+            color = colors[randColor]
 			del colors[randColor]
             toSend[event] = [top, height, color]
 
