@@ -95,7 +95,14 @@ def info(request):
         arr = theCourse.split('~!~')
         classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
 
-        response = render(request, 'info.html', {'course' : theCourse, 'classes' : classes, 'id' : id})
+        toSend = {}
+        for c in classes:
+            if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+                toSend[c] = True
+            else:
+                toSend[c] = False
+                    
+        response = render(request, 'info.html', {'classes' : toSend, 'id' : id})
         if setcookie == True:
             response.__setitem__('Set-Cookie', cookie)
         return response
@@ -163,8 +170,17 @@ def addcourse(request):
         eventId = request.POST['eventID']
         caseId = request.POST['id']
         stu = Student.objects.get(case_id=caseId)
-        eve = Event.objects.get(id=eventId)
         enroll = Enrollment(student_id=stu.pk, event_id=eventId)
         enroll.save()
+        return HttpResponseRedirect('/scheduler/')
+    raise Http404
+
+def removecourse(request):
+    if request.method == 'POST':
+        eventId = request.POST['eventID']
+        caseId = request.POST['id']
+        stu = Student.objects.get(case_id=caseId)
+        enroll = Enrollment.objects.get(student_id=stu.pk, event_id=eventId)
+        enroll.delete()
         return HttpResponseRedirect('/scheduler/')
     raise Http404
