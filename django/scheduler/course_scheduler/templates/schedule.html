@@ -68,7 +68,7 @@
 			<td class="day">
 				{% for e, t in events.iteritems %}
 					{% if "M" in e.recur_type %}
-						<div class="event" style="top:{{t0]}}px;height:{{t.1}}">
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}">
 						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
 						</div>
 					{% endif %}
