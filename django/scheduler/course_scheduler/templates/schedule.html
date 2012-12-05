@@ -60,8 +60,8 @@
 				{% for e, t in events.iteritems %}
 					{% if "So" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
-						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
-						<span style="vertical-align:text-top; text-align:right">[x]</span>
+						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
@@ -70,7 +70,8 @@
 				{% for e, t in events.iteritems %}
 					{% if "M" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
-						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
@@ -80,7 +81,7 @@
 					{% if "Tu" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
 						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
-						<span style="vertical-align:text-top; text-align:right">[x]</span>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
@@ -89,7 +90,8 @@
 				{% for e, t in events.iteritems %}
 					{% if "W" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
-						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
@@ -98,7 +100,8 @@
 				{% for e, t in events.iteritems %}
 					{% if "Th" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
-						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
@@ -107,7 +110,8 @@
 				{% for e, t in events.iteritems %}
 					{% if "F" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
-						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
@@ -116,7 +120,8 @@
 				{% for e, t in events.iteritems %}
 					{% if "Sa" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px">
-						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<span style="vertical-align:text-top; text-align:right">x</span>
 						</div>
 					{% endif %}
 				{% endfor %}
