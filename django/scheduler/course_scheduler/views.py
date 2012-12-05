@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q
 import re
 import sys
+import random
+
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
 from checklogin import redirect_to_cas
