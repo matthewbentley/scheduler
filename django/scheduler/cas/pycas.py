@@ -171,7 +171,7 @@ def make_pycas_cookie(val, domain, path, secure, expires=None):
 #  Return status and id (id will be empty string if unknown).
 def decode_cookie(cookie_val,lifetime=None):
 	#  Test for no cookies
-	if cookie_val=="":
+	if cookie_val=="" || cookie_val==None:
 		return COOKIE_NONE, ""
 	#  Test each cookie value
 	cookie_attrs = []
