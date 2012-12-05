@@ -57,44 +57,67 @@
 			<div style="position:absolute;top:1310px">10:00pm</div>
 			</td>
 			<td class="day">
-				{% for e in events %}
+				{% for e, t in events.iteritems %}
 					{% if "So" in e.recur_type %}
-						<!--<div class="event" style="top:-->
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
 					{% endif %}
 				{% endfor %}
 			</td>
 			<td class="day">
-				<div id="M">
-					&nbsp;
-				</div>
+				{% for e, t in events.iteritems %}
+					{% if "M" in e.recur_type %}
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
+					{% endif %}
+				{% endfor %}
 			</td>
 			<td class="day">
-				<div id="T">
-					&nbsp;
-				</div>
+				{% for e, t in events.iteritems %}
+					{% if "Tu" in e.recur_type %}
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
+					{% endif %}
+				{% endfor %}
 			</td>
 			<td class="day">
-				<div id="W">
-					<!--<div style="height:400px">&nbsp; </div>-->
-					<div style="position:absolute;height:75px;width:130px;top:200px;background-color:#0000FF">
-					hey
-					</div>
-				</div>
+				{% for e, t in events.iteritems %}
+					{% if "W" in e.recur_type %}
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
+					{% endif %}
+				{% endfor %}
 			</td>
 			<td class="day">
-				<div id="R">
-					&nbsp;
-				</div>
+				{% for e, t in events.iteritems %}
+					{% if "Th" in e.recur_type %}
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
+					{% endif %}
+				{% endfor %}
 			</td>
 			<td class="day">
-				<div id="F">
-					&nbsp;
-				</div>
+				{% for e, t in events.iteritems %}
+					{% if "F" in e.recur_type %}
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
+					{% endif %}
+				{% endfor %}
 			</td>
 			<td class="day">
-				<div id="S">
-					&nbsp;
-				</div>
+				{% for e, t in events.iteritems %}
+					{% if "Sa" in e.recur_type %}
+						<div class="event" style="top:{{t[0]}}px;height:{{t[1]}}">
+						{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}
+						</div>
+					{% endif %}
+				{% endfor %}
 			</td>
 		</tr>
 	</table>

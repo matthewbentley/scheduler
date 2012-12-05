@@ -22,10 +22,21 @@ def schedule(request):
 
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
+    toSend = {}
     if created == False:
         events = Enrollment.objects.filter(student__case_id=id)
 
-    response = render(request, 'schedule.html', {'events' : events, 'id' : id})
+        for event in events:
+            top = event.start_time.hour - 6
+            top += event.start_time.minute / 60.0
+            top *= 75
+            top += 115
+            height = event.start_time.hour + event.start_time.minute / 60.0
+            height = (event.end_time.hour + event.end_time.minute / 60.0) - height
+            height *= 1.2
+            toSend[event] = [top, height]
+
+    response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response

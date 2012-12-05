@@ -117,3 +117,9 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	vertical-align: bottom;
 	padding-right: 10px;
 }
+
+.event {
+	position:absolute;
+	width:130px;
+	background-color:#0000FF;
+}
