@@ -55,13 +55,12 @@
 			<div style="position:absolute;top:1095px">7:00pm</div>
 			<div style="position:absolute;top:1165px">8:00pm</div>
 			<div style="position:absolute;top:1245px">9:00pm</div>
-			<div style="position:absolute;top:1310px">10:00pm</div>
 			</td>
 			<td class="day">
 				{% for e, t in events.iteritems %}
 					{% if "Su" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%;">[x]</span>
 						</div>
 					{% endif %}
@@ -71,7 +70,7 @@
 				{% for e, t in events.iteritems %}
 					{% if "M" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%">[x]</span>
 						</div>
 					{% endif %}
@@ -81,7 +80,7 @@
 				{% for e, t in events.iteritems %}
 					{% if "Tu" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%">[x]</span>
 						</div>
 					{% endif %}
@@ -91,7 +90,7 @@
 				{% for e, t in events.iteritems %}
 					{% if "W" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%">[x]</span>
 						</div>
 					{% endif %}
@@ -101,7 +100,7 @@
 				{% for e, t in events.iteritems %}
 					{% if "Th" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%">[x]</span>
 						</div>
 					{% endif %}
@@ -111,7 +110,7 @@
 				{% for e, t in events.iteritems %}
 					{% if "F" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%">[x]</span>
 						</div>
 					{% endif %}
@@ -121,7 +120,7 @@
 				{% for e, t in events.iteritems %}
 					{% if "Sa" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
-						<a href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						<span style="vertical-align:text-bottom; text-align:right;font-size:80%">[x]</span>
 						</div>
 					{% endif %}

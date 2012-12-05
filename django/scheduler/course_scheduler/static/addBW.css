@@ -2,7 +2,7 @@
 /* CSS Document */
 body {
 	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-	background: #000000;
+	background: #FFFFFF;
 	margin: 0;
 	padding: 0;
 	color: #000;
@@ -37,7 +37,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 /* ~~ this fixed width container surrounds all other elements ~~ */
 .container {
 	width: 600px;
-	background: #004477;
+	background: #6677cc;
 	padding-left: 10px;
 }
 
