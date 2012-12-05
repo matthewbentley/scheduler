@@ -1,0 +1,5 @@
+/* Remove unwanted elements */
+#header, #nav, .noprint
+{
+display: none;
+}
