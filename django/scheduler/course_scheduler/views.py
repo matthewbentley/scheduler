@@ -39,7 +39,7 @@ def schedule(request):
             height *= 1.2
             randColor = random.randint(0, len(colors)-1)
             color = colors[randColor]
-			del colors[randColor]
+            del colors[randColor]
             toSend[event] = [top, height, color]
 
     response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
