@@ -23,10 +23,19 @@ a img { /* this selector removes the default blue border displayed in some brows
 }
 /* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
 a:link {
-	color: #000000;
+	color: #FFFFFF;
 	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
 }
+
+a.daylink:link {
+	color: #000000;
+	text-decoration: underline;
+}
 a:visited {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+a.daylink:visited {
 	color: #000000;
 	text-decoration: underline;
 }
