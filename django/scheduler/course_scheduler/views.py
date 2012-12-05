@@ -38,9 +38,9 @@ def schedule(request):
             height *= 60
             height *= 1.2
             randColor = random.randint(0, len(colors)-1)
-            color = colors[randColor] + ''
-            del colors[randColor]
-            toSend[event] = [top, height, color]
+            #color = colors[randColor] + ''
+            #del colors[randColor]
+            toSend[event] = [top, height, randcolor]
 
     response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
     if setcookie == True:
