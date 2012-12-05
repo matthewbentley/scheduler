@@ -20,7 +20,7 @@ def schedule(request):
         return redirect_to_cas('http://concertina.case.edu/scheduler/')
     if cookie != "":
         setcookie = True
-	colors = ['FF0000', '32E01B', '003CFF', 'FF9D00', '00B7FF', '9D00FF', 'FF00EA', 'B5AA59', '79BF6B', 'CFA27E']
+    colors = ['FF0000', '32E01B', '003CFF', 'FF9D00', '00B7FF', '9D00FF', 'FF00EA', 'B5AA59', '79BF6B', 'CFA27E']
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     toSend = {}
