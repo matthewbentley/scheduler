@@ -159,8 +159,16 @@ def addcourse(request):
         eventId = request.POST['eventID']
         caseId = request.POST['id']
         stu = Student.objects.get(case_id=caseId)
-        eve = Event.objects.get(id=eventId)
         enroll = Enrollment(student_id=stu.pk, event_id=eventId)
         enroll.save()
+        return HttpResponseRedirect('/scheduler/')
+    raise Http404
+
+def removecourse(request):
+    if request.method == 'POST':
+        eventId = request.POST['eventID']
+        caseId = request.POST['id']
+        enroll = Enrollment.objects.get(student_id=caseId, event_id=eventId)
+        enroll.delete()
         return HttpResponseRedirect('/scheduler/')
     raise Http404
