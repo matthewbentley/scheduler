@@ -23,9 +23,9 @@ def schedule(request):
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     if created == False:
-        classes = Enrollment.objects.filter(student__case_id=id)
+        events = Enrollment.objects.filter(student__case_id=id)
 
-    response = render(request, 'schedule.html', {'classes' : classes, 'id' : id})
+    response = render(request, 'schedule.html', {'events' : events, 'id' : id})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
