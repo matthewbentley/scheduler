@@ -33,7 +33,7 @@
 				<input type="submit" value="Remove Course">
 				</form></td>
 			{% else %}
-				<td><form name="add" action="/scheduler/addcourse" method="post">{% csrf_token %}
+				<td><form name="add" action="/scheduler/addcourse" method="post" style="align:center">{% csrf_token %}
 				<input type="hidden" name="eventID" value="{{instructs.meeting.id}}"/>
 				<input type="hidden" name="id" value="{{id}}"/>
 				<input type="submit" value="Add Course">
