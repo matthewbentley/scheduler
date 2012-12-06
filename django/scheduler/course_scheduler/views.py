@@ -236,11 +236,6 @@ def customevent(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
-class EventForm(forms.Form):
-    name=forms.CharField(max_length=100)
-    start_time=forms.CharField(max_length=20, validators=[validate_time])
-    recur_type=forms.CharField(max_length=14, validators=[validate_day])
-
 def validate_time(value):
     validAMs = '[6-11]:[0-5][0-9]am'
     validPMs = '([1-9]|12):[0-5][0-9]pm'
@@ -254,3 +249,10 @@ def validate_day(value):
     patt = re.compile(validDays)
     if not patt.match(value):
         raise ValidationError('%s is not a valid day format!' % value)
+    
+class EventForm(forms.Form):
+    name=forms.CharField(max_length=100)
+    start_time=forms.CharField(max_length=20, validators=[validate_time])
+    recur_type=forms.CharField(max_length=14, validators=[validate_day])
+
+
