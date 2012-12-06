@@ -286,7 +286,7 @@ def validate_day(value):
         raise ValidationError('%s is not a valid day format!' % value)
 
 def parse_time(array):
-    timeArr = value.split('-')
+    timeArr = array.split('-')
     timeArr[0]=re.sub(r'( )+', "", timeArr[0])
     timeArr[1]=re.sub(r'( )+', "", timeArr[1])
 
