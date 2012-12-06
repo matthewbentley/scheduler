@@ -64,10 +64,9 @@
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
 							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
-							</div>
+							{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}
-							
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -84,6 +83,7 @@
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
 						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}
 						{% endif %}
@@ -102,6 +102,7 @@
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
 						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}
 						{% endif %}
@@ -120,6 +121,7 @@
 					{% if "W" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
+						{{e.meeting_location}}
 						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						{% else %}
 							{{e.customevent.event_name}}
@@ -139,6 +141,7 @@
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
 						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}							
 						{% endif %}
@@ -157,6 +160,7 @@
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
 						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}
 						{% endif %}
@@ -175,6 +179,7 @@
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
 							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+							{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}
 						{% endif %}
