@@ -245,7 +245,7 @@ def validate_time(value):
     validAMs = '[6-11]:[0-5][0-9]am'
     validPMs = '([1-9]|12):[0-5][0-9]pm'
     
-    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|('  validPMs + '( )+-( )+' + validPMS + ')')
+    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|(' + validPMs + '( )+-( )+' + validPMS + ')')
     if !patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
