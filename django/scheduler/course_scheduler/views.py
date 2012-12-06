@@ -224,7 +224,7 @@ def customevent(request):
     if cookie != "":
         setcookie = True
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
             return HttpResponseRedirect('/scheduler/')
