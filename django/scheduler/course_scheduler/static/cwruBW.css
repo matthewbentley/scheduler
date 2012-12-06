@@ -134,6 +134,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	height: 16px;
 	border: none;
 	position:absolute; 
-	bottom:1;
+	bottom:0;
 	right:0;
+	cursor:pointer;
 }
