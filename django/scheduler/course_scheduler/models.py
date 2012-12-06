@@ -16,6 +16,7 @@ class Event(models.Model):
 
 class CustomEvent(Event):
     event_name = models.CharField(max_length=120)
+    location = models.CharField(max_length=50)
 
 class MeetingTime(Event):
     meeting_class = models.ForeignKey('Class')

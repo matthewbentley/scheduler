@@ -66,7 +66,7 @@ def main():
                     desc = ""
 
             try:
-                c_num = int(c_num)
+                c_num = int(re.match(r'\d+', c_num).group())
                 d = unicode(d)
                 name = unicode(name)
                 if len(desc) > 4096:
