@@ -236,7 +236,7 @@ def customevent(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
-def EventForm(forms.Form):
+class EventForm(forms.Form):
     name=forms.CharField(maxlength=100)
     start_time=forms.CharField(maxlength=20, validators=[validate_time])
     recur_type=forms.CharField(maxlength=14, validators=[validate_day])
