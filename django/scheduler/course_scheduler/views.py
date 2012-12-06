@@ -43,7 +43,7 @@ def schedule(request):
             height *= 60
             height *= 1.2
             height += 3
-            if len(colors_temp) == 0:
+            if len(color_temp) == 0:
                 color_temp = list(colors)
             randColor = random.randint(0, len(color_temp)-1)
             color = color_temp[randColor] + ''
