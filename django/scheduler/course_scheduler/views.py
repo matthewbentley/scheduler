@@ -228,6 +228,35 @@ def customevent(request):
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
+            name = form.cleaned_data['event_title']
+            time = form.cleaned_data['times']
+            days = form.cleaned_data['days']
+            timeArr = time.split('-')
+            timeArr[0]=re.sub(r'( )+', "", timeArr[0])
+            timeArr[1]=re.sub(r'( )+', "", timeArr[1])
+    
+            startTimeArr = timeArr[0].split(':')
+            startTimeArr[1] = startTimeArr[1][:2]
+            startTimeArr[0] = int(startTimeArr[0])
+            startTimeArr[1] = int(startTimeArr[1])
+            if pm in timeArr[0] or PM in timeArr[0]:
+                startTimeArr[0] = startTimeArr[0] + 12
+
+            endTimeArr = timeArr[1].split(':')
+            endTimeArr[1] = endTimeArr[1][:2]
+            endTimeArr[0] = int(endTimeArr[0])
+            endTimeArr[1] = int(endTimeArr[1])
+            if pm in timeArr[1] or PM in timeArr[1]:
+                endTimeArr[0] = endTimeArr[0] + 12
+            
+            
+            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
+            event.save()
+
+            stu = Student.objects.get(case_id=id)
+            enroll = Enrollment(student_id=stu.pk, event_id=event.id)
+            enroll.save()
+            
             return HttpResponseRedirect('/scheduler/')
     else:
         form = EventForm()
