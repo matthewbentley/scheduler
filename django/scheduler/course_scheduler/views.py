@@ -215,4 +215,42 @@ def mycourses(request):
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
+
+def customevent(request):
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/scheduler/')
+    else:
+        form = EventForm
     
+    response = render(request, 'customevent.html', {'id' : id, 'form' : form})
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
+
+def EventForm(forms.Form):
+    name=forms.CharField(maxlength=100)
+    start_time=forms.CharField(maxlength=20, validators=[validate_time])
+    recur_type=forms.CharField(maxlength=14, validators=[validate_day])
+
+def validate_time(value):
+    validAMs = '[6-11]:[0-5][0-9]am'
+    validPMs = '([1-9]|12):[0-5][0-9]pm'
+    
+    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|('  validPMs + '( )+-( )+' + validPMS + ')')
+    if !patt.match(value):
+        raise ValidationError('%s is not a valid time format!' % value)
+
+def validate_day(value):
+    validDays = '((Su)|M|(Tu)|W|(Th)|F|(Sa))+'
+    patt = re.compile(validDays)
+    if !patt.match(value):
+        raise ValidationError('%s is not a valid day format!' % value)

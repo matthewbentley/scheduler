@@ -1,0 +1,38 @@
+{% load url from future %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Add a course</title>
+<LINK href="{{ STATIC_URL }}cwruBW.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+		<div id="top">
+			<table id="header">
+				<tr>
+					<td class="menuitem" style="width:130px"><a href="/scheduler">Back to Schedule</a></td>
+					<td class="menuitem" style="width:150px"><a href="/scheduler/inssearch">Search for a Professor</a></td>
+					<td class="menuitem" style="width:80px"><a href="/scheduler/add">Add a Course</a></td>
+					<td style="width:500px"></td>
+				</tr>
+			</table>		
+		</div>
+<div class="content">
+<p>&nbsp;</p>
+<form action="/scheduler/addevent" action="get">{% csrf_token %}
+<label for="e_name">Event Title:</label>
+<input id="name" type="text" name="Enter" maxlength="100" /></p></form>
+
+<label for="e_name">Time (e.g. 9:00am - 1:00pm):</label>
+{{ form.as_p }}
+<!--<input id="start_time" type="text" name="Search" maxlength="100" /><br>
+<label for="e_days">Days (SuMTuWThFSa):</label>
+<input id="recur_type" type="text" name="Search" maxlength="100" /><br>-->
+<input type="hidden" name="id" value="{{id}}"/>
+<input type="submit" value="Create Event">
+</form>
+</div>
+</div>
+</body>
+</html>
