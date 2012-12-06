@@ -21,7 +21,9 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
+<div style="padding-left:20px">
 {{ form.as_p }}
+</div>
 <!--<label for="e_name">Event Title:</label>
 <input id="name" type="text" name="Enter" maxlength="100" />
 
