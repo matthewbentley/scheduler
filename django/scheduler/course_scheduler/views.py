@@ -246,7 +246,7 @@ def validate_time(value):
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
-    if not "".equals(re.sub(validTimes, "", value)):
+    if not ""==(re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
 
     
@@ -256,7 +256,7 @@ def validate_day(value):
     if not patt.match(value):
         raise ValidationError('%s is not a valid day format!' % value)
 
-    if not "".equals(re.sub(validDays, "", value)):
+    if not ""==(re.sub(validDays, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
     
 class EventForm(forms.Form):
