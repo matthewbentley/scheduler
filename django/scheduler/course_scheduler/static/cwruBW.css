@@ -125,7 +125,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	position:absolute;
 	width:130px;
 	color:#000000;
-	border: 1px solid;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
 }
 
 .delbutton{
