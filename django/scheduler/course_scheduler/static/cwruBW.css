@@ -128,8 +128,9 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 }
 
 .delbutton{
-	background: url(images/delete.png) no-repeat right bottom;
+	background: url(images/delete.png) no-repeat right top;
 	width: 24px;
 	height: 24px;
-	padding-left: 24px;
+	padding-right: 24px;
+	border: none;
 }
