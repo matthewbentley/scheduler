@@ -251,8 +251,8 @@ def validate_day(value):
         raise ValidationError('%s is not a valid day format!' % value)
     
 class EventForm(forms.Form):
-    name=forms.CharField(max_length=100)
+    event_title=forms.CharField(max_length=100)
     start_time=forms.CharField(max_length=20, validators=[validate_time])
-    recur_type=forms.CharField(max_length=14, validators=[validate_day])
+    days=forms.CharField(max_length=14, validators=[validate_day])
 
 
