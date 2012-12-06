@@ -229,7 +229,7 @@ def customevent(request):
         if form.is_valid():
             return HttpResponseRedirect('/scheduler/')
     else:
-        form = EventForm
+        form = EventForm()
     
     response = render(request, 'custom.html', {'id' : id, 'form' : form})
     if setcookie == True:
@@ -237,20 +237,20 @@ def customevent(request):
     return response
 
 def validate_time(value):
-    validAMs = '[6-11]:[0-5][0-9]am'
-    validPMs = '([1-9]|12):[0-5][0-9]pm'
-    
-    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|(' + validPMs + '( )+-( )+' + validPMS + ')')
-    if not patt.match(value):
-        raise ValidationError('%s is not a valid time format!' % value)
-    return True
+##    validAMs = '[6-11]:[0-5][0-9]am'
+##    validPMs = '([1-9]|12):[0-5][0-9]pm'
+##    
+##    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|(' + validPMs + '( )+-( )+' + validPMS + ')')
+##    if not patt.match(value):
+##        raise ValidationError('%s is not a valid time format!' % value)
+##    return True
 
 def validate_day(value):
-    validDays = '((Su)|M|(Tu)|W|(Th)|F|(Sa))+'
-    patt = re.compile(validDays)
-    if not patt.match(value):
-        raise ValidationError('%s is not a valid day format!' % value)
-    return True
+##    validDays = '((Su)|M|(Tu)|W|(Th)|F|(Sa))+'
+##    patt = re.compile(validDays)
+##    if not patt.match(value):
+##        raise ValidationError('%s is not a valid day format!' % value)
+##    return True
     
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
