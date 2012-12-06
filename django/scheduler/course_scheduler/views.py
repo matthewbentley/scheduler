@@ -195,3 +195,26 @@ def removecourse(request):
         enroll.delete()
         return HttpResponseRedirect('/scheduler/')
     raise Http404
+
+def mycourses(request):
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+
+    toSend={}
+    if ins != None:
+        eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
+        classes = Instructs.objects.filter(meeting_id__in=eventIDs)
+        
+        for c in classes:
+            toSend[c]=True
+
+        response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
+        if setcookie == True:
+            response.__setitem__('Set-Cookie', cookie)
+        return response
+    return render(request, 'add.html', {'id' : id})
+    
