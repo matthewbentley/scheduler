@@ -235,25 +235,8 @@ def customevent(request):
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
             days = form.cleaned_data['days']
-            timeArr = time.split('-')
-            timeArr[0]=re.sub(r'( )+', "", timeArr[0])
-            timeArr[1]=re.sub(r'( )+', "", timeArr[1])
-    
-            startTimeArr = timeArr[0].split(':')
-            startTimeArr[1] = startTimeArr[1][:2]
-            startTimeArr[0] = int(startTimeArr[0])
-            startTimeArr[1] = int(startTimeArr[1])
-            if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
-                if startTimeArr != 12:
-                    startTimeArr[0] = startTimeArr[0] + 12
 
-            endTimeArr = timeArr[1].split(':')
-            endTimeArr[1] = endTimeArr[1][:2]
-            endTimeArr[0] = int(endTimeArr[0])
-            endTimeArr[1] = int(endTimeArr[1])
-            if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
-                if endTimeArr != 12:
-                    endTimeArr[0] = endTimeArr[0] + 12
+            startTimeArr, endTimeArr = parse_time(time)
             
             
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
@@ -284,30 +267,11 @@ def validate_time(value):
 
     if not ""==(re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
-
-    timeArr = value.split('-')
-    timeArr[0]=re.sub(r'( )+', "", timeArr[0])
-    timeArr[1]=re.sub(r'( )+', "", timeArr[1])
-
-    startTimeArr = timeArr[0].split(':')
-    startTimeArr[1] = startTimeArr[1][:2]
-    startTimeArr[0] = int(startTimeArr[0])
-    startTimeArr[1] = int(startTimeArr[1])
-    if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
-        if startTimeArr != 12:
-            startTimeArr[0] = startTimeArr[0] + 12
-
+    
+    startTimeArr, endTimeArr = parse_time(value)
+    
     actSTime = startTimeArr[0] + startTimeArr[1] / 60.0
-
-    endTimeArr = timeArr[1].split(':')
-    endTimeArr[1] = endTimeArr[1][:2]
-    endTimeArr[0] = int(endTimeArr[0])
-    endTimeArr[1] = int(endTimeArr[1])
-    if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
-        if endTimeArr != 12:
-            endTimeArr[0] = endTimeArr[0] + 12
-
-    actETime = startETimeArr[0] + startETimeArr[1] / 60.0
+    actETime = endTimeArr[0] + endTimeArr[1] / 60.0
 
     if actSTime >= actETime:
         raise ValidationError('Start Time must be after end Time!')
@@ -321,7 +285,27 @@ def validate_day(value):
     if not ""==(re.sub(validDays, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
 
-    
+def parse_time(array):
+    timeArr = value.split('-')
+    timeArr[0]=re.sub(r'( )+', "", timeArr[0])
+    timeArr[1]=re.sub(r'( )+', "", timeArr[1])
+
+    startTimeArr = timeArr[0].split(':')
+    startTimeArr[1] = startTimeArr[1][:2]
+    startTimeArr[0] = int(startTimeArr[0])
+    startTimeArr[1] = int(startTimeArr[1])
+    if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
+        if startTimeArr != 12:
+            startTimeArr[0] = startTimeArr[0] + 12
+            
+    endTimeArr = timeArr[1].split(':')
+    endTimeArr[1] = endTimeArr[1][:2]
+    endTimeArr[0] = int(endTimeArr[0])
+    endTimeArr[1] = int(endTimeArr[1])
+    if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
+        if endTimeArr != 12:
+            endTimeArr[0] = endTimeArr[0] + 12
+    return startTimeArr, endTimeArr
     
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
