@@ -126,3 +126,10 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	width:130px;
 	color:#000000;
 }
+
+.dulbutton{
+	background-image: url(images/delete.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	padding-right: 12px;
+}
