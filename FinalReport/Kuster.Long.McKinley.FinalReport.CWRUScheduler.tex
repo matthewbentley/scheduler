@@ -17,15 +17,15 @@
 December 7, 2012}
 \end{flushright}
 \end{titlepage}
-%\tableofcontents{}
-%\newpage
-\section*{Introduction Overview}
+\tableofcontents{}
+\newpage
+\section{Introduction Overview}
 Currently, there only exist functional but not particularly elegant ways for students to visualize their class schedules. For our project, we want to make a better Case Scheduler, one which works fast and is easy for students to use.\\
 
 \noindent When making a class schedule, it is very helpful to be able to see what your schedule looks like. The two systems currently available, SIS and scheduler.case.edu do an unsatisfactory job of displaying the schedule. The problem with SIS is that it's exceedingly slow and inefficient for course planning, and is much more suited to only doing course enrollment. The problem with scheduler.case.edu is that not only is it slow to open and do anything, but it is impossible to print without using the Print Screen function on your computer, exporting it to an image, and printing that image. In addition, there are many expansions which could be made to functionality, such as easy sharing of schedules and planning your schedule with friends. What we plan to do is to duplicate the functionality of the current Case Scheduler, while completely rewriting the user interface and backend code to allow for a better user experience.\\
 
 \noindent We will be using two technologies to implement this scheduler. First, we will be using Python and the Django framework for programming our web application. Second, we will be using MySQL for our database.
-\section*{Application Requirements Specifications}
+\section{Application Requirements Specifications}
 \begin{enumerate}[1.]
 \item The system will maintain a per-user list of courses.\\\\
 This is the main focus of our project. Our object is to create a place to which students are able to come and put in and plan their schedule. In order for this to happen, we must maintain per-user lists of courses. These lists of courses will be maintained for four years, after which point they will be discarded. We will allow for creation of lists for the current semester, as well as the next semester once the data is available from the Student Information System.
@@ -53,8 +53,8 @@ This is necessary in order to allow users to plan a next semester while having a
 In order to be a one-stop schedule manager, as well as to remain more feature-complete than the current case scheduler, we will be adding support for custom events such as TA sessions, jobs, and other user-defined events. These custom events will have all of the behavior of courses, but will be visible only to their creator, i.e they will not appear in searches. The add dialog will look similar to below.\\
 \includegraphics[width=130mm]{add_event.png}
 \end{enumerate}
-\section*{Database Requirements Specifications}
-\subsection*{Objects and Relationships}
+\section{Database Requirements Specifications}
+\subsection{Objects and Relationships}
 \begin{enumerate}[1.]
 \item Course Offering: The database will have an instance of course offering for each course offered by CWRU. Every course offering is-a course, which is described below. This entity it important to our application because a course offering is the typical item that a user will actually had to his or her schedule. A course offering will have at least the following attributes: offering id, term, subject, status, dates, days/times, room, total capacity, current enrollment, and description.\\\\  In explanation, the "component" attribute represents the type of the course, whether it's a lecture, recitation, or similar. The "status" attribute represents whether the course is  open, closed, or other, which is important for a user to know when scheduling for a certain course. "Current Enrollment" signifies how many other students are registered for the course offering. "Description" is a paragraph explanation of the course provided by the department or professor, also important info for a user browsing through various courses.
 \item Course: every course offering is-a course. A course entity is useful to have for this application because it will allows the application to more easily display all of the course offering for a selected course. The course entity will have the following attributes: title, catalog number, component, units (max), and label. In explanation, the "label" attribute corresponds to a short combination of the of the subject, catalog number, and title. The catalog number corresponds to the course number within that courses department (e.g. 314 for EECS 341). Courses will also have prerequisite as specified by the Has\_Prerequisite relationship, detailed below.
@@ -66,7 +66,7 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \item Custom Event: Like the current Case Scheduler, our application will allow users to add their own recurring custom events to the schedule. A good example might be an extra-curricular actives such as band rehearsals or sport practices. As such, the databases needs a separate entity to store these events. This entity will have the following attributes: days/times, location, title, semester, and description. This entity will be a weak entity and each custom event will be connected to a single user through the Has relationship.
 \item Has Relationship: The Has relationship, again, connects users to the custom events they have created. This relationship is a one-to-many relationship, so a user may have many custom events, and it requires full participation on the part of the custom event entities.
 \end{enumerate}
-\subsection*{Queries and Transactions}
+\subsection{Queries and Transactions}
 \begin{enumerate}[1.]
 \item Get\_List:  Since the application is centered around displaying a graphical representation of a list of courses, we will need to retrieve the list of courses associated with the current user.  Since we will not be storing this list in cookies, we will need to retrieve it from the database every time we seek to display it.  This will be required approximately once per page-view.  This will require as input the user ID (Case ID), and produce as output a list of course ids.
 \item Lookup\_Course:  Since the application will need to display information about each course in the list of courses, we will need to retrieve this information.  This information will include things like course title, course description, instructor, course time, and course location.  Since most lists will contain more than one course, we will need to perform this query more than one time per page view.  This query will require as input a course ID, and will return several columns which will be used to build the calendar.
@@ -75,12 +75,12 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \item Lookup\_Instructor:  One feature that users might desire is the ability to lookup all courses that a particular instructor is teaching.  This means that we will want to index the courses table by instructor as well as by course ID.  This query will be used much less frequently than the other queries and transactions because the primary feature of the application is display of a calendar, not viewing the courses taught by a particular instructor.  This transaction will take as input the instructor name, and will return a list of course IDs taught by that instructor.
 \item Create\_Event: Users will be allowed to create their own custom events to add to any schedule they desire. The application will use the event's semester attribute to determine which schedule to add the event to.
 \end{enumerate}
-\subsection*{Actions and Events}
+\subsection{Actions and Events}
 \begin{enumerate}[1.]
 \item This application will display users' schedules based on the currently selected semester, with the default semester being the current semester at the time of the user login. The application will have a drop down list or similar form that will allow users' to select any other schedule in which the user has a course. As can be seen above, the database does not have an actual "schedule" object. To craft various semester schedules, the course offering relations will just be queried for term and the user's schedules will be constructed off of that. All of a user's schedules will be stored until that user is deleted, see \textit{Integrity Constraints} for user deletion policies.
 \item An event that will happen every time the application is used by any user is a user login. To use this application a user must have a CWRU ID and password, and will log in with the CWRU Single Sign-On Service. By logging in, the application will be able to identify the user and load all of that user's schedules.
 \end{enumerate}
-\subsection*{Integrity Constraints}
+\subsection{Integrity Constraints}
 \begin{enumerate}
 \item Users must be enrolled in at least one course offering. If, for some reason, a user is no longer enrolled in any course offering, then that user is removed from the database. If the user wants to use an application after being deleted, than a new "user" object for that user will be created upon log-in, as if that user was a first time user.
 \item This application may have to handle up to all CWRU community members and several schedules per user. In order to maintain a flexible ceiling on the database, users that have been inactive for more than four years. If a user is removed and one of the course offerings that that user was enrolled in no longer has any users enrolled in it, then that course offering is deleted as well.
@@ -89,11 +89,11 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \item Every custom event must be involved in a Has relationship with some user.
 \item Every course offering must satisfy the is-a course relationship.
 \end{enumerate}
-\section*{ER Diagram}
+\section{ER Diagram}
 \includegraphics[width=120mm]{ERDiagram.png}
 \FloatBarrier
 \pagebreak
-\section*{Relational Model}
+\section{Relational Model}
 \begin{verbatim} 
 CREATE_TABLE User
   (userid CHAR(6),
@@ -160,7 +160,7 @@ CREATE TABLE Instructor
 	officeLocal CHAR(20),
 	phoneNumber INTEGER)
   \end{verbatim}
-\subsection*{Justification of Relational Model}
+\subsection{Justification of Relational Model}
 \begin{itemize}
 \item User HAS Custom Event (1:N, full participation from Custom Event to Has)
 \subitem This relationship is satisfied by two pieces: first, the Custom Event has a key for the id of the user to which it is attached. This satisfies the 1:N part of the relationship. Second, the id is listed as NOT NULL, which enforces the full participation.
@@ -173,7 +173,7 @@ CREATE TABLE Instructor
 \item Course Has\_Prerequisite
 \subitem The Has\_Prerequisite relationship is satisfied by the inclusion of the Has\_Prerequisite table. It contains two keys, one key for the course in question, and another for the course for which it is a prerequisite. In this way, one course can have multiple prerequisites and can also be a prerequisite for multiple classes.
 \end{itemize}
-\section*{Installing on a DBMS}
+\section{Installing on a DBMS}
 We successfully installed mysql on a linux machine that one of our group members owns.  The machine is running Ubuntu, so the installation was a very straightforward process.  We simply ran 'apt-get install mysql-server'.  After that, we needed to create the scheduler database, which was done simply:\\\\
 \begin{verbatim}
 CREATE DATABASE scheduler;
@@ -216,7 +216,7 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \end{figure}
 \end{flushleft}
 
-\section*{SQL Queries}
+\section{SQL Queries}
 \begin{enumerate}[1.]
 \item Query: Find the id of the student who only takes all of the courses taught by Professor X in Fall 2012\\
 \begin{enumerate}[i.]
@@ -249,4 +249,56 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \item SQL:
 \end{enumerate}
 \end{enumerate}
+
+\appendix
+\section{Appendix 2. User's Manual}
+\subsection{Starting Case Scheduler}
+To access the Case Western Reserve University scheduler you must be either  a student or faculty member at the University. Specifically, you must have a "Case ID" in order to login through Case's Single Sign-On service.\\
+
+So, to start using the scheduler, go to \underline{http:$\\$concertina.case.edu/scheduler} and, when prompted, login with your Case ID and password. This will bring you to Case Scheduler's home page and your schedule! So anytime you actually want to view your schedule just go to \underline{http:$\\$concertina.case.edu/scheduler}\\
+
+\subsection{Adding Courses}
+As a student or professor, one of the most common events on your schedule will be classes. To add a course find the underlined "Add a Course" link at the top of the page and click.\\
+
+You should be brought to a page with blank "Search" bar and an empty table. To search for a class enter your search criteria into the search box. The search feature currently supports search by department, course name, and/or course number.\\
+
+So let's say you want to add "Introduction to Database Systems" to your schedule. You could try searching for "intro" or "introduction", but that would return of introduction courses at CWRU! Instead let's search for "database". Two classes should be returned: "EECS 433: Database Systems" and "EECS 341: Introduction to Database Systems".\\
+
+You should see that the table of search results we just created displays some basic information about the courses. It displays the professor, "Meral Ozsoyoglu" in this case, the "times" for the course, and a button that adds the selected course to your schedule. As a note on the time fields, this web service uses the following convention: Sunday = Su, Monday=M, Tuesday=Tu, Wednesday=W, Thursday=Th, Friday=F, and Saturday=Sa. Let's go ahead and add EECS 341 to your schedule by clicking the "Add Course" button next to "EECS 341: Introduction to Database Systems".\\
+
+\subsection{Course Information} 
+Continuing from the "Adding Courses" section, you should be back on the main schedule page and you should have 1 class, "EECS 341", displayed on your schedule is some pleasant color.\\
+
+Now we'll show you a different way to add a course to your schedule. Click the "Add a Course" link at the top of the page again. Let's search for "EECS 337". The search should return 1 result: "EECS 337: Compiler Design" taught by Daniel Oldham. Instead of adding the course directly from this page, we're going to go ahead and clicking on the name of the course.\\
+
+You should have been brought to a course information page for "Compiler Design". You'll notice that a lot of different information is displayed for the course. Along with the name of the course, you should see the times and days for the course, the course location, the professor for the course, and a short description of the course. Finally, at the very bottom you should see an "Add Course" button. Go ahead and click that.
+
+\subsection{Professors}
+Continuing from the "Course Information" section, you should be back on the main schedules page and now have 2 classes in your schedule, "EECS 341" and "EECS 337". Now go ahead and click the "Search for a Professor" link at the top of the page.\\
+
+You should be brought to a page with a "Search" bar and an empty table. Let's search for "Fred". Two results should be displayed: "Bernard Jim" and "Jim Shaffer". Go ahead and click on Professor Shaffer's name.\\
+
+You should be brought to a short information page displaying the email and office for Professor Schafer. There should also be a link at the bottom of the page, "View all classes", go ahead and click it. This link will display all the classes currently taught by Professor Shaffer.\\
+
+In this case, only 2 courses will be displayed "ANTH 331" and "ANTH 107". You may notice that we are the same type of page as the "Add a Course" page, and you'd be right! You should notice that from this page you could also click on "Jim Shaffer" and that would just take you back to your Professor Shaffer's page again. Let's go ahead and ad "ANTH 107" to our schedule by clicking the "Add Course" button.\\
+
+\subsection{My Courses}
+Continuing from the "Professors" section, you should once again be back on the main schedule page, but now have 3 classes in your schedule. Let's go ahead and click the "My Courses" link at the top of the screen.\\
+
+You should be brought to a table displaying the list of the 3 courses currently in your schedule. You'll that it's exactly the same as an "Add a Course Page". Let's go ahead and remove "ANTH 107" from your schedule by clicking the "Remove Course" button, because who wants to take anthropology anyway? Note, that this "Remove Course" button will be available anywhere where you have seen an "Add Course" button for the classes that are already in your schedule. You should be brought back to the main schedule page and now you should see that "ANTH 107" is no longer in your schedule.\\
+
+\subsection{Courses on the Schedule}
+Continuing on from the "My Courses" section, you should have 2 courses currently in your schedule. Notice that the names of the courses are underlined, this means that they represent links. Let's go ahead and click on "EECS 337". You should be brought to the familiar course information page for EECS 337, though now it says "Remove Course" at the bottom instead of "Add Course". Go ahead and click "Remove Course", you should be brought to the main schedule page, and now EECS 337 should no longer be in the your schedule.\\
+
+Look at the last course in your schedule, EECS 341, you should see an "X" icon in the bottom right of the colored course. Clicking this button removes the select event from your schedule, go ahead and remove EECS 341 from the schedule.
+
+\subsection{Custom Events}
+Continuing on from the "Courses on the Schedule", you will now learn how to add your own events to your schedule. Go ahead and click the "Custom Event" link at the top of the page. You should see a series of text fields that correspond to information you want to enter for your custom event. Note that all fields are mandatory.\\
+
+"Event title" corresponds to the name of your event, and will be what is actually displayed on your schedule. The "Times" field represents the duration of your event. NOTE: your choice time must be passed in in the following format: "xx:xxAM/PM - xx:xxAM/PM" where x is a valid digit 0-9. Note that a time such as "9:00" can be entered in as such, it does not have to be "09:00". Also the end time for the interval cannot be before te start time.\\
+
+The "Start Date" and "End Date" fields correspond to the time period during which you want your event to recur. These dates should be entered in in the dd/mm/yy format. Finally the days field corresponds to on which days your event recurs. E.G. MWF would correspond to "Monday", "Wednesday", and "Friday". Go ahead and create a custom event and add it to your schedule. On clicking "Create Event" you should be returned to the main schedule page, and you should see your event on your schedule. If you want to delete a custom event, simply click the the "x" button as you would to delete a course.\\
+
+Congratulations, you've successfully made it through he entire basic User's Manual for the new Case Scheduler. If you have any questions, comments, or concerns, please email our dev team at stuart.long@case.edu
+
 \end{document}
