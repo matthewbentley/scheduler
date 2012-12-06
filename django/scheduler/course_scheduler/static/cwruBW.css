@@ -135,5 +135,5 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	border: none;
 	position:absolute; 
 	bottom:1;
-	right:100%;
+	right:0;
 }
