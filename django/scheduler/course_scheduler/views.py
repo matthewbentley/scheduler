@@ -231,8 +231,8 @@ def customevent(request):
         if form.is_valid():
             name = form.cleaned_data['event_title']
             time = form.cleaned_data['times']
-            sdate = form.cleaned_date['start_date']
-            edate = form.cleaned_date['end_date']
+            sdate = form.cleaned_data['start_date']
+            edate = form.cleaned_data['end_date']
             days = form.cleaned_data['days']
             timeArr = time.split('-')
             timeArr[0]=re.sub(r'( )+', "", timeArr[0])
