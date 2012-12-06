@@ -295,7 +295,6 @@ def validate_day(value):
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
     times=forms.CharField(max_length=20, validators=[validate_time])
-    end_time=forms.TimeField()
     start_date=forms.DateField()
     end_date=forms.DateField()
     days=forms.CharField(max_length=14, validators=[validate_day])
