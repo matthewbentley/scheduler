@@ -231,7 +231,7 @@ def customevent(request):
     else:
         form = EventForm
     
-    response = render(request, 'customevent.html', {'id' : id, 'form' : form})
+    response = render(request, 'custom.html', {'id' : id, 'form' : form})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
