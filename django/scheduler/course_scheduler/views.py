@@ -24,7 +24,7 @@ def schedule(request):
     if cookie != "":
         setcookie = True
     colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
-
+    color_temp = list(colors)
 
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
@@ -43,9 +43,11 @@ def schedule(request):
             height *= 60
             height *= 1.2
             height += 3
-            randColor = random.randint(0, len(colors)-1)
-            color = colors[randColor] + ''
-            del colors[randColor]
+            if len(colors_temp) == 0:
+                colors_temp = list(colors)
+            randColor = random.randint(0, len(color_temp)-1)
+            color = color_temp[randColor] + ''
+            del color_temp[randColor]
             toSend[event] = [top, height, color]
 
 
