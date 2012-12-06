@@ -230,32 +230,31 @@ def customevent(request):
         form = EventForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['event_title']
-            stime = form.cleaned_data['start_time']
-            etime = form.cleaned_date['end_time']
+            time = form.cleaned_data['times']
             sdate = form.cleaned_date['start_date']
             edate = form.cleaned_date['end_date']
             days = form.cleaned_data['days']
-##            timeArr = time.split('-')
-##            timeArr[0]=re.sub(r'( )+', "", timeArr[0])
-##            timeArr[1]=re.sub(r'( )+', "", timeArr[1])
-##    
-##            startTimeArr = timeArr[0].split(':')
-##            startTimeArr[1] = startTimeArr[1][:2]
-##            startTimeArr[0] = int(startTimeArr[0])
-##            startTimeArr[1] = int(startTimeArr[1])
-##            if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
-##                startTimeArr[0] = startTimeArr[0] + 12
-##
-##            endTimeArr = timeArr[1].split(':')
-##            endTimeArr[1] = endTimeArr[1][:2]
-##            endTimeArr[0] = int(endTimeArr[0])
-##            endTimeArr[1] = int(endTimeArr[1])
-##            if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
-##                endTimeArr[0] = endTimeArr[0] + 12
+            timeArr = time.split('-')
+            timeArr[0]=re.sub(r'( )+', "", timeArr[0])
+            timeArr[1]=re.sub(r'( )+', "", timeArr[1])
+    
+            startTimeArr = timeArr[0].split(':')
+            startTimeArr[1] = startTimeArr[1][:2]
+            startTimeArr[0] = int(startTimeArr[0])
+            startTimeArr[1] = int(startTimeArr[1])
+            if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
+                startTimeArr[0] = startTimeArr[0] + 12
+
+            endTimeArr = timeArr[1].split(':')
+            endTimeArr[1] = endTimeArr[1][:2]
+            endTimeArr[0] = int(endTimeArr[0])
+            endTimeArr[1] = int(endTimeArr[1])
+            if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
+                endTimeArr[0] = endTimeArr[0] + 12
             
             
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
-            event = CustomEvent(start_time=stime, end_time=etime, start_date=sdate, end_date=edate, recur_type=days, event_name=name)
+            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=days, event_name=name
             event.save()
 
             stu = Student.objects.get(case_id=id)
@@ -295,7 +294,7 @@ def validate_day(value):
     
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
-    start_time=forms.TimeField()
+    times=forms.CharField(max_length=20, validators=[validate_time])
     end_time=forms.TimeField()
     start_date=forms.DateField()
     end_date=forms.DateField()
