@@ -140,7 +140,7 @@
 					{% if "Th" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-						<span style="width:110px"><a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a></span>
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						{{e.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}							
