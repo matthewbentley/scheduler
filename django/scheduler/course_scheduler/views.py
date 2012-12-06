@@ -24,7 +24,7 @@ def schedule(request):
     if cookie != "":
         setcookie = True
     colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
-    color_temp = list(colors)
+
 
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
@@ -43,11 +43,9 @@ def schedule(request):
             height *= 60
             height *= 1.2
             height += 3
-            if len(color_temp) == 0:
-                color_temp = list(colors)
-            randColor = random.randint(0, len(color_temp)-1)
-            color = color_temp[randColor] + ''
-            del color_temp[randColor]
+            randColor = random.randint(0, len(colors)-1)
+            color = colors[randColor] + ''
+            del colors[randColor]
             toSend[event] = [top, height, color]
 
 
@@ -246,14 +244,16 @@ def customevent(request):
             startTimeArr[0] = int(startTimeArr[0])
             startTimeArr[1] = int(startTimeArr[1])
             if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
-                startTimeArr[0] = startTimeArr[0] + 12
+                if startTimeArr not 12:
+                    startTimeArr[0] = startTimeArr[0] + 12
 
             endTimeArr = timeArr[1].split(':')
             endTimeArr[1] = endTimeArr[1][:2]
             endTimeArr[0] = int(endTimeArr[0])
             endTimeArr[1] = int(endTimeArr[1])
             if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
-                endTimeArr[0] = endTimeArr[0] + 12
+                if endTimeArr not 12:
+                    endTimeArr[0] = endTimeArr[0] + 12
             
             
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
@@ -285,6 +285,32 @@ def validate_time(value):
     if not ""==(re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
 
+    timeArr = value.split('-')
+    timeArr[0]=re.sub(r'( )+', "", timeArr[0])
+    timeArr[1]=re.sub(r'( )+', "", timeArr[1])
+
+    startTimeArr = timeArr[0].split(':')
+    startTimeArr[1] = startTimeArr[1][:2]
+    startTimeArr[0] = int(startTimeArr[0])
+    startTimeArr[1] = int(startTimeArr[1])
+    if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
+        if startTimeArr not 12:
+            startTimeArr[0] = startTimeArr[0] + 12
+
+    actSTime = startTimeArr[0] + startTimeArr[1] / 60.0
+
+    endTimeArr = timeArr[1].split(':')
+    endTimeArr[1] = endTimeArr[1][:2]
+    endTimeArr[0] = int(endTimeArr[0])
+    endTimeArr[1] = int(endTimeArr[1])
+    if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
+        if endTimeArr not 12:
+            endTimeArr[0] = endTimeArr[0] + 12
+
+    actETime = startETimeArr[0] + startETimeArr[1] / 60.0
+
+    if actSTime >= actETime:
+        raise ValidationError('Start Time must be after end Time!')
     
 def validate_day(value):
     validDays = '((Su)|(M)|(Tu)|(W)|(Th)|(F)|(Sa))+'
@@ -294,6 +320,8 @@ def validate_day(value):
 
     if not ""==(re.sub(validDays, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
+
+    
     
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
@@ -301,5 +329,3 @@ class EventForm(forms.Form):
     start_date=forms.DateField()
     end_date=forms.DateField()
     days=forms.CharField(max_length=14, validators=[validate_day])
-
-
