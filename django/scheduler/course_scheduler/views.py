@@ -205,16 +205,14 @@ def mycourses(request):
         setcookie = True
 
     toSend={}
-    if ins != None:
-        eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
-        classes = Instructs.objects.filter(meeting_id__in=eventIDs)
+    eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
+    classes = Instructs.objects.filter(meeting_id__in=eventIDs)
         
-        for c in classes:
-            toSend[c]=True
+    for c in classes:
+        toSend[c]=True
 
-        response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
-        if setcookie == True:
-            response.__setitem__('Set-Cookie', cookie)
-        return response
-    return render(request, 'add.html', {'id' : id})
+    response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
     
