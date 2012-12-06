@@ -240,7 +240,7 @@ def customevent(request):
 def validate_time(value):
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
-    validTimes = '(' + validAMs + '( )+-( )+' + validAMs + ')|(' + validAMs + '( )+-( )+' + validPMs + ')|(' + validPMs + '( )+-( )+' + validPMs + ')'
+    validTimes = '(' + validAMs + '( )*-( )*' + validAMs + ')|(' + validAMs + '( )*-( )*' + validPMs + ')|(' + validPMs + '( )*-( )*' + validPMs + ')'
     
     patt = re.compile(validTimes)
     if not patt.match(value):
