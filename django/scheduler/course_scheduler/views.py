@@ -6,6 +6,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 import re
 import sys
 import random
@@ -240,7 +241,7 @@ def validate_time(value):
     validAMs = '[6-11]:[0-5][0-9]am'
     validPMs = '([1-9]|12):[0-5][0-9]pm'
     
-    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|(' + validPMs + '( )+-( )+' + validPMS + ')')
+    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMs + ')|(' + validAMs + '( )+-( )+' + validPMs + ')|(' + validPMs + '( )+-( )+' + validPMs + ')')
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
     
