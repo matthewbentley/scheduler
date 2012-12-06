@@ -130,6 +130,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 .delbutton{
 	background: url(images/delete.png) no-repeat right top;
 	width: 16px;
+	padding-right: 5px;
 	height: 16px;
 	border: none;
 	float: right;
