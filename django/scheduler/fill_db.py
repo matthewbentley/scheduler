@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from course_scheduler.models import Class, MeetingTime, Instructor, Instructs, Event
 import course_scheduler
 import sys
+import re
 
 def add_twelve_hours(time):
     time_hour = time.split(":")[0]
@@ -66,7 +67,11 @@ def main():
                     desc = ""
 
             try:
-                c_num = int(re.match(r'\d+', c_num).group())
+                c_num = int(re.search(r'\d+', c_num).group())
+            except Exception:
+                print c_num
+                c_num = int(c_num)
+            try:
                 d = unicode(d)
                 name = unicode(name)
                 if len(desc) > 4096:
