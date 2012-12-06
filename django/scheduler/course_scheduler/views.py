@@ -240,15 +240,23 @@ def customevent(request):
 def validate_time(value):
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
+    validTimes = '(' + validAMs + '( )+-( )+' + validAMs + ')|(' + validAMs + '( )+-( )+' + validPMs + ')|(' + validPMs + '( )+-( )+' + validPMs + ')'
     
-    patt = re.compile('(' + validAMs + '( )+-( )+' + validAMs + ')|(' + validAMs + '( )+-( )+' + validPMs + ')|(' + validPMs + '( )+-( )+' + validPMs + ')')
+    patt = re.compile(validTimes)
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
+
+    if not "".equals(re.sub(validTimes, "", value)):
+        raise ValidationError('%s is not a valid day format!' % value)
+
     
 def validate_day(value):
     validDays = '((Su)|(M)|(Tu)|(W)|(Th)|(F)|(Sa))+'
     patt = re.compile(validDays)
     if not patt.match(value):
+        raise ValidationError('%s is not a valid day format!' % value)
+
+    if not "".equals(re.sub(validDays, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
     
 class EventForm(forms.Form):
