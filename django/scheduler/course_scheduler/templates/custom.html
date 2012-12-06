@@ -21,12 +21,13 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/addevent" action="get">{% csrf_token %}
-<label for="e_name">Event Title:</label>
-<input id="name" type="text" name="Enter" maxlength="100" /></p></form>
+{{ form.as_p }}
+<!--<label for="e_name">Event Title:</label>
+<input id="name" type="text" name="Enter" maxlength="100" />
 
 <label for="e_name">Time (e.g. 9:00am - 1:00pm):</label>
-{{ form.as_p }}
-<!--<input id="start_time" type="text" name="Search" maxlength="100" /><br>
+
+<input id="start_time" type="text" name="Search" maxlength="100" /><br>
 <label for="e_days">Days (SuMTuWThFSa):</label>
 <input id="recur_type" type="text" name="Search" maxlength="100" /><br>-->
 <input type="hidden" name="id" value="{{id}}"/>

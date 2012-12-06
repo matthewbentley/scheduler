@@ -237,9 +237,9 @@ def customevent(request):
     return response
 
 class EventForm(forms.Form):
-    name=forms.CharField(maxlength=100)
-    start_time=forms.CharField(maxlength=20, validators=[validate_time])
-    recur_type=forms.CharField(maxlength=14, validators=[validate_day])
+    name=forms.CharField(max_length=100)
+    start_time=forms.CharField(max_length=20, validators=[validate_time])
+    recur_type=forms.CharField(max_length=14, validators=[validate_day])
 
 def validate_time(value):
     validAMs = '[6-11]:[0-5][0-9]am'
