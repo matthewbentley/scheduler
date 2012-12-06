@@ -239,14 +239,14 @@ def customevent(request):
             startTimeArr[1] = startTimeArr[1][:2]
             startTimeArr[0] = int(startTimeArr[0])
             startTimeArr[1] = int(startTimeArr[1])
-            if pm in timeArr[0] or PM in timeArr[0]:
+            if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
                 startTimeArr[0] = startTimeArr[0] + 12
 
             endTimeArr = timeArr[1].split(':')
             endTimeArr[1] = endTimeArr[1][:2]
             endTimeArr[0] = int(endTimeArr[0])
             endTimeArr[1] = int(endTimeArr[1])
-            if pm in timeArr[1] or PM in timeArr[1]:
+            if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
                 endTimeArr[0] = endTimeArr[0] + 12
             
             
