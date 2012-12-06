@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.core.exceptions import ValidationError
-from datetime import time
+import datetime
 import re
 import sys
 import random
@@ -251,7 +251,7 @@ def customevent(request):
                 endTimeArr[0] = endTimeArr[0] + 12
             
             
-            event = CustomEvent(start_time=time(startTimeArr[0], startTimeArr[1]), end_time=time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
+            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event.save()
 
             stu = Student.objects.get(case_id=id)
