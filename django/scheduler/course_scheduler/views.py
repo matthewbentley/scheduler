@@ -246,11 +246,11 @@ def validate_time(value):
     validPMs = '([1-9]|12):[0-5][0-9]pm'
     
     patt = re.compile('(' + validAMs + '( )+-( )+' + validAMS + ')|(' + validAMs + '( )+-( )+' + validPMS + ')|(' + validPMs + '( )+-( )+' + validPMS + ')')
-    if !patt.match(value):
+    if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
 def validate_day(value):
     validDays = '((Su)|M|(Tu)|W|(Th)|F|(Sa))+'
     patt = re.compile(validDays)
-    if !patt.match(value):
+    if not patt.match(value):
         raise ValidationError('%s is not a valid day format!' % value)
