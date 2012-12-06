@@ -58,7 +58,7 @@
 			<div style="position:absolute;top:1165px">8:00pm</div>
 			<div style="position:absolute;top:1245px">9:00pm</div>
 			</td>
-			<td class="day" style="position:absolute">
+			<td class="day" >
 				{% for e, t in events.iteritems %}
 					{% if "Su" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">

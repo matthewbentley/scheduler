@@ -82,7 +82,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	/*height: 1120px;*/
 	height: 1195px;
 	width: 130px;
-		
+	position:absolute;	
 	vertical-align: top;
 }
 
