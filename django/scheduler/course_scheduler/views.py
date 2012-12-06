@@ -237,6 +237,7 @@ def customevent(request):
     return response
 
 def validate_time(value):
+    return True
 ##    validAMs = '[6-11]:[0-5][0-9]am'
 ##    validPMs = '([1-9]|12):[0-5][0-9]pm'
 ##    
@@ -246,6 +247,7 @@ def validate_time(value):
 ##    return True
 
 def validate_day(value):
+    return True
 ##    validDays = '((Su)|M|(Tu)|W|(Th)|F|(Sa))+'
 ##    patt = re.compile(validDays)
 ##    if not patt.match(value):
