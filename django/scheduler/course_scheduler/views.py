@@ -243,12 +243,14 @@ def validate_time(value):
     
     patt = re.compile('(' + validAMs + '( )+-( )+' + validAMs + ')|(' + validAMs + '( )+-( )+' + validPMs + ')|(' + validPMs + '( )+-( )+' + validPMs + ')')
     if not patt.match(value):
+        return False
         raise ValidationError('%s is not a valid time format!' % value)
     
 def validate_day(value):
     validDays = '((Su)|M|(Tu)|W|(Th)|F|(Sa))+'
     patt = re.compile(validDays)
     if not patt.match(value):
+        return False
         raise ValidationError('%s is not a valid day format!' % value)
     
 class EventForm(forms.Form):
