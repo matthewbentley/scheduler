@@ -127,7 +127,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	color:#000000;
 }
 
-.dulbutton{
+.delbutton{
 	background-image: url(images/delete.png);
 	background-repeat: no-repeat;
 	background-position: right;
