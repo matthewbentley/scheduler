@@ -294,7 +294,7 @@ def validate_time(value):
     startTimeArr[0] = int(startTimeArr[0])
     startTimeArr[1] = int(startTimeArr[1])
     if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
-        if startTimeArr not 12:
+        if startTimeArr != 12:
             startTimeArr[0] = startTimeArr[0] + 12
 
     actSTime = startTimeArr[0] + startTimeArr[1] / 60.0
@@ -304,7 +304,7 @@ def validate_time(value):
     endTimeArr[0] = int(endTimeArr[0])
     endTimeArr[1] = int(endTimeArr[1])
     if 'pm' in timeArr[1] or 'PM' in timeArr[1]:
-        if endTimeArr not 12:
+        if endTimeArr != 12:
             endTimeArr[0] = endTimeArr[0] + 12
 
     actETime = startETimeArr[0] + startETimeArr[1] / 60.0
