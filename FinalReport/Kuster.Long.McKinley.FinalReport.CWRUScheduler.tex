@@ -218,6 +218,35 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 
 \section*{SQL Queries}
 \begin{enumerate}[1.]
-\item 
+\item Query: Find the id of the student who only takes all of the courses taught by Professor X in Fall 2012\\
+\begin{enumerate}[i.]
+\item RA: 
+\item TRC: $\{t^1\vert(\exists s)(Students(s)\wedge t[1]=s.case\_id)\wedge(\forall m)(\forall c)(\forall e)(MeetingTime(m) \wedge Class(c) \wedge Enrollment(e) \wedge m.meeting_class=c.pk \wedge c.term="Fall 2012" \wedge e.student=s.case\_id \wedge e.event=m.id \rightarrow (\exists p)(\exists i)(Instructor(p) \wedge Instructs(i) \wedge p.name = "Professor X" \wedge i.instructor=p.name \wedge i.meeting=m.id))\}$
+\item SQL:
+\end{enumerate}
+\item Query: Find the name of the EECS class for which there is a meeting time taken by all students that doesn't conflict with any other EECS class\\
+\begin{enumerate}[i.]
+\item RA:
+\item TRC: $\{v^1\vert(\exists c)(\exists m)(Class(c) \wedge MeetingTime(m) \wedge v[1]=c.classname \wedge m.meeting\_class=c.pk \wedge ((\forall s)(Student(s) \rightarrow (\exists e)(Enrollment(e) \wedge e.student=s.case\_id \wedge e.event\_id = m.id))) \wedge (\forall t)(MeetingTime(t) \wedge m.id\le\ge t.id \rightarrow (m.recur\_type<>t.recur\_type) \vee ((m.start\_date \leq t.start\_date \wedge m.end\_date \leq t.start\_date) \vee (m.end\_date \geq t.end\_date \wedge m.start\_date \geq t.end\_date)) \vee (m.start\_time \leq t.start\_time \wedge m.end\_time \leq t.start\_time) \vee (m.end\_time \geq t.end\_time \wedge m.end\_time \geq t.end\_time)))\}$
+\item SQL:
+\end{enumerate}
+\item Query: Find the names of instructors who teaches any course taken by srl51 after 3:00pm and don't teach any course taken by jrk126
+\begin{enumerate}[i.]
+\item RA:
+\item TRC: $\{t^1\vert(\exists p)(\exists s)(\exists i)(\exists e)(\exists m)(Instructors(p) \wedge Students(s) \wedge Instructs(i) \wedge Enrollment(e) \wedge MeetingTime(m) \wedge t[1]=p.name \wedge s.case\_id="srl51" \wedge i.instructor=p.name \wedge e.student=s.case\_id \wedge e.event\_id=i.meeting\_id \wedge m.start\_time>"3:00pm" \wedge (\exists s2)(Students(s2) \wedge s2.case\_id="jrk126" \wedge (\forall e2)(Enrollment(e2) \wedge e2.student=s2.case\_id \rightarrow \wedge (\exists i2)(Instructs(i2) \wedge i2.meeting\_id=e2.event\_id \wedge i2.instructor<>p.name))))\}$
+\item SQL:
+\end{enumerate}
+\item Query: Find the names of the teachers and ids of the students who have the exact same class schedule, time wise, ie they are busy with classes at the same times.
+\begin{enumerate}[i.]
+\item RA:
+\item TRC: $\{t^2\vert(\exists p)(\exists s)(Instructors(p) \wedge Students(s) \wedge t[1]=p.name \wedge t[2]=s.case\_id \wedge (\forall i)(Instructs(i) \wedge i.instructor=p.name \rightarrow (\exists e)(Enrollment(e) \wedge e.event\_id=i.event\_id \wedge e.student=s.case\_id)) \wedge (\forall e)(Enrollment(e) \wedge e.student=s.case\_id \rightarrow (\exists i)(Instructs(i) \wedge e.event\_id=i.event\_id \wedge i.instructor=p.name)))\}$
+\item SQL:
+\end{enumerate}
+\item Query: Find the names of the classes that srl51 can't take because the custom event "band practice" conflicts with the class.
+\begin{enumerate}[i.]
+\item RA:
+\item TRC: $\{t^1\vert(\exists c)(\exists e)(\exists n)(Class(c) \wedge CustomEvent(e) \wedge Enrollment(n) \wedge t[1]=c.classname \wedge n.event=e.id \wedge n.student="srl51" \wedge e.event\_name="Band Practice"(\forall m)(MeetingTime(m) \wedge m.meeting\_class=c.pk \rightarrow m.recur\_type=e.recur\_type \wedge ((m.start\_date \geq e.start\_date \wedge m.start\_date \leq e.end\_date) \vee (m.end\_date \leq e.end\_date \wedge m.end\_date \geq e.start\_date)) \wedge ((m.start\_time \geq e.start\_time \wedge m.start\_time \leq e.end\_time) \vee (m.end\_time \leq e.end\_time \wedge m.end\_time \geq e.start\_time))\}$
+\item SQL:
+\end{enumerate}
 \end{enumerate}
 \end{document}
