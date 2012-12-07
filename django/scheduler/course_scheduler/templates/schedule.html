@@ -63,10 +63,10 @@
 					{% if "Su" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 							{{e.meetingtime.meeting_location}}
 						{% else %}
-							{{e.customevent.event_name}}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -82,10 +82,10 @@
 					{% if "M" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 						{{e.meetingtime.meeting_location}}
 						{% else %}
-							{{e.customevent.event_name}}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -101,10 +101,10 @@
 					{% if "Tu" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 						{{e.meetingtime.meeting_location}}
 						{% else %}
-							{{e.customevent.event_name}}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -121,10 +121,10 @@
 					{% if "W" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 						{{e.meetingtime.meeting_location}}
-						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
 						{% else %}
-							{{e.customevent.event_name}}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -140,10 +140,11 @@
 					{% if "Th" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 						{{e.meetingtime.meeting_location}}
 						{% else %}
-							{{e.customevent.event_name}}							
+							{{e.customevent.event_name}}<br>
+							{{e.customevent.location}}							
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -159,10 +160,10 @@
 					{% if "F" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 						{{e.meetingtime.meeting_location}}
 						{% else %}
-							{{e.customevent.event_name}}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
@@ -178,10 +179,10 @@
 					{% if "Sa" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
 							{{e.meetingtime.meeting_location}}
 						{% else %}
-							{{e.customevent.event_name}}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
 						{% endif %}
 							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
 							<input type="hidden" name="eventID" value="{{e.id}}"/>
