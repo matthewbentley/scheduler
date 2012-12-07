@@ -248,7 +248,7 @@ AND		i.student=passed\_id
 \end{enumerate}
 \item Query: All instructs tuples whose instructor's name matches exactly a passed string
 \begin{enumerate}[i.]
-\item RA:
+\item RA:$\Pi_{MeetingTime, instructor}(\sigma_{instructor=passed\_name}Instructs)$
 \item TRC: $\{v^2\vert(\exists i)(\exists p)(Instructs(i) \wedge Instructor(p) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.instructor=p.name \wedge p.name=input\_name\} $
 \item SQL:
 \begin{verbatim}
@@ -260,7 +260,7 @@ WHERE 	i.instructor=passed_name
 \item Query: the event with a passed id that is in an enroll relationship with a
 student with a passed id
 \begin{enumerate}[i.]
-\item RA:
+\item RA:$\Pi_{id, start\_time, end\_time, start\_date, end\_date, recur\_type}(Event\bowtie_{id = event AND}$\\$_{passed\_id = student}Enroll)$
 \item TRC: $\{v^6 \vert (\exists ev)(\exists en)(Enrollment(en) \wedge Event(ev) \wedge v[1]=ev.start\_time \wedge v[2]=ev.end\_time \wedge v[3]=ev.start\_date \wedge v[4].ev.end\_date \wedge v[5]=ev.recur\_type \wedge v[6]=ev.id \wedge en.event = ev.id \wedge en.student=input\_case\_id \wedge ev.id=\wedge input\_event\_id)\}$
 \item SQL:
 \begin{verbatim}
