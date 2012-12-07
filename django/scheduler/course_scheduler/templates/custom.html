@@ -21,7 +21,7 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
-<div style="padding-left:20px; width: 300px; margin-bottom: 20px">
+<div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
         <div style="padding: 5px 5px 5px 5px">
            {% if  field.errors %} {{ field.errors }} <br> {% endif %}
@@ -29,6 +29,7 @@
         </div>
     {% endfor %}
 </div>
+<p>&nbsp;</p>
 <!--<label for="e_name">Event Title:</label>
 <input id="name" type="text" name="Enter" maxlength="100" />
 
