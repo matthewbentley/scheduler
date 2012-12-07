@@ -205,7 +205,7 @@ Due to the nature of our application, our queries do not get terribly crazy.
 \begin{enumerate}[1.]
 \item Query: All instructs tuples whose events have a given dept/number combination.
 \begin{enumerate}[i.]
-\item RA: $    instructs \bowtie_{} \sigma_{dept=in\_dept, classnumber=in\_number}(Class))$
+\item RA: $   \pi_{instrutor, meeting} (\bowtie_{meeting=id} (MeetingTime \\\bowtie_{meeting\_class=pk} (\sigma_{dept=in\_dept, classnumber=in\_number}(Class)))) $
 \item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists c)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge c.dept=input\_dept \wedge c.class\_number = input\_number)\}$
 \item SQL: 
 \begin{verbatim}
@@ -220,7 +220,7 @@ AND		c.class_number=input_number
 \item Query: All instructs tuples whose events have a dept that contains a passed string or have a number that contains a passed string or whose names contains a
 passed string
 \begin{enumerate}[i.]
-\item RA:
+\item RA: 
 \item TRC:$\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge (Contains(c.dept, input\_dept) \vee Contains(c.number, input\_number) \vee Contains(c.classname, input\_name)))\}$
 \item SQL:
 \begin{verbatim}
@@ -236,7 +236,7 @@ AND		(c.dept LIKE %input_dept%
 \item Query: All instructs tuples whose meetings are in an enroll relation with a
 passed student's id
 \begin{enumerate}[i.]
-\item RA:$\sigma_{}$
+\item RA: $ \pi_{instrutor, meeting} (Instructs \bowtie_{meeting\_id=id} (MeetingTime \bowtie_{id=event\_id}(\sigma_{student=in\_id} Enrollment)))$
 \item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists en)(Instructs(i) \wedge MeetingTime(m) \wedge Enrollment(e) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge en.student=input\_id \wedge en.event=m.id)\}$
 \item SQL:
 \begin{verbatim}
