@@ -5,6 +5,7 @@
 \usepackage{placeins}
 \usepackage{enumerate}
 \usepackage{hyperref}
+\usepackage{pdfpages}
 \makeatletter
   \renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
 \makeatother
@@ -418,7 +419,10 @@ When checking the validity of the form data, the form class calls to custom made
 \end{figure}
 \FloatBarrier
 
-That essentially covers the bare-bones of how our application implementation works. Django and HTML 5 provided a flexible and powerful way to manipulate databases, display dynamic information to the user, and respond appropriately to user input.
+That essentially covers the bare-bones of how our application implementation works. Django and HTML 5 provided a flexible and powerful way to manipulate databases, display dynamic information to the user, and respond appropriately to user input.=
+
+%\includepdf[pages={-}]{stuarts/stuarts13n14.pdf}
+\newpage
 \appendix
 \section{Appendix 1. Installation Manual}
 \subsection{Installing Django and MySQL}
@@ -519,4 +523,8 @@ Congratulations, you've successfully made it through he entire basic User's Manu
 This programmer's manual is intended as a mid-to-low level overview of the code behind the magic that is the new CWRU Scheduler. We essentially provide all of the comments for the main functions we use in our python source code files. For a high level overview and a basic understanding of how Python,Django/=, and HTML 5 interact, please see the "Application Implementation" section above. For a over view of how we implemented and integrated a MySQL database, please see the "Database Implementation" section above.
 \subsection{views.py}
 \verbatiminput{viewsComments.txt}
+\subsubsection*{checklogin.py}
+\verbatiminput{loginComments.txt}
+\subsection*{pycas.py}
+\verbatiminput{pycas.txt}
 \end{document}
