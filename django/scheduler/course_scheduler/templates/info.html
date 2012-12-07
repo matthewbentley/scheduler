@@ -22,7 +22,7 @@
 <br>
 {% for instruct, bool in classes.iteritems %}
 	<table border="1" style="margin-right: 10px; margin-bottom: 10px; width:500px">
-	<tr><td colspan="2" >{{instructs.meeting.meeting_class.dept}} {{instructs.meeting.meeting_class.class_number}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
+	<tr><td colspan="2" >{{instruct.meeting.meeting_class.dept}} {{instruct.meeting.meeting_class.class_number}}: {{instruct.meeting.meeting_class.classname}}</td></tr>
 	<tr><td colspan="2">{{instruct.meeting.meeting_class.term}}: {{instruct.meeting.recur_type}} {{instruct.meeting.start_time}}</td></tr>
 	<tr><td>{{instruct.meeting.meeting_location}}</td><td>  <a href="instructor?instructor={{instruct.instructor.name}}">{{instruct.instructor.name}}</a></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>

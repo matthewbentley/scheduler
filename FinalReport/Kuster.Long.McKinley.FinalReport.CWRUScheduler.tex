@@ -314,6 +314,15 @@ We did not encounter too many obstacles in implementing the add a course feature
 You should see that some courses have an "Add Course" button and some have a "Remove Course" button. The courses that are already in your schedule are the ones that display "remove course." This is accomplished during the compilation of the search results, the query also checks to see if there in an Enroll relationship with the current case\_id and each returned course, and if so, that information is passed to the HTML file. The implementation for both buttons is the same as described above for the delete button from the main page.\\
 
 Again you should see that the course title is underlined. Like on the front page, this redirects the user to a page showing information for a the selected class. In the same process, the webservice determine that the proper view is 'course \_scheduler.views.info' and sends that view the users 'request. The info view queries the database for the class with the same name as the one selected and displays a separate information table for each different meeting time for that class (or event). The results of the information page for EECS 341 are shown below.
+\begin{figure}
+\includegraphics[width=6in]{databaseInfo.png}
+\caption{The information page for EECS 341}
+\end{figure}
+\FloatBarrier
+This page is very similar to the add page in that it displays one or more courses to the user and allows the user to selectively add or remove courses. The main difference is that the user cannot search from this page and each course has a great deal more information attached to it. By now you may be wondering exactly how the HTML accesses this information. Well, we can actually embed simple Django directly into our HTML file, allowing us to have access to the attribute of objects passed into the HTML file via the 'context' mentioned earlier. For example, the following code snipet displays a course name:\\
+<td>{{event.meetingtime.meeting\_class.dept}} {{event.meetingtime.meeting_class.class_number}}: {{event.meetingtime.meeting_class.classname}}</td>\\
+
+Note, this is not the exact code we have, because behind the scenes the info view actually iterates through the instructs relation so that we can display an instructor for each meeting time. Also, the <td> tag is an HTML tag for whenever you want to have an entry in a table cell.\\
 
 \appendix
 \section{Appendix 1. Installation Manual}
