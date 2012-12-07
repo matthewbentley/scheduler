@@ -439,24 +439,6 @@ def customevent(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
-#   The EventForm class is a simple
-#   instance of a forms.Form. Every
-#   field we want the user to supply
-#   data for is set an a member attribute
-#   of this class. Two of the fields, location
-#   and days, are given their own custom validators
-#   since we allow any chars to be entered but we
-#   want those strings to have a certain form, eg
-#   MWF is valid for days but CANDV is not.
-#   See https://docs.djangoproject.com/en/dev/topics/forms/?from=olddocs
-class EventForm(forms.Form):
-    event_title=forms.CharField(max_length=100)
-    location=forms.CharField(max_length=100, required=False)
-    times=forms.CharField(max_length=20, validators=[validate_time])
-    start_date=forms.DateField()
-    end_date=forms.DateField()
-    days=forms.CharField(max_length=14, validators=[validate_day])
-
 #   This function is the validation function for
 #   the times field in EventForm. It uses regexes
 #   to check that the user's passed time is in a form
@@ -534,5 +516,22 @@ def parse_time(array):
         if endTimeArr != 12:
             endTimeArr[0] = endTimeArr[0] + 12
     return startTimeArr, endTimeArr
-    
+
+#   The EventForm class is a simple
+#   instance of a forms.Form. Every
+#   field we want the user to supply
+#   data for is set an a member attribute
+#   of this class. Two of the fields, location
+#   and days, are given their own custom validators
+#   since we allow any chars to be entered but we
+#   want those strings to have a certain form, eg
+#   MWF is valid for days but CANDV is not.
+#   See https://docs.djangoproject.com/en/dev/topics/forms/?from=olddocs
+class EventForm(forms.Form):
+    event_title=forms.CharField(max_length=100)
+    location=forms.CharField(max_length=100, required=False)
+    times=forms.CharField(max_length=20, validators=[validate_time])
+    start_date=forms.DateField()
+    end_date=forms.DateField()
+    days=forms.CharField(max_length=14, validators=[validate_day])
 
