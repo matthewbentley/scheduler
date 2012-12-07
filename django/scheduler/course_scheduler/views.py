@@ -238,7 +238,7 @@ def customevent(request):
             try:
                 loc = form.cleaned_data['location']
             except:
-                loc = "null"
+                loc = ""
 
             startTimeArr, endTimeArr = parse_time(time)
             
@@ -313,7 +313,7 @@ def parse_time(array):
     
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
-    loc=forms.CharField(max_length=100, required=False)
+    location=forms.CharField(max_length=100, required=False)
     times=forms.CharField(max_length=20, validators=[validate_time])
     start_date=forms.DateField()
     end_date=forms.DateField()
