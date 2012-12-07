@@ -235,7 +235,10 @@ def customevent(request):
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
             days = form.cleaned_data['days']
-            loc = form.cleaned_data['location']
+            if request.POST['location']:
+                loc = form.cleaned_data['location']
+            else:
+                loc = ""
 
             startTimeArr, endTimeArr = parse_time(time)
             
