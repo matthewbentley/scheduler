@@ -24,10 +24,10 @@
 <div style="padding-left:20px">
 <table>
 {% for field in form %}
-        
-           <tr>
-            <td>{{ field.label_tag }}: {{ field }}</td></tr>{{ field.errors }}
-        
+        <div style="padding: 5px 5px 5px 5px; width=400px">
+           if {% {{ field.errors }} %} {{ field.errors }} <br> {% endif %}
+           <span style="float: left"> {{ field.label_tag }}:</span> <span style="float:right"> {{ field }}</div>
+        </div>
     {% endfor %}
 </table>
 </div>
