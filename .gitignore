@@ -9,3 +9,4 @@
 *.gz
 *.dvi
 local_settings.py
+stuarts/

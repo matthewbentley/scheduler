@@ -7,6 +7,7 @@ import sys
 import re
 
 def add_twelve_hours(time):
+    """Make time into PM.  Requires time in format 'XX:YY'"""
     time_hour = time.split(":")[0]
     time_minute = time.split(":")[1].split(" ")[0]
     if int(time_hour) != 12:
@@ -15,10 +16,13 @@ def add_twelve_hours(time):
     return time
 
 def format_date(date):
+    """Turns a date in XX/YY/ZZZZ into ZZZZ-XX-YY.  Needed for python's Date"""
     parts = [part.strip() for part in date.split("/")]
     return "-".join([parts[2],parts[0],parts[1]])
 
 def format_times(s_time, e_time):
+    """Turns '12:30 - 2:30 PM' into ('12:30','14:30').
+    Needed for python's Time field"""
     if "PM" in e_time:
         e_time = add_twelve_hours(e_time)
         s_hour = s_time.strip().split(":")[0]
@@ -40,14 +44,20 @@ def format_times(s_time, e_time):
 def main():
 
     xml_file = ""
+# read entire file as string into xml_file
+
     with open(sys.argv[1]) as f:
         xml_file += f.read()
 
     print 'file opened'
 
+# parse entire file as XML into a beautifulsoup object.
+
     b = BeautifulSoup(xml_file, "lxml")
 
     print 'file parsed'
+
+# for every term, for every class, add the class
 
     for curr_term in b.find_all('term'):
 
@@ -79,10 +89,13 @@ def main():
                 desc = unicode(desc)
                 print 'adding:  ' + ' '.join([unicode(c_num), unicode(d), unicode(name), unicode(desc), unicode(term_name)])
             except ValueError,UnicodeEncodeError:
+                # if they have non-unicode characters in their description, we don't add it to the DB.
                 continue
 
             c_model = Class(class_number=c_num, dept=d, classname=name, description=desc, term=term_name)
             c_model.save()
+
+# if there are meetings, find and add them.  If there are no meetings, don't add any.
 
             try:
                 meetings = c.meetings.find_all('meeting')
@@ -116,6 +129,7 @@ def main():
                 m.save()
 
                 insts = unicode(meeting.instructor.contents[0])
+                # instructor names are in format like 'inst1,inst2,inst3'.
                 for inst_name in insts.split(","):
                     inst, created = Instructor.objects.get_or_create(name=inst_name)
                     instructs = Instructs(instructor=inst, meeting = m)

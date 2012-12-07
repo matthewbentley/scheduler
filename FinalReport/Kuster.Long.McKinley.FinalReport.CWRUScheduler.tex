@@ -5,6 +5,7 @@
 \usepackage{placeins}
 \usepackage{enumerate}
 \usepackage{hyperref}
+\usepackage{pdfpages}
 \makeatletter
   \renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
 \makeatother
@@ -205,16 +206,32 @@ Due to the nature of our application, our queries do not get terribly crazy.
 \item Query: All instructs tuples whose events have a given dept/number combination.
 \begin{enumerate}[i.]
 \item RA: 
-\item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge c.dept=input\_dept \wedge c.class\_number = input\_number)\}$
-\item SQL:
+\item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists c)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge c.dept=input\_dept \wedge c.class\_number = input\_number)\}$
+\item SQL: 
+\begin{verbatim}
+SELECT i.MeetingTime, i.instructor
+FROM Instructs i, MeetingTime m, Class c
+WHERE 	i.meeting=m.id
+AND		m.meeting_class=c.pk
+AND		c.dept=input_dept
+AND		c.class_number=input_number
+\end{verbatim}
 \end{enumerate}
-\item Query: All instructs tuples whose events have a dept that contains a passed string
-or have a number that contains a passed string or whose names contains a
+\item Query: All instructs tuples whose events have a dept that contains a passed string or have a number that contains a passed string or whose names contains a
 passed string
 \begin{enumerate}[i.]
 \item RA:
 \item TRC:$\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge (Contains(c.dept, input\_dept) \vee Contains(c.number, input\_number) \vee Contains(c.classname, input\_name)))\}$
 \item SQL:
+\begin{verbatim}
+SELECT i.MeetingTime, i.instructor
+FROM Instructs i, MeetingTime m, Class c
+WHERE 	i.meeting=m.id
+AND		m.meeting_class=c.pk
+AND		(c.dept LIKE %input_dept%
+	 	OR c.number LIKE %input_number %
+	 	OR c.classname LIKE %input_name %)
+\end{verbatim}
 \end{enumerate}
 \item Query: All instructs tuples whose meetings are in an enroll relation with a
 passed student's id
@@ -222,12 +239,23 @@ passed student's id
 \item RA:
 \item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists en)(Instructs(i) \wedge MeetingTime(m) \wedge Enrollment(e) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge en.student=input\_id \wedge en.event=m.id)\}$
 \item SQL:
+\begin{verbatim}
+SELECT i.MeetingTime, i.instructor
+FROM Instructs i, MeetingTime m
+WHERE 	i.meeting=m.id
+AND		i.student=passed\_id
+\end{verbatim}
 \end{enumerate}
 \item Query: All instructs tuples whose instructor's name matches exactly a passed string
 \begin{enumerate}[i.]
 \item RA:
 \item TRC: $\{v^2\vert(\exists i)(\exists p)(Instructs(i) \wedge Instructor(p) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.instructor=p.name \wedge p.name=input\_name\} $
 \item SQL:
+\begin{verbatim}
+SELECT i.MeetingTime, i.instructor
+FROM Instructs i
+WHERE 	i.instructor=passed_name
+\end{verbatim}
 \end{enumerate}
 \item Query: the event with a passed id that is in an enroll relationship with a
 student with a passed id
@@ -235,6 +263,12 @@ student with a passed id
 \item RA:
 \item TRC: $\{v^6 \vert (\exists ev)(\exists en)(Enrollment(en) \wedge Event(ev) \wedge v[1]=ev.start\_time \wedge v[2]=ev.end\_time \wedge v[3]=ev.start\_date \wedge v[4].ev.end\_date \wedge v[5]=ev.recur\_type \wedge v[6]=ev.id \wedge en.event = ev.id \wedge en.student=input\_case\_id \wedge ev.id=\wedge input\_event\_id)\}$
 \item SQL:
+\begin{verbatim}
+SELECT e.*
+FROM Event e, Enroll en
+WHERE 	en.event=e.id
+AND		en.student=passed_id
+\end{verbatim}
 \end{enumerate}
 \end{enumerate}
 
@@ -418,7 +452,10 @@ When checking the validity of the form data, the form class calls to custom made
 \end{figure}
 \FloatBarrier
 
-That essentially covers the bare-bones of how our application implementation works. Django and HTML 5 provided a flexible and powerful way to manipulate databases, display dynamic information to the user, and respond appropriately to user input.
+That essentially covers the bare-bones of how our application implementation works. Django and HTML 5 provided a flexible and powerful way to manipulate databases, display dynamic information to the user, and respond appropriately to user input.=
+
+%\includepdf[pages={-}]{stuarts/stuarts13n14.pdf}
+\newpage
 \appendix
 \section{Appendix 1. Installation Manual}
 \subsection{Installing Django and MySQL}
@@ -517,6 +554,12 @@ Congratulations, you've successfully made it through he entire basic User's Manu
 \section{Appendix 2. Programmer's Manual}
 \subsection{Introduction}
 This programmer's manual is intended as a mid-to-low level overview of the code behind the magic that is the new CWRU Scheduler. We essentially provide all of the comments for the main functions we use in our python source code files. For a high level overview and a basic understanding of how Python,Django/=, and HTML 5 interact, please see the "Application Implementation" section above. For a over view of how we implemented and integrated a MySQL database, please see the "Database Implementation" section above.
-\subsection{views.py}
+\subsection*{views.py}
 \verbatiminput{viewsComments.txt}
+\subsubsection*{checklogin.py}
+\verbatiminput{loginComments.txt}
+\subsection*{pycas.py}
+\verbatiminput{pycas.txt}
+\subsection*{fill\_db.py]
+\verbatiminput{filldbComments.txt}
 \end{document}
