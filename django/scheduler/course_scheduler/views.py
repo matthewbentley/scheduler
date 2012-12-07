@@ -235,12 +235,13 @@ def customevent(request):
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
             days = form.cleaned_data['days']
+            loc = form.cleaned_data[l'location']
 
             startTimeArr, endTimeArr = parse_time(time)
             
             
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
-            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=days, event_name=name)
+            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=days, event_name=name, )
             event.save()
 
             stu = Student.objects.get(case_id=id)
@@ -309,6 +310,7 @@ def parse_time(array):
     
 class EventForm(forms.Form):
     event_title=forms.CharField(max_length=100)
+    loc=forms.CharField(max_length=100)
     times=forms.CharField(max_length=20, validators=[validate_time])
     start_date=forms.DateField()
     end_date=forms.DateField()

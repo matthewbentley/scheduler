@@ -121,8 +121,8 @@
 					{% if "W" in e.recur_type %}
 						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
 						{% if e.meetingtime %}
-						{{e.meetingtime.meeting_location}}
 						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a>
+						{{e.meetingtime.meeting_location}}
 						{% else %}
 							{{e.customevent.event_name}}
 						{% endif %}
