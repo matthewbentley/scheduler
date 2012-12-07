@@ -250,7 +250,47 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \end{enumerate}
 \end{enumerate}
 
+\section{Integrity Constraints}
+
+Our first and most wide-reaching integrity constraint is that we require all character fields to be non-null, but allow storing of empty values.  This is enforced by our backend.
+We have the following less trivial constraints:  the id field of the Class table must be non-null.  We resorted to an id field because our database backend is currently unable to handle multi-column keys, and there is no single column which is a key for a class.  This is enforced by the backend as it's a primary key of the table.  
+The id field of Event also must be non-null.  We decided on an id field instead of a multi-column key for the same reason as above.  We made this decision beacuse there are two tables that have the IS-A relation with Event (MeetingTime and CustomEvent), and our database framework implements inheritance by selecting a foreign key to the parent table as the primary key for the child tables.
+MeetingTime and CustomEvent have primary keys that must be present in Event.  This is enforced by our database backend.  MeetingTime's meeting\_class attribute must refer to an id that is present in Class.
+Instructor has 'name' as a primary key, so names must be unique.
+Instructs has an ID which must be unique.  The instructor attribute must refer to a name that is present in the Instructor table.  The meeting attribute must refer to an id which is present in MeetingTime.
+The Student table contains only a case\_id and that's the primary key.  The Enrollment table has an id attribute which must be non-null, a foreign key to Student which is the case\_id of the student in question (must be present in Student, enforced by backend), and a foreign key to Event's id (must be present in Event, enforced by backend).\\
+
+We also have one subtler constraint which is not enforced by the backend.  An Event must be either a CustomEvent, a MeetingTime, or neither.  If Event's id is present in both MeetingTime and CustomEvent, if a student enrolls in the Event, it is unclear whether the name associated with the MeetingTime or the CustomEvent should be displayed.  We deal with this by displaying the MeetingTime if it ever happens, but also by creating a new Event for every MeetingTime or CustomEvent.\\
+
+\section{DBMS Implementation}
+We used the Django python framework.  This requred us to define a set of models, which is what Django calls objects and relations.  These objects have fields, like a CharField or IntegerField.  Each object type defines a table, with the interactions between the object types (for instance, MeetingTime subclasses Event) definining the integrity constraints.  
+
+Filling this database is as simple as instantiating a class of the model type and calling its .save() method.  We used the BeautifulSoup XML parser to parse soc.xml, which is provided by the college as a dump of the current semester's schedule of courses.  When we read a course, we create a Class object for it, and MeetingTime objects for all its meetings.  We search for Instructor objects for every instructor who is named in the meetings and create it if it doesn't exist.  We then create a row in the Instructs table for the MeetingTime and Instructor.  soc.xml does not contain information about the instructors other than their names, so we leave the other fields empty for now.
+
+Our queries are fairly simple, and are handled through the django object managers.  In order to display the schedule, we need a list of all events which are in an Enroll relationship with a given student id.
+
+In order to do searches, we need every Instruct tuple whose MeetingTime contains a given department / number combination.  We also need all the Instructors whose names contain a given string, and all Instructs tuples whose Class's department contains a certain string, whose Class name contains a given string, or whose Class number matches the given number.
+
+In order to build lists, we need to insert new tuples into Enroll for a given MeetingTime and a given Student.  In order to build custom events, we need to add CustomEvent instances and add an entry in the Enroll table for the Student and the new CustomEvent.  This means that all CustomEvents are unique.
+
 \appendix
+\section{Appendix 1. Installation Manual}
+\subsection{Installing Django and MySQL}
+First, install Ubuntu or an Ubuntu-derivative.  Then execute 'apt-get install python-django mysql-server python-mysqld'.  Move the server code into a directory and set it to be on \$PYTHONPATH.  Then set the \$DJANGO\_SETTINGS\_MODULE to be the python import name of settings.py.
+
+Log in to MySQL as the root user and run the following commands:
+
+\begin{verbatim}
+CREATE DATABASE course_scheduler;
+GRANT ALL ON course_scheduler.* TO djangouser IDENTIFIED BY 'EECS341F12';
+\end{verbatim}
+
+Run 'python manage.py syncdb' and 'python manage.py reset course\_scheduler', answering yes to the prompt.
+
+Run 'python fill\_db.py soc.xml', replacing soc.xml with the name of the soc file.
+
+TODO:  SETUP FOR THE FRONTEND
+
 \section{Appendix 2. User's Manual}
 \subsection{Starting Case Scheduler}
 To access the Case Western Reserve University scheduler you must be either  a student or faculty member at the University. Specifically, you must have a "Case ID" in order to login through Case's Single Sign-On service.\\
