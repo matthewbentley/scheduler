@@ -23,7 +23,7 @@
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
 <div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
-		{% if field.errors %} {{ field.errors }}  <br/><br/>{% endif %}
+		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
            <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span>
     {% endfor %}
 </div>
