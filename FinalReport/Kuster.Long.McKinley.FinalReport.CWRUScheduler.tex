@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{placeins}
 \usepackage{enumerate}
+\usepackage{hyperref}
 \makeatletter
   \renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
 \makeatother
@@ -95,71 +96,68 @@ In order to be a one-stop schedule manager, as well as to remain more feature-co
 \pagebreak
 \section{Relational Model}
 \begin{verbatim} 
-CREATE_TABLE User
-  (userid CHAR(6),
-  login date CHAR(10) NOT NULL,
-  PRIMARY KEY (userid))
-  
-CREATE_TABLE CustomEvent
-	(userid CHAR(6) NOT NULL,
-	days/times CHAR(20),
-	location CHAR(40),
-	title CHAR(40),
-	semester CHAR(12),
-	description CHAR(120),
-	PRIMARY KEY (userid, title, semester)
-	FOREIGN KEY (userid) REFERENCES User
-		ON DELETE CASCADE
-
-CREATE_TABLE Enrolled_In
-  (userid CHAR(6),
-  coid CHAR(8),
-  PRIMARY KEY (coid, userid),
-  FOREIGN KEY (userid) REFERENCES User,
-      ON DELETE CASCADE
-  FOREIGN KEY (coid) REFERENCES CourseOffering,
-      ON DELETE CASCADE)
-      
-CREATE_TABLE CourseOffering
-  (coid CHAR(8),
-  status CHAR(20),
-  room	CHAR(20),
-  total_capacity INTEGER,
-  days/times CHAR(20),
-  current_enrollment INTEGER,
-  term CHAR(16),
-  description CHAR(400),
-  instructorId CHAR(8) NOT NULL,
-  catalogNumber CHAR(12) NOT NULL,
-  PRIMARY KEY (coid),
-  FOREIGN KEY (instructorId) REFERENCES Instructor
-  		ON DELETE CASCADE
-  FOREIGN KEY (catalogNumber) REFERENCES Course
-  		ON DELETE CASCADE
-  		
-CREATE TABLE Course
-	(catalogNumber CHAR(12),
-	title CHAR(40),
-	component CHAR(20),
-	units REAL,
-	PRIMARY KEY (catalogNumber))
-	
-CREATE TABLE Has_Prerequisite
-	(prereqCnumber CHAR(12),
-	prereqForCnumber CHAR(12),
-	PRIMARY KEY (prereqForCnumber, prereqCnumber),
-	FOREIGN KEY (prereqForCnumber) REFERENCES Course
-		ON DELETE CASCADE
-	FOREIGN KEY (prereqCnumber) REFERENCES Course
-		ON DELETE CASCADE)
-		
-CREATE TABLE Instructor
-	(instructorId CHAR(8),
-	email CHAR(20),
-	officeHours CHAR(20),
-	officeLocal CHAR(20),
-	phoneNumber INTEGER)
-  \end{verbatim}
+BEGIN;
+CREATE TABLE `course_scheduler_class` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `class_number` integer NOT NULL,
+    `dept` varchar(10) NOT NULL,
+    `classname` varchar(350) NOT NULL,
+    `description` varchar(4096) NOT NULL,
+    `term` varchar(30) NOT NULL
+)
+;
+CREATE TABLE `course_scheduler_event` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `start_time` time NOT NULL,
+    `end_time` time NOT NULL,
+    `start_date` date NOT NULL,
+    `end_date` date NOT NULL,
+    `recur_type` varchar(12) NOT NULL
+)
+;
+CREATE TABLE `course_scheduler_customevent` (
+    `event_ptr_id` integer NOT NULL PRIMARY KEY,
+    `event_name` varchar(120) NOT NULL,
+    `location` varchar(50) NOT NULL
+)
+;
+ALTER TABLE `course_scheduler_customevent` ADD CONSTRAINT `event_ptr_id_refs_id_4813623e` FOREIGN KEY (`event_ptr_id`) REFERENCES `course_scheduler_event` (`id`);
+CREATE TABLE `course_scheduler_meetingtime` (
+    `event_ptr_id` integer NOT NULL PRIMARY KEY,
+    `meeting_class_id` integer NOT NULL,
+    `meeting_location` varchar(50) NOT NULL
+)
+;
+ALTER TABLE `course_scheduler_meetingtime` ADD CONSTRAINT `meeting_class_id_refs_id_8beceb5b` FOREIGN KEY (`meeting_class_id`) REFERENCES `course_scheduler_class` (`id`);
+ALTER TABLE `course_scheduler_meetingtime` ADD CONSTRAINT `event_ptr_id_refs_id_98bafe7b` FOREIGN KEY (`event_ptr_id`) REFERENCES `course_scheduler_event` (`id`);
+CREATE TABLE `course_scheduler_instructor` (
+    `email` varchar(10) NOT NULL,
+    `name` varchar(50) NOT NULL PRIMARY KEY,
+    `office` varchar(15) NOT NULL
+)
+;
+CREATE TABLE `course_scheduler_instructs` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `instructor_id` varchar(50) NOT NULL,
+    `meeting_id` integer NOT NULL
+)
+;
+ALTER TABLE `course_scheduler_instructs` ADD CONSTRAINT `instructor_id_refs_name_d0e02416` FOREIGN KEY (`instructor_id`) REFERENCES `course_scheduler_instructor` (`name`);
+ALTER TABLE `course_scheduler_instructs` ADD CONSTRAINT `meeting_id_refs_event_ptr_id_4ac340b8` FOREIGN KEY (`meeting_id`) REFERENCES `course_scheduler_meetingtime` (`event_ptr_id`);
+CREATE TABLE `course_scheduler_student` (
+    `case_id` varchar(6) NOT NULL PRIMARY KEY
+)
+;
+CREATE TABLE `course_scheduler_enrollment` (
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `student_id` varchar(6) NOT NULL,
+    `event_id` integer NOT NULL
+)
+;
+ALTER TABLE `course_scheduler_enrollment` ADD CONSTRAINT `student_id_refs_case_id_70e0330d` FOREIGN KEY (`student_id`) REFERENCES `course_scheduler_student` (`case_id`);
+ALTER TABLE `course_scheduler_enrollment` ADD CONSTRAINT `event_id_refs_id_6200046` FOREIGN KEY (`event_id`) REFERENCES `course_scheduler_event` (`id`);
+COMMIT;
+\end{verbatim}
 \subsection{Justification of Relational Model}
 \begin{itemize}
 \item User HAS Custom Event (1:N, full participation from Custom Event to Has)
@@ -250,7 +248,91 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \end{enumerate}
 \end{enumerate}
 
+\section{Integrity Constraints}
+
+Our first and most wide-reaching integrity constraint is that we require all character fields to be non-null, but allow storing of empty values.  This is enforced by our backend.
+We have the following less trivial constraints:  the id field of the Class table must be non-null.  We resorted to an id field because our database backend is currently unable to handle multi-column keys, and there is no single column which is a key for a class.  This is enforced by the backend as it's a primary key of the table.  
+The id field of Event also must be non-null.  We decided on an id field instead of a multi-column key for the same reason as above.  We made this decision beacuse there are two tables that have the IS-A relation with Event (MeetingTime and CustomEvent), and our database framework implements inheritance by selecting a foreign key to the parent table as the primary key for the child tables.
+MeetingTime and CustomEvent have primary keys that must be present in Event.  This is enforced by our database backend.  MeetingTime's meeting\_class attribute must refer to an id that is present in Class.
+Instructor has 'name' as a primary key, so names must be unique.
+Instructs has an ID which must be unique.  The instructor attribute must refer to a name that is present in the Instructor table.  The meeting attribute must refer to an id which is present in MeetingTime.
+The Student table contains only a case\_id and that's the primary key.  The Enrollment table has an id attribute which must be non-null, a foreign key to Student which is the case\_id of the student in question (must be present in Student, enforced by backend), and a foreign key to Event's id (must be present in Event, enforced by backend).\\
+
+We also have one subtler constraint which is not enforced by the backend.  An Event must be either a CustomEvent, a MeetingTime, or neither.  If Event's id is present in both MeetingTime and CustomEvent, if a student enrolls in the Event, it is unclear whether the name associated with the MeetingTime or the CustomEvent should be displayed.  We deal with this by displaying the MeetingTime if it ever happens, but also by creating a new Event for every MeetingTime or CustomEvent.\\
+
+\section{DBMS Implementation}
+We used the Django python framework.  This requred us to define a set of models, which is what Django calls objects and relations.  These objects have fields, like a CharField or IntegerField.  Each object type defines a table, with the interactions between the object types (for instance, MeetingTime subclasses Event) definining the integrity constraints.  
+
+Filling this database is as simple as instantiating a class of the model type and calling its .save() method.  We used the BeautifulSoup XML parser to parse soc.xml, which is provided by the college as a dump of the current semester's schedule of courses.  When we read a course, we create a Class object for it, and MeetingTime objects for all its meetings.  We search for Instructor objects for every instructor who is named in the meetings and create it if it doesn't exist.  We then create a row in the Instructs table for the MeetingTime and Instructor.  soc.xml does not contain information about the instructors other than their names, so we leave the other fields empty for now.
+
+Our queries are fairly simple, and are handled through the django object managers.  In order to display the schedule, we need a list of all events which are in an Enroll relationship with a given student id.
+
+In order to do searches, we need every Instruct tuple whose MeetingTime contains a given department / number combination.  We also need all the Instructors whose names contain a given string, and all Instructs tuples whose Class's department contains a certain string, whose Class name contains a given string, or whose Class number matches the given number.
+
+In order to build lists, we need to insert new tuples into Enroll for a given MeetingTime and a given Student.  In order to build custom events, we need to add CustomEvent instances and add an entry in the Enroll table for the Student and the new CustomEvent.  This means that all CustomEvents are unique.
+
+\section{Application Implementation}
+As we planned, we used the powerful combination of Django and HTML 5 to implement our application online. This presented an immediate obstacle to our devlopment team: we an zero experience with Django and little experience with HTML 5 or web-site design in general. To overcome this each member of our team worked through multiple Django tutorials online (specifically see \url{https://docs.djangoproject.com/en/dev/intro/tutorial01/}) and various helpful HTML resources (by far the most helpful was \url{http://www.w3schools.com/html/default.asp}).\\
+
+As for the actual implementation, all of our source files for the website are stored on a server run and maintained by one of our team members (Jason Kuster - jrk126) and the website itself is set-up on an Apache server. There are three main components to writing a web-service with Django/HTML:
+\begin{enumerate}[1.]
+\item A urls.py file which stores all of the acceptable URL's for the website and determines what "view" corresponds to each certain URL.
+\item A views.py file which stores all of the "views" for each web page. A view in Django is a python function that takes in an HTTP request and returns an appropriate "response", which tells the webpage how to render itself, usually through what is know an a template file, but sometimes through a default page, such as the default 404-Not Found page.
+\item Template files for most, if not all webpages. These template files are html files which can have a limited amount of Django code inside of them. Every template can be passed a "context" which is a Python dictionary of {variable, value} pairs that are computed in the corresponding "view" and can subsequently be referenced and used in the html files.
+\end{enumerate}
+Because our application is a scheduling service, perhaps the key component is the actual page that displays a user's schedule, which is also the homepage for the website. Before anyone can access our website, however, they have to login through the Case Western Single Sign-on service with their case-id and password. Integrating this service with ours was moderately easy because Case has a good online API for using it. Essentially, when a user logs-in we store their ID in a a temporary cookie that is deleted when that user closes his or her browser. Then, everytime a user loads a page, the "view" for that page checks the user's cookie, if it is invalid we force the user to relog, else we now have access to their ID to use in our database queries. In the end, the actual schedule view of the website actually turned out to be the most difficult to design and implement. At first we considered using a number of different online libraries to essentially implement the weekly view of the schedule for us. The primary ones we considered were Django-Scheduler (\url{https://github.com/thauber/django-schedule}) and the Google Calendar API for Python (\url{https://developers.google.com/google-apps/calendar/}). Unfortunately, neither of these libraries ended up suiting our needs. The Django-Scheduler library doesn't support a weekly-calendar view, which is the only calendar view our schedule shows or needs, and the Google Calendar API doesn't allow you to directly add events to user's schedule.\\
+
+Thus we ended up directly implementing the schedule view with a combination of HTML and Django. The finished, or at least current, product is below:\newpage\FloatBarrier
+\begin{figure}
+\includegraphics[width=6in]{schedule1.png}
+\caption{Main page at normal zoom level with an example selection of courses and custom events}
+\end{figure}
+\begin{figure}
+\includegraphics[width=6in]{schedule2.png}
+\caption{Main page at 50\% zoom level in order to show full schedule}
+\end{figure}
+\FloatBarrier
+\newpage
+So after a user logs in and naviages \url{http://concertina.case.edu/scheduler}, the application searches urls.py for the appropriate response for that url. It see that the view for the url is 'course \_scheduler.views.schedule'. So the function schedule(request) is called in order to determine how to render the webpage. Since we have the user's id we make a query to our database via Django is order to find all of that user's events (class and custom\_events) so we can send it to the html template.\\
+
+The final schedule seen in the figures is impemented through an HTML table. Every day of the week is a separate column in the table and just one single long row. We couldn't use sepearte rows in each column because a user's event can be at any time and span any number of time slots, and HTML table do not support any kind of span across table rows. So instead, when the schedule HTML file receives a list of events it simply creates a colored square at a location within the tabe based on that event's recur\_type (eg MWF) and start\_time. The hieght of these squares is based on the event's duration. \\
+
+From the above screen shots you may notice that a class's title is underlined and each event has a black X button in the bottem right of its square. In designing our application we decided the two things a user would want to do from their main page was to either remove events from their schedule or see more information on a selected class. The delete button is implemented through a basic HTML form tag. The form tag is the basic HTML way to handle user input. Behind the scenes, when the user hits the click button the web page redirects to the removecourse view and passes it the user's 'request', ie that he selected to delete a certain event. The removecourse view queries the database for the enroll relationship linking the user to the specified event and deletes. Upon successful deletion, the webpage redirects back to the main schedule page. To the eyes of the user, the selected course simply disappears.\\
+
+When the user click on a class's title, the user is taken to an information page, but that is explained more in detail below. For now, we're going to look at the second key feature for a schedule: the ability to add a class to your schedule. At the top of every page in our application there is a black navigation bar, this is built through a HTML a horizontal table HTML tag and is common to many website and was thus easy to implement. Each link brings the user to a different page of the application. The first one from the main page, "Add a Course" brings to the page show below.
+\begin{figure}
+\includegraphics[width=6in]{blankAdd.png}
+\caption{The add a course page as shown with no search results}
+\end{figure}
+\FloatBarrier
+We did not encounter too many obstacles in implementing the add a course feature mostly because both the HTML and the Django queries are rather simple. The search bar is a simple form (like the delete button) with an input text field. This form calls the add view again, but this type the passed request has metadata attached to it (ie the whatever the user entered into the search box). The view queries the Instructs relationship in the database and returns a list of classes whose name, dept, and/or course number contains the search string. The HTML file then displays the classes in a table format. The figure below shows the results of a user search.
+\begin{figure}
+\includegraphics[width=6in]{dataResults.png}
+\caption{The results returned by search for "data"}
+\end{figure}
+\FloatBarrier
+You should see that some courses have an "Add Course" button and some have a "Remove Course" button. The courses that are already in your schedule are the ones that display "remove course." This is accomplished during the compilation of the search results, the query also checks to see if there in an Enroll relationship with the current case\_id and each returned course, and if so, that information is passed to the HTML file. The implementation for both buttons is the same as described above for the delete button from the main page.\\
+
+Again you should see that the course title is underlined. Like on the front page, this redirects the user to a page showing information for a the selected class. In the same process, the webservice determine that the proper view is 'course \_scheduler.views.info' and sends that view the users 'request. The info view queries the database for the class with the same name as the one selected and displays a separate information table for each different meeting time for that class (or event). The results of the information page for EECS 341 are shown below.
+
 \appendix
+\section{Appendix 1. Installation Manual}
+\subsection{Installing Django and MySQL}
+First, install Ubuntu or an Ubuntu-derivative.  Then execute 'apt-get install python-django mysql-server python-mysqld'.  Move the server code into a directory and set it to be on \$PYTHONPATH.  Then set the \$DJANGO\_SETTINGS\_MODULE to be the python import name of settings.py.
+
+Log in to MySQL as the root user and run the following commands:
+
+\begin{verbatim}
+CREATE DATABASE course_scheduler;
+GRANT ALL ON course_scheduler.* TO djangouser IDENTIFIED BY 'EECS341F12';
+\end{verbatim}
+
+Run 'python manage.py syncdb' and 'python manage.py reset course\_scheduler', answering yes to the prompt.
+
+Run 'python fill\_db.py soc.xml', replacing soc.xml with the name of the soc file.
+
+\section{Application}
+
 \section{Appendix 2. User's Manual}
 \subsection{Starting Case Scheduler}
 To access the Case Western Reserve University scheduler you must be either  a student or faculty member at the University. Specifically, you must have a "Case ID" in order to login through Case's Single Sign-On service.\\
