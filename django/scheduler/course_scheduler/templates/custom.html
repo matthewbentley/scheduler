@@ -25,7 +25,7 @@
 <table>
 {% for field in form %}
         <div style="padding: 5px 5px 5px 5px; width=400px">
-           {% if  {{ field.errors }} %} {{ field.errors }} <br> {% endif %}
+           {% if  field.errors %} {{ field.errors }} <br> {% endif %}
            <span style="float: left"> {{ field.label_tag }}:</span> <span style="float:right"> {{ field }}</div>
         </div>
     {% endfor %}
