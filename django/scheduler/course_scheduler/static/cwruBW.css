@@ -120,6 +120,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	text-align: left;
 	vertical-align: bottom;
 	padding-right: 10px;
+	float: left;
+	padding-left: 10px;
 }
 
 .event {
