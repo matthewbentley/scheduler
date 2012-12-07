@@ -238,7 +238,7 @@ def customevent(request):
             try:
                 loc = form.cleaned_data['location']
             except:
-                loc = ""
+                loc = "null"
 
             startTimeArr, endTimeArr = parse_time(time)
             
