@@ -21,11 +21,10 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
-<div style="padding-left:20px; width: 300px; padding-bottom: 20px">
+<div style="padding-left:20px; width: 500px; padding-bottom: 20px">
 {% for field in form %}
-        <div style="padding: 10px 10px 10px 10px">
-           {% if  field.errors %} {{ field.errors }} <br> {% endif %}
-           <span style="float: left"> {{ field.label_tag }}:</span> <span style="float:right"> {{ field }}</span>
+        <div>
+           <span style="float: left"> {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} {{ field.errors }}</span><br>
         </div>
     {% endfor %}
 </div>
