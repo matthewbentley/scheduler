@@ -22,7 +22,12 @@
 <p>&nbsp;</p>
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
 <div style="padding-left:20px">
-{{ form.as_p }}
+{% for field in form %}
+        <div>
+            {{ field.errors }}
+            {{ field.label_tag }}: {{ field }}
+        </div>
+    {% endfor %}
 </div>
 <!--<label for="e_name">Event Title:</label>
 <input id="name" type="text" name="Enter" maxlength="100" />

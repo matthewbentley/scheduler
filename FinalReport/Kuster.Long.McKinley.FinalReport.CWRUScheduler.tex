@@ -320,10 +320,44 @@ Again you should see that the course title is underlined. Like on the front page
 \end{figure}
 \FloatBarrier
 This page is very similar to the add page in that it displays one or more courses to the user and allows the user to selectively add or remove courses. The main difference is that the user cannot search from this page and each course has a great deal more information attached to it. By now you may be wondering exactly how the HTML accesses this information. Well, we can actually embed simple Django directly into our HTML file, allowing us to have access to the attribute of objects passed into the HTML file via the 'context' mentioned earlier. For example, the following code snipet displays a course name:\\
-<td>{{event.meetingtime.meeting\_class.dept}} {{event.meetingtime.meeting_class.class_number}}: {{event.meetingtime.meeting_class.classname}}</td>\\
+$\langle td \rangle${{event.meetingtime.meeting\_class.dept}} {{event.meetingtime.meeting\_class.class\_number}}: {{event.meetingtime.meeting\_class.classname}}$\langle/td \rangle$\\
 
-Note, this is not the exact code we have, because behind the scenes the info view actually iterates through the instructs relation so that we can display an instructor for each meeting time. Also, the <td> tag is an HTML tag for whenever you want to have an entry in a table cell.\\
+Note, this is not the exact code we have, because behind the scenes the info view actually iterates through the instructs relation so that we can display an instructor for each meeting time. Also, the $\langle td \rangle$ tag is an HTML tag for whenever you want to have an entry in a table cell.\\
 
+From here you can go back to the main schedule either through the link at the top of the page or by clicking the Add Course/Remove Course button, or you can go back to the search page by clicking "Add a Course" again, or you can go to a feature we haven't discussed, the instructor information page, by clicking on the name of the instructor, "Meral Ozsoyoglu" in the screen shot above.\\
+
+The instructor information page, shown below, is actually the most basic page in our application. That is because, as a student scheduler, we felt that detailed instructor information was unnecessary. However, we do display an instructor's office and email address.
+\begin{figure}
+\includegraphics[width=6in]{meral.png}
+\caption{The information page for Meral Ozsoyoglu}
+\end{figure}
+\FloatBarrier
+As you can see, the office and email in this case both display as "not listed". That is because as of right now, we have not yet filled our database with an office location and email for all of the instructors present in our database. The main reason behind this lapse is that when first designing our application we beleived that this information was published by the university in the same XML document that we retrieve the course information from, but this turned out to be untrue. Thus we would now have to manually enter in all instructor information to achieve full functionality. However, because our application has the full functionality to parse an xml document and create database entries from that document, we will first ask CWRU to publish or give us access to such a list, if it exists.\\
+
+At the bottom of the page there is a View all Courses button. This is again a HTML form button that calls the "inscourse" view, sending the view the instructor's name as a parameter. Then in that view, we query the instructs relation for all of the courses taught by the passed instructor. Then we return the resulting query set to the add HTML file discussed above. The result of hitting this button for Meral Ozsoyoglu is shown below.
+\begin{figure}
+\includegraphics[width=6in]{meralCourses.png}
+\caption{The courses currently taught by Meral Ozsoyoglu}
+\end{figure}
+\FloatBarrier
+
+This is the familiar add page already discussed, so we're going to go ahead and return to the home page to discuss the last few features. The easiest way to do this is to hit the "Back to Schedule" button (which is available on every page except the home page). From here we'll hit the "My Courses" button. The button redirects the user to \url{http://concertina.case.edu/scheduler/mycourses}, and the urls.py file informs the application that the view to get the rendered page from is the mycourses view. This view, like the schedule views, finds all of the events for the current user, but unlike the schedule view it only queries for events with meetingtimes ie class, custom\_events (discussed below) do not have meetingtimes. Then upon a successful query, the user is redirected back to the add page, only this time the table is filled with all of the user's current classes. The result of hitting "My Courses" is shown below.
+\begin{figure}
+\includegraphics[width=6in]{mycourses.png}
+\caption{The result of clicking the "My Courses" link}
+\end{figure}
+\FloatBarrier
+
+Everything on this page functions just like the add page. That is one of the powerful parts of our application, that a lot of our HTML code can be easily reused. We could even customize this page more differently from the add page by passing in certain parameters telling the HTML file what or what not to render.\\
+
+The final feature to discuss was the 2nd hardest implement on both the front-end and the back-end. Specifically, this feature is the idea of custom\_events. During design we decided our users' would most definitely want to be able to add their own events to their schedule. Such a feature would allow them to schedule things like extra-curricular, study-sessions, or sports practices. These events however proved troublesome when designing the database. We went through 4 or 5 different schema implementation before we settled a reasonable and effective one. This trouble stemmed from the fact that events are very similar to meetingtimes, but slightly different in key areas. For example, meetingtimes have a class associated with them that hold the class name, department, information and so forth. Thus, we couldn't have a simple custom\_event is a meetingtime relation. Nor could a meetingtime be a custom\_event because a custom\_event has attributes a meetingtime doesn't need. Finally we settled on a global event entity that both meetingtime and custom\_event could inherit from. This scheme proved difficult for our primary database developer because Django inheritance was a beast none of us had, at that point, yet touched. Fortunately Django has excellent documentation we could work with (\url{https://docs.djangoproject.com/en/dev/topics/db/models/#model-inheritance}).\\
+
+Custom\_event proved difficult for the front-end application for entirely different reasons. First, the required a reworking of the schedule HTML code because custom\_events need to be rendered a little differently than meetingtimes. Eventually, we just decided to use a {{ if event.meetingtime }} embedded Django block in our HTML to check to see whether the event we were currently examining was a class (meetingtime) or not. Second, the creation page for an event, shown below, was a much more complex use of HTML form tags than we had used previously. One of our developers was again saved by Django's documentation as it has good coverage on Django forms and how they interact with HTML forms (\url{https://docs.djangoproject.com/en/dev/topics/forms/?from=olddocs}). They work, in short, by binding each input field in the HTML form to corresponding member attribute of a custom Django form class (see EventForm in views.py). Then when a user submits the form (by hitting the submit data), the form class checks the validity of all the entered data. If any of the data is invalid the submission is denied and an error message is displayed to the user. Else the form is sent as part of a 'request' to the proper 'view', which in this case is the "customevent" view. This view parses all of the input data and creates a new instance of a custom\_event with the corresponding attribute fields and enters it in the database. Then it grabs the current user and enters the two into an 'enroll' relation. Finally, the user is returned to the main page.
+\begin{figure}
+\includegraphics[width=6in]{emptyEvent.png}
+\caption{The form to create an empty event}
+\end{figure}
+\FloatBarrier
 \appendix
 \section{Appendix 1. Installation Manual}
 \subsection{Installing Django and MySQL}
