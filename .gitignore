@@ -1,4 +1,6 @@
 *.log
+*.toc
+*.out
 *.pot
 *.pyc
 *.aux
