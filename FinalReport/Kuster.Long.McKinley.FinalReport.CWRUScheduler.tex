@@ -180,38 +180,22 @@ USE scheduler;
 
 Then it got fairly complicated.  It became apparent (see figure 1) that the syntax we've been using wasn't correct.  In mysql, foreign key constraints need to be declared after the keys themselves; in the SQL we learned, they could be declared at the end of the CREATE TABLE statement.  This correction was necessary throughout the set of table creations.  About halfway through it became clear how the SQL needed to be modified.  We then used DESCRIBE calls to ensure that everything was set up correctly.
 \begin{flushleft}
-\begin{figure}
-\includegraphics[width=140mm]{db1.png}
-\figurename{ 1}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db2.png}
-\figurename{ 2}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db3.png}
-\figurename{ 3}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db4.png}
-\figurename{ 4}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db5.png}
-\figurename{ 5}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db6.png}
-\figurename{ 6}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db7.png}
-\figurename{ 7}
-\end{figure}
-\begin{figure}
-\includegraphics[width=140mm]{db8.png}
-\figurename{ 8}
-\end{figure}
+\includegraphics[width=4in]{db1.png}
+\FloatBarrier
+\includegraphics[width=4in]{db2.png}
+\FloatBarrier
+\includegraphics[width=4in]{db3.png}
+\FloatBarrier
+\includegraphics[width=4in]{db4.png}
+\FloatBarrier
+\includegraphics[width=4in]{db5.png}
+\FloatBarrier
+\includegraphics[width=4in]{db6.png}
+\FloatBarrier
+\includegraphics[width=4in]{db7.png}
+\FloatBarrier
+\includegraphics[width=4in]{db8.png}
+\FloatBarrier
 \end{flushleft}
 
 \section{SQL Queries}
@@ -260,6 +244,68 @@ The Student table contains only a case\_id and that's the primary key.  The Enro
 
 We also have one subtler constraint which is not enforced by the backend.  An Event must be either a CustomEvent, a MeetingTime, or neither.  If Event's id is present in both MeetingTime and CustomEvent, if a student enrolls in the Event, it is unclear whether the name associated with the MeetingTime or the CustomEvent should be displayed.  We deal with this by displaying the MeetingTime if it ever happens, but also by creating a new Event for every MeetingTime or CustomEvent.\\
 
+\section{Relational Database Design -- Applying The Dependency Theory}
+As we have a relatively straightforward database structure, all of our relations are already in BCNF(and thus 3NF). They are listed below:
+\subsection*{Class}
+\begin{itemize}
+\item c\_id (Primary Key)
+\item class\_number
+\item dept
+\item classname
+\item description
+\item term
+\end{itemize}
+c\_id $\rightarrow$ class\_number, dept, classname, description, term (In BCNF since c\_id is a key)
+\subsection*{Event}
+\begin{itemize}
+\item id (Primary Key)
+\item start\_time
+\item end\_time
+\item start\_date
+\item end\_date
+\item recur\_type
+\end{itemize}
+id $\rightarrow$ start\_time, end\_time, start\_date, end\_date, recur\_type (In BCNF since id is a key)
+\subsection*{CustomEvent}
+\begin{itemize}
+\item id (Primary Key)
+\item event\_name
+\item location
+\end{itemize}
+id $\rightarrow$ event\_name, location (In BCNF since id is a key)
+\subsection*{MeetingTime}
+\begin{itemize}
+\item id
+\item meeting\_class
+\item meeting\_location
+\end{itemize}
+id $\rightarrow$ meeting\_class, meeting\_location (In BCNF since id is a key)
+\subsection*{Instructor}
+\begin{itemize}
+\item email
+\item name (Primary Key)
+\item office
+\end{itemize}
+name $\rightarrow$ email, office (In BCNF since name is a key)
+\subsection*{Instructs}
+\begin{itemize}
+\item Instructor (Foreign Key $\rightarrow$ Instructor)
+\item Meeting (Foreign Key $\rightarrow$ MeetingTime)
+\end{itemize}
+No Functional Dependencies (In BCNF because no Functional Dependencies)
+\subsection*{Student}
+\begin{itemize}
+\item case\_id (Primary Key)
+\end{itemize}
+No Functional Dependencies (In BCNF because no Functional Dependencies)
+\subsection*{Enrollment}
+\begin{itemize}
+\item student (Foreign Key $\rightarrow$ Student)
+\item event (Foreign Key $\rightarrow$ Event)
+\end{itemize}
+No Functional Dependencies (In BCNF because no Functional Dependencies)
+\section{Revisiting the Relational Database Schema}
+Upon consideration, we decided to keep the database schema that we currently have. Our database would not benefit from breaking components out or merging tables further, and as such works well the way it is. Most of our optimization was done during the implementation process. The most significant performance improvement came from using inheritance to make Custom Event and Meeting Time children of Event. This allowed us to link to either Custom Events or Meeting Times in the Enrollment table, as well as removing the need to join either of those with Event, as Event was now their parent.
 \section{DBMS Implementation}
 We used the Django python framework.  This requred us to define a set of models, which is what Django calls objects and relations.  These objects have fields, like a CharField or IntegerField.  Each object type defines a table, with the interactions between the object types (for instance, MeetingTime subclasses Event) definining the integrity constraints.  
 
