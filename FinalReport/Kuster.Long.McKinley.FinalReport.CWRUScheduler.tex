@@ -1,5 +1,6 @@
 \documentclass[pdftex,12pt,letter]{article}
 
+\usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{placeins}
 \usepackage{enumerate}
@@ -434,8 +435,28 @@ Run 'python manage.py syncdb' and 'python manage.py reset course\_scheduler', an
 
 Run 'python fill\_db.py soc.xml', replacing soc.xml with the name of the soc file.
 
-\section{Application}
-
+\subsection{Deployment to an Apache Server}
+In order to run our application, we will be using Apache. On Ubuntu or an Ubuntu-derivative, execute 'apt-get install apache2 libapache2-mod-wsgi'. This will set up the Apache server with the mod-wsgi interface. Next, configure an Apache site in /etc/apache2/sites-available and /etc/apache2/sites-enabled. Ours is included here, and it contains elements of our directory structure which can be changed if desired.
+\verbatiminput{scheduler-apache-conf.txt}
+The important components of this file are as follows (more details can be found in the apache man pages)
+\begin{itemize}
+\item ServerName
+\subitem The Fully Qualified Domain Name of the server.
+\item ServerAlias
+\subitem Another location at which the server can be found.
+\item ServerAdmin
+\subitem The email address which will be displayed upon users encountering a server error.
+\item DocumentRoot
+\subitem The main directory for the html files accessible by this server.
+\item ErrorLog
+\subitem The location to which the server's error log should be written.
+\item CustomLog
+\subitem The location to which all non-errors should be written
+\item WSGIScriptAlias
+\subitem The location at which the Python WSGI script can be located.
+\item Aliases
+\subitem Locations of various resources and resource folders that browsers will want.
+\end{itemize}
 \section{Appendix 2. User's Manual}
 \subsection{Starting Case Scheduler}
 To access the Case Western Reserve University scheduler you must be either  a student or faculty member at the University. Specifically, you must have a "Case ID" in order to login through Case's Single Sign-On service.\\
