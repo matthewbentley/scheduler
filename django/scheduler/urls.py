@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^scheduler/removecourse$', 'course_scheduler.views.removecourse', name='removecourse'),
     url(r'^scheduler/mycourses$', 'course_scheduler.views.mycourses', name='mycourses'),
     url(r'^scheduler/customevent$', 'course_scheduler.views.customevent', name='customevent'),
+    url(r'^scheduler/about$', 'course_scheduler.views.about', name='about'),
 )

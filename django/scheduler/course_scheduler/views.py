@@ -377,6 +377,22 @@ def mycourses(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
+#   The about view function
+#   is the trivial view function
+#   that just returns the rendering
+#   of the about.html template file
+def about(request):
+    #check to see if the user is logged in
+    #if not make the user login
+    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+
+    return render(request, 'about.html')
+
 #   The customevent view function is the view
 #   for the custom.html field. If the event
 #   is passed a request with a POST method,
