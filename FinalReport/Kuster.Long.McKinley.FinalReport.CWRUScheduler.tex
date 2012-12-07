@@ -220,7 +220,7 @@ AND		c.class_number=input_number
 \item Query: All instructs tuples whose events have a dept that contains a passed string or have a number that contains a passed string or whose names contains a
 passed string
 \begin{enumerate}[i.]
-\item RA: 
+\item RA: $\Pi_{MeetingTime, instructor}(Instructs\bowtie_{meeting=id}\Pi_{id}(MeetingTime\bowtie_{meeting\_class=pk}\Pi_{pk}(\sigma_{input\_number  IN  dept  OR  input\_number  IN  number  OR  input\_name  IN  classname}Class)))$
 \item TRC:$\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge (Contains(c.dept, input\_dept) \vee Contains(c.number, input\_number) \vee Contains(c.classname, input\_name)))\}$
 \item SQL:
 \begin{verbatim}
