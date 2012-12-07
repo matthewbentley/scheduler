@@ -116,7 +116,7 @@ def add(request):
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
         patt = re.compile('(\w\w\w\w( )*((\d\d\d)|(\d\d\d\w)))')
-        if criterion != None
+        if criterion != None:
             toSend = {}
             if patt.match(criterion):
                 str = string.replace(criterion, ' ', '')
