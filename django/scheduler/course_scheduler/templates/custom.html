@@ -21,7 +21,7 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
-<div style="padding-left:20px; width: 500px; padding-bottom: 20px">
+<div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
            <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} {{ field.errors }}</span></span><br/><br/>
     {% endfor %}
