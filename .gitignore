@@ -8,5 +8,4 @@
 *.blg
 *.gz
 *.dvi
-*.pdf
 local_settings.py
