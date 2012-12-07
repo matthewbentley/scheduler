@@ -25,7 +25,7 @@
 {% for field in form %}
         <div style="padding: 5px 5px 5px 5px">
            {% if  field.errors %} {{ field.errors }} <br> {% endif %}
-           <span style="float: left"> {{ field.label_tag }}:</span> <span style="float:right"> {{ field }}</span></div>
+           <span style="float: left"> {{ field.label_tag }}:</span> <span style="float:right"> {{ field }}</span>
         </div>
     {% endfor %}
 </div>
