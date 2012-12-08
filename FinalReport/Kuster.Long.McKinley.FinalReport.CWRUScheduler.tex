@@ -123,15 +123,21 @@ CREATE TABLE `course_scheduler_customevent` (
     `location` varchar(50) NOT NULL
 )
 ;
-ALTER TABLE `course_scheduler_customevent` ADD CONSTRAINT `event_ptr_id_refs_id_4813623e` FOREIGN KEY (`event_ptr_id`) REFERENCES `course_scheduler_event` (`id`);
+ALTER TABLE `course_scheduler_customevent` ADD CONSTRAINT
+    `event_ptr_id_refs_id_4813623e` FOREIGN KEY (`event_ptr_id`)
+    REFERENCES `course_scheduler_event` (`id`);
 CREATE TABLE `course_scheduler_meetingtime` (
     `event_ptr_id` integer NOT NULL PRIMARY KEY,
     `meeting_class_id` integer NOT NULL,
     `meeting_location` varchar(50) NOT NULL
 )
 ;
-ALTER TABLE `course_scheduler_meetingtime` ADD CONSTRAINT `meeting_class_id_refs_id_8beceb5b` FOREIGN KEY (`meeting_class_id`) REFERENCES `course_scheduler_class` (`id`);
-ALTER TABLE `course_scheduler_meetingtime` ADD CONSTRAINT `event_ptr_id_refs_id_98bafe7b` FOREIGN KEY (`event_ptr_id`) REFERENCES `course_scheduler_event` (`id`);
+ALTER TABLE `course_scheduler_meetingtime` ADD CONSTRAINT
+    `meeting_class_id_refs_id_8beceb5b` FOREIGN KEY (`meeting_class_id`)
+    REFERENCES `course_scheduler_class` (`id`);
+ALTER TABLE `course_scheduler_meetingtime` ADD CONSTRAINT
+    `event_ptr_id_refs_id_98bafe7b` FOREIGN KEY (`event_ptr_id`)
+    REFERENCES `course_scheduler_event` (`id`);
 CREATE TABLE `course_scheduler_instructor` (
     `email` varchar(10) NOT NULL,
     `name` varchar(50) NOT NULL PRIMARY KEY,
@@ -144,8 +150,12 @@ CREATE TABLE `course_scheduler_instructs` (
     `meeting_id` integer NOT NULL
 )
 ;
-ALTER TABLE `course_scheduler_instructs` ADD CONSTRAINT `instructor_id_refs_name_d0e02416` FOREIGN KEY (`instructor_id`) REFERENCES `course_scheduler_instructor` (`name`);
-ALTER TABLE `course_scheduler_instructs` ADD CONSTRAINT `meeting_id_refs_event_ptr_id_4ac340b8` FOREIGN KEY (`meeting_id`) REFERENCES `course_scheduler_meetingtime` (`event_ptr_id`);
+ALTER TABLE `course_scheduler_instructs` ADD CONSTRAINT
+    `instructor_id_refs_name_d0e02416` FOREIGN KEY (`instructor_id`)
+    REFERENCES `course_scheduler_instructor` (`name`);
+ALTER TABLE `course_scheduler_instructs` ADD CONSTRAINT
+    `meeting_id_refs_event_ptr_id_4ac340b8` FOREIGN KEY (`meeting_id`)
+    REFERENCES `course_scheduler_meetingtime` (`event_ptr_id`);
 CREATE TABLE `course_scheduler_student` (
     `case_id` varchar(6) NOT NULL PRIMARY KEY
 )
@@ -156,8 +166,12 @@ CREATE TABLE `course_scheduler_enrollment` (
     `event_id` integer NOT NULL
 )
 ;
-ALTER TABLE `course_scheduler_enrollment` ADD CONSTRAINT `student_id_refs_case_id_70e0330d` FOREIGN KEY (`student_id`) REFERENCES `course_scheduler_student` (`case_id`);
-ALTER TABLE `course_scheduler_enrollment` ADD CONSTRAINT `event_id_refs_id_6200046` FOREIGN KEY (`event_id`) REFERENCES `course_scheduler_event` (`id`);
+ALTER TABLE `course_scheduler_enrollment` ADD CONSTRAINT
+    `student_id_refs_case_id_70e0330d` FOREIGN KEY (`student_id`)
+    REFERENCES `course_scheduler_student` (`case_id`);
+ALTER TABLE `course_scheduler_enrollment` ADD CONSTRAINT
+    `event_id_refs_id_6200046` FOREIGN KEY (`event_id`)
+    REFERENCES `course_scheduler_event` (`id`);
 COMMIT;
 \end{verbatim}
 \subsection{Justification of Relational Model}
@@ -264,7 +278,8 @@ student with a passed id
 \item TRC: $\{v^6 \vert (\exists ev)(\exists en)(Enrollment(en) \wedge Event(ev) \wedge v[1]=ev.start\_time \wedge v[2]=ev.end\_time \wedge v[3]=ev.start\_date \wedge v[4].ev.end\_date \wedge v[5]=ev.recur\_type \wedge v[6]=ev.id \wedge en.event = ev.id \wedge en.student=input\_case\_id \wedge ev.id=\wedge input\_event\_id)\}$
 \item SQL:
 \begin{verbatim}
-SELECT e.id, e.start_time, e.end_time, e.start_date, e.end_date, e.recur_type
+SELECT e.id, e.start_time, e.end_time, e.start_date,
+    e.end_date, e.recur_type
 FROM Event e, Enroll en
 WHERE 	en.event=e.id
 AND		en.student=passed_id
