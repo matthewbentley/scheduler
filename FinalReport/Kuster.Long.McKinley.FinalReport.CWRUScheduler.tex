@@ -201,36 +201,36 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \end{flushleft}
 
 \section{SQL Queries}
-Due to the nature of our application, our queries do not get terribly crazy.
+Due to our table design, our queries are relatively straightforward.
 \begin{enumerate}[1.]
 \item Query: All instructs tuples whose events have a given dept/number combination.
 \begin{enumerate}[i.]
-\item RA: $   \pi_{instrutor, meeting} (\bowtie_{meeting=id} (MeetingTime \\\bowtie_{meeting\_class=pk} (\sigma_{dept=in\_dept, classnumber=in\_number}(Class)))) $
-\item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists c)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge c.dept=input\_dept \wedge c.class\_number = input\_number)\}$
+\item RA: $   \pi_{instrutor, meeting} (\bowtie_{meeting=id} (MeetingTime \\\bowtie_{meeting\_class=id} (\sigma_{dept=in\_dept, classnumber=in\_number}(Class)))) $
+\item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists c)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.id \wedge c.dept=input\_dept \wedge c.class\_number = input\_number)\}$
 \item SQL: 
 \begin{verbatim}
 SELECT i.MeetingTime, i.instructor
 FROM Instructs i, MeetingTime m, Class c
 WHERE 	i.meeting=m.id
-AND		m.meeting_class=c.pk
-AND		c.dept=input_dept
+AND		m.meeting_class=c.id
+AND		c.dept='input_dept'
 AND		c.class_number=input_number
 \end{verbatim}
 \end{enumerate}
 \item Query: All instructs tuples whose events have a dept that contains a passed string or have a number that contains a passed string or whose names contains a
 passed string
 \begin{enumerate}[i.]
-\item RA: $\Pi_{MeetingTime, instructor}(Instructs\bowtie_{meeting=id}\Pi_{id}(MeetingTime\bowtie_{meeting\_class=pk}\Pi_{pk}(\sigma_{input\_number  IN  dept  OR  input\_number  IN  number  OR  input\_name  IN  classname}Class)))$
-\item TRC:$\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.pk \wedge (Contains(c.dept, input\_dept) \vee Contains(c.number, input\_number) \vee Contains(c.classname, input\_name)))\}$
+\item RA: $\Pi_{MeetingTime, instructor}(Instructs\bowtie_{meeting=id}\Pi_{id}(MeetingTime\bowtie_{meeting\_class=id}\Pi_{pk}(\sigma_{input\_number  IN  dept  OR  input\_number  IN  number  OR  input\_name  IN  classname}Class)))$
+\item TRC:$\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.id \wedge (Contains(c.dept, input\_dept) \vee Contains(c.number, input\_number) \vee Contains(c.classname, input\_name)))\}$
 \item SQL:
 \begin{verbatim}
 SELECT i.MeetingTime, i.instructor
 FROM Instructs i, MeetingTime m, Class c
 WHERE 	i.meeting=m.id
-AND		m.meeting_class=c.pk
-AND		(c.dept LIKE %input_dept%
-	 	OR c.number LIKE %input_number %
-	 	OR c.classname LIKE %input_name %)
+AND		m.meeting_class=c.id
+AND		(c.dept LIKE '%input_dept%'
+	 	OR c.number = input_number
+	 	OR c.classname LIKE '%input_name%')
 \end{verbatim}
 \end{enumerate}
 \item Query: All instructs tuples whose meetings are in an enroll relation with a
@@ -248,11 +248,11 @@ AND		i.student=passed\_id
 \end{enumerate}
 \item Query: All instructs tuples whose instructor's name matches exactly a passed string
 \begin{enumerate}[i.]
-\item RA:$\Pi_{MeetingTime, instructor}(\sigma_{instructor=passed\_name}Instructs)$
+\item RA:$(\sigma_{instructor=passed\_name}Instructs)$
 \item TRC: $\{v^2\vert(\exists i)(\exists p)(Instructs(i) \wedge Instructor(p) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.instructor=p.name \wedge p.name=input\_name\} $
 \item SQL:
 \begin{verbatim}
-SELECT i.MeetingTime, i.instructor
+SELECT *
 FROM Instructs i
 WHERE 	i.instructor=passed_name
 \end{verbatim}
@@ -264,7 +264,7 @@ student with a passed id
 \item TRC: $\{v^6 \vert (\exists ev)(\exists en)(Enrollment(en) \wedge Event(ev) \wedge v[1]=ev.start\_time \wedge v[2]=ev.end\_time \wedge v[3]=ev.start\_date \wedge v[4].ev.end\_date \wedge v[5]=ev.recur\_type \wedge v[6]=ev.id \wedge en.event = ev.id \wedge en.student=input\_case\_id \wedge ev.id=\wedge input\_event\_id)\}$
 \item SQL:
 \begin{verbatim}
-SELECT e.*
+SELECT e.id, e.start_time, e.end_time, e.start_date, e.end_date, e.recur_type
 FROM Event e, Enroll en
 WHERE 	en.event=e.id
 AND		en.student=passed_id
@@ -329,23 +329,25 @@ id $\rightarrow$ meeting\_class, meeting\_location (In BCNF since id is a key)
 name $\rightarrow$ email, office (In BCNF since name is a key)
 \subsection*{Instructs}
 \begin{itemize}
+\item id (Primary Key)
 \item Instructor (Foreign Key $\rightarrow$ Instructor)
 \item Meeting (Foreign Key $\rightarrow$ MeetingTime)
 \end{itemize}
-No Functional Dependencies (In BCNF because no Functional Dependencies)
+id $\rightarrow$ Instructor, Meeting
 \subsection*{Student}
 \begin{itemize}
 \item case\_id (Primary Key)
 \end{itemize}
-No Functional Dependencies (In BCNF because no Functional Dependencies)
+No Non-Trivial Functional Dependencies (In BCNF because no Non-Trivial Functional Dependencies)
 \subsection*{Enrollment}
 \begin{itemize}
+\item id (Primary Key)
 \item student (Foreign Key $\rightarrow$ Student)
 \item event (Foreign Key $\rightarrow$ Event)
 \end{itemize}
-No Functional Dependencies (In BCNF because no Functional Dependencies)
+id $\rightarrow$ student, event
 \section{Revisiting the Relational Database Schema}
-Upon consideration, we decided to keep the database schema that we currently have. Our database would not benefit from breaking components out or merging tables further, and as such works well the way it is. Most of our optimization was done during the implementation process. The most significant performance improvement came from using inheritance to make Custom Event and Meeting Time children of Event. This allowed us to link to either Custom Events or Meeting Times in the Enrollment table, as well as removing the need to join either of those with Event, as Event was now their parent.
+Upon consideration, we decided to keep the database schema that we currently have. Our database would not benefit from breaking components out or merging tables further, and as such works well the way it is. Most of our optimization was done during the implementation process. The most significant performance improvement came from using inheritance to make Custom Event and Meeting Time children of Event. This allowed us to link to either Custom Events or Meeting Times in the Enrollment table, as well as removing the need to join either of those with Event, as an Event id was now their primary key.
 \section{DBMS Implementation}
 We used the Django python framework.  This requred us to define a set of models, which is what Django calls objects and relations.  These objects have fields, like a CharField or IntegerField.  Each object type defines a table, with the interactions between the object types (for instance, MeetingTime subclasses Event) definining the integrity constraints.  
 
@@ -379,13 +381,13 @@ Thus we ended up directly implementing the schedule view with a combination of H
 \end{figure}
 \FloatBarrier
 \newpage
-So after a user logs in and naviages \url{http://concertina.case.edu/scheduler}, the application searches urls.py for the appropriate response for that url. It see that the view for the url is 'course \_scheduler.views.schedule'. So the function schedule(request) is called in order to determine how to render the webpage. Since we have the user's id we make a query to our database via Django is order to find all of that user's events (class and custom\_events) so we can send it to the html template.\\
+After a user logs in and naviages \url{http://concertina.case.edu/scheduler}, the application searches urls.py for the appropriate response for that url. It see that the view for the url is 'course \_scheduler.views.schedule'. So the function schedule(request) is called in order to determine how to render the webpage. Since we have the user's id we make a query to our database via Django is order to find all of that user's events (class and custom\_events) so we can send it to the html template.\\
 
-The final schedule seen in the figures is impemented through an HTML table. Every day of the week is a separate column in the table and just one single long row. We couldn't use sepearte rows in each column because a user's event can be at any time and span any number of time slots, and HTML table do not support any kind of span across table rows. So instead, when the schedule HTML file receives a list of events it simply creates a colored square at a location within the tabe based on that event's recur\_type (eg MWF) and start\_time. The hieght of these squares is based on the event's duration. \\
+The final schedule seen in the figures is impemented through an HTML table. Every day of the week is a separate column in the table and just one single long row. We couldn't use separate rows in each column because a user's event can be at any time and span any number of time slots, and HTML table do not support any kind of span across table rows. So instead, when the schedule HTML file receives a list of events it simply creates a colored square at a location within the tabe based on that event's recur\_type (eg MWF) and start\_time. The hieght of these squares is based on the event's duration. \\
 
-From the above screen shots you may notice that a class's title is underlined and each event has a black X button in the bottem right of its square. In designing our application we decided the two things a user would want to do from their main page was to either remove events from their schedule or see more information on a selected class. The delete button is implemented through a basic HTML form tag. The form tag is the basic HTML way to handle user input. Behind the scenes, when the user hits the click button the web page redirects to the removecourse view and passes it the user's 'request', ie that he selected to delete a certain event. The removecourse view queries the database for the enroll relationship linking the user to the specified event and deletes. Upon successful deletion, the webpage redirects back to the main schedule page. To the eyes of the user, the selected course simply disappears.\\
+From the above screenshots you may notice that a class's title is underlined and each event has a black X button in the bottem right of its square. In designing our application we decided the two things a user would want to do from their main page was to either remove events from their schedule or see more information on a selected class. The delete button is implemented through a basic HTML form tag. The form tag is the basic HTML way to handle user input. Behind the scenes, when the user hits the click button the web page redirects to the removecourse view and passes it the user's 'request', ie that he selected to delete a certain event. The removecourse view queries the database for the enroll relationship linking the user to the specified event and deletes. Upon successful deletion, the webpage redirects back to the main schedule page. To the eyes of the user, the selected course simply disappears.\\
 
-When the user click on a class's title, the user is taken to an information page, but that is explained more in detail below. For now, we're going to look at the second key feature for a schedule: the ability to add a class to your schedule. At the top of every page in our application there is a black navigation bar, this is built through a HTML a horizontal table HTML tag and is common to many website and was thus easy to implement. Each link brings the user to a different page of the application. The first one from the main page, "Add a Course" brings to the page show below.
+When the user clicks on a class's title, the user is taken to an information page, but that is explained more in detail below. For now, we're going to look at the second key feature for a schedule: the ability to add a class to your schedule. At the top of every page in our application there is a black navigation bar, this is built through a HTML a horizontal table HTML tag and is common to many website and was thus easy to implement. Each link brings the user to a different page of the application. The first one from the main page, "Add a Course" brings to the page show below.
 \begin{figure}
 \includegraphics[width=6in]{blankAdd.png}
 \caption{The add a course page as shown with no search results}
@@ -399,13 +401,13 @@ We did not encounter too many obstacles in implementing the add a course feature
 \FloatBarrier
 You should see that some courses have an "Add Course" button and some have a "Remove Course" button. The courses that are already in your schedule are the ones that display "remove course." This is accomplished during the compilation of the search results, the query also checks to see if there in an Enroll relationship with the current case\_id and each returned course, and if so, that information is passed to the HTML file. The implementation for both buttons is the same as described above for the delete button from the main page.\\
 
-Again you should see that the course title is underlined. Like on the front page, this redirects the user to a page showing information for a the selected class. In the same process, the webservice determine that the proper view is 'course \_scheduler.views.info' and sends that view the users 'request. The info view queries the database for the class with the same name as the one selected and displays a separate information table for each different meeting time for that class (or event). The results of the information page for EECS 341 are shown below.
+Again you should see that the course title is underlined. Like on the front page, this redirects the user to a page showing information for a the selected class. In the same process, the application determines that the proper view is 'course \_scheduler.views.info' and sends that view the user's request. The info view queries the database for the class with the same name as the one selected and displays a separate information table for each different meeting time for that class (or event). The results of the information page for EECS 341 are shown below.
 \begin{figure}
 \includegraphics[width=6in]{databaseInfo.png}
 \caption{The information page for EECS 341}
 \end{figure}
 \FloatBarrier
-This page is very similar to the add page in that it displays one or more courses to the user and allows the user to selectively add or remove courses. The main difference is that the user cannot search from this page and each course has a great deal more information attached to it. By now you may be wondering exactly how the HTML accesses this information. Well, we can actually embed simple Django directly into our HTML file, allowing us to have access to the attribute of objects passed into the HTML file via the 'context' mentioned earlier. For example, the following code snipet displays a course name:\\
+This page is very similar to the add page in that it displays one or more courses to the user and allows the user to selectively add or remove courses. The main difference is that the user cannot search from this page and each course has a great deal more information attached to it. It may be unclear how the HTML accesses this information. Django allows directly inserting queries into our HTML file, allowing us to have access to the attribute of objects passed into the HTML file via the 'context' mentioned earlier. For example, the following code snipet displays a course name:\\
 $\langle td \rangle${{event.meetingtime.meeting\_class.dept}} {{event.meetingtime.meeting\_class.class\_number}}: {{event.meetingtime.meeting\_class.classname}}$\langle/td \rangle$\\
 
 Note, this is not the exact code we have, because behind the scenes the info view actually iterates through the instructs relation so that we can display an instructor for each meeting time. Also, the $\langle td \rangle$ tag is an HTML tag for whenever you want to have an entry in a table cell.\\
@@ -418,7 +420,7 @@ The instructor information page, shown below, is actually the most basic page in
 \caption{The information page for Meral Ozsoyoglu}
 \end{figure}
 \FloatBarrier
-As you can see, the office and email in this case both display as "not listed". That is because as of right now, we have not yet filled our database with an office location and email for all of the instructors present in our database. The main reason behind this lapse is that when first designing our application we beleived that this information was published by the university in the same XML document that we retrieve the course information from, but this turned out to be untrue. Thus we would now have to manually enter in all instructor information to achieve full functionality. However, because our application has the full functionality to parse an xml document and create database entries from that document, we will first ask CWRU to publish or give us access to such a list, if it exists.\\
+As you can see, the office and email in this case both display as "not listed". That is because as of right now, we have not yet filled our database with an office location and email for all of the instructors present in our database. The main reason behind this lapse is that when first designing our application we believed that this information was published by the university in the same XML document that we retrieve the course information from, but this turned out to be untrue. Thus we would now have to manually enter in all instructor information to achieve full functionality. However, because our application has the full functionality to parse an xml document and create database entries from that document, we will first ask CWRU to publish or give us access to such a list, if it exists.\\
 
 At the bottom of the page there is a View all Courses button. This is again a HTML form button that calls the "inscourse" view, sending the view the instructor's name as a parameter. Then in that view, we query the instructs relation for all of the courses taught by the passed instructor. Then we return the resulting query set to the add HTML file discussed above. The result of hitting this button for Meral Ozsoyoglu is shown below.
 \begin{figure}
@@ -434,7 +436,7 @@ This is the familiar add page already discussed, so we're going to go ahead and 
 \end{figure}
 \FloatBarrier
 
-Everything on this page functions just like the add page. That is one of the powerful parts of our application, that a lot of our HTML code can be easily reused. We could even customize this page more differently from the add page by passing in certain parameters telling the HTML file what or what not to render.\\
+Everything on this page functions just like the add page. One of the powerful parts of our application is that a lot of our HTML code can be easily reused. We could even customize this page differently from the add page by passing in certain parameters telling the HTML file what or what not to render.\\
 
 The final feature to discuss was the 2nd hardest implement on both the front-end and the back-end. Specifically, this feature is the idea of custom\_events. During design we decided our users' would most definitely want to be able to add their own events to their schedule. Such a feature would allow them to schedule things like extra-curricular, study-sessions, or sports practices. These events however proved troublesome when designing the database. We went through 4 or 5 different schema implementation before we settled a reasonable and effective one. This trouble stemmed from the fact that events are very similar to meetingtimes, but slightly different in key areas. For example, meetingtimes have a class associated with them that hold the class name, department, information and so forth. Thus, we couldn't have a simple custom\_event is a meetingtime relation. Nor could a meetingtime be a custom\_event because a custom\_event has attributes a meetingtime doesn't need. Finally we settled on a global event entity that both meetingtime and custom\_event could inherit from. This scheme proved difficult for our primary database developer because Django inheritance was a beast none of us had, at that point, yet touched. Fortunately Django has excellent documentation we could work with (\url{https://docs.djangoproject.com/en/dev/topics/db/models/#model-inheritance}).\\
 
@@ -445,19 +447,19 @@ Custom\_event proved difficult for the front-end application for entirely differ
 \end{figure}
 \FloatBarrier
 
-When checking the validity of the form data, the form class calls to custom made validation methods. Both uses Python regular expressions to ensure the validty of certain fields. For example, the "days" field can only be made up for the following strings: Su M Tu W Th F Sa . Below is a figure showing some of the possible error messages.
+When checking the validity of the form data, the form class calls to custom made validation methods. Both uses Python regular expressions to ensure the validity of certain fields. For example, the "days" field can only be made up for the following strings: Su M Tu W Th F Sa . Below is a figure showing some of the possible error messages.
 \begin{figure}
 \includegraphics[width=6in]{eventErr.png}
 \caption{Example of invalid custom\_event data}
 \end{figure}
 \FloatBarrier
 
-That essentially covers the bare-bones of how our application implementation works. Django and HTML 5 provided a flexible and powerful way to manipulate databases, display dynamic information to the user, and respond appropriately to user input.=
+That essentially covers the bare-bones of how our application implementation works. Django and HTML 5 provided a flexible and powerful way to manipulate databases, display dynamic information to the user, and respond appropriately to user input.
 
 %\includepdf[pages={-}]{stuarts/stuarts13n14.pdf}
 
 \subsection*{15. Conclusion}
-As of the righting of this report the new CWRU Scheduler developed by this team is a simple, yet powerful tool available for use by the entire CWRU faculty and staff. There is no question that we accomplished our main goal of having an exponentially faster application than the one currently available (scheduler.case.edu). While our scheduler is not quite feature complete enough for release, it does provide the bulk of those necessary for user's to schedule their class lists. We hope to continue working on this project, so that it will eventually see widespread use.
+As of the writing of this report the new CWRU Scheduler developed by this team is a simple, yet powerful tool available for use by the entire CWRU faculty and staff. There is no question that we accomplished our main goal of having an exponentially faster application than the one currently available (scheduler.case.edu). While our scheduler is not quite feature complete enough for release, it does provide the bulk of those necessary for user's to schedule their class lists. We hope to continue working on this project, so that it will eventually see widespread use.
 
 \newpage
 \appendix
@@ -534,7 +536,7 @@ You should be brought to a page with a "Search" bar and an empty table. Let's se
 
 You should be brought to a short information page displaying the email and office for Professor Schafer. There should also be a link at the bottom of the page, "View all classes", go ahead and click it. This link will display all the classes currently taught by Professor Shaffer.\\
 
-In this case, only 2 courses will be displayed "ANTH 331" and "ANTH 107". You may notice that we are the same type of page as the "Add a Course" page, and you'd be right! You should notice that from this page you could also click on "Jim Shaffer" and that would just take you back to your Professor Shaffer's page again. Let's go ahead and ad "ANTH 107" to our schedule by clicking the "Add Course" button.\\
+In this case, only 2 courses will be displayed "ANTH 331" and "ANTH 107". You may notice that we are the same type of page as the "Add a Course" page, and you'd be right! You should notice that from this page you could also click on "Jim Shaffer" and that would just take you back to your Professor Shaffer's page again. Let's go ahead and add "ANTH 107" to our schedule by clicking the "Add Course" button.\\
 
 \subsection{My Courses}
 Continuing from the "Professors" section, you should once again be back on the main schedule page, but now have 3 classes in your schedule. Let's go ahead and click the "My Courses" link at the top of the screen.\\
@@ -544,7 +546,7 @@ You should be brought to a table displaying the list of the 3 courses currently 
 \subsection{Courses on the Schedule}
 Continuing on from the "My Courses" section, you should have 2 courses currently in your schedule. Notice that the names of the courses are underlined, this means that they represent links. Let's go ahead and click on "EECS 337". You should be brought to the familiar course information page for EECS 337, though now it says "Remove Course" at the bottom instead of "Add Course". Go ahead and click "Remove Course", you should be brought to the main schedule page, and now EECS 337 should no longer be in the your schedule.\\
 
-Look at the last course in your schedule, EECS 341, you should see an "X" icon in the bottom right of the colored course. Clicking this button removes the select event from your schedule, go ahead and remove EECS 341 from the schedule.
+Look at the last course in your schedule, EECS 341, you should see an "X" icon in the bottom right of the colored course. Clicking this button removes the selected event from your schedule, we will remove EECS 341 from the schedule.
 
 \subsection{Custom Events}
 Continuing on from the "Courses on the Schedule", you will now learn how to add your own events to your schedule. Go ahead and click the "Custom Event" link at the top of the page. You should see a series of text fields that correspond to information you want to enter for your custom event. Note that all fields are mandatory.\\
@@ -557,7 +559,7 @@ Congratulations, you've successfully made it through he entire basic User's Manu
 
 \section{Appendix 2. Programmer's Manual}
 \subsection{Introduction}
-This programmer's manual is intended as a mid-to-low level overview of the code behind the magic that is the new CWRU Scheduler. We essentially provide all of the comments for the main functions we use in our python source code files. For a high level overview and a basic understanding of how Python,Django/=, and HTML 5 interact, please see the "Application Implementation" section above. For an overview of how we implemented and integrated a MySQL database, please see the "Database Implementation" section above. The HTML 5 source code can be easily reviewed by using your internet browser's "View Source" while reviewing the project. Because HTML is a markup language, it does not really have nice function blocks to comment, nor is the code complex enough to really necessitate more explanation than the code itself.
+This programmer's manual is intended as a mid-to-low level overview of the code behind the magic that is the new CWRU Scheduler. We essentially provide all of the comments for the main functions we use in our python source code files. For a high level overview and a basic understanding of how Python, Django, and HTML 5 interact, please see the "Application Implementation" section above. For an overview of how we implemented and integrated a MySQL database, please see the "Database Implementation" section above. The HTML 5 source code can be easily reviewed by using your internet browser's "View Source" while reviewing the project. Because HTML is a markup language, it does not really have nice function blocks to comment, nor is the code complex enough to really necessitate more explanation than the code itself.
 \subsubsection*{views.py}
 \verbatiminput{viewsComments.txt}
 \subsubsection*{checklogin.py}
