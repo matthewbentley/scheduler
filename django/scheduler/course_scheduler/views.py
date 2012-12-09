@@ -121,7 +121,7 @@ def add(request):
             toSend = {}
             if patt.match(criterion):
                 str = string.replace(criterion, ' ', '')
-                arr = [2]
+                arr = [None]*2
                 arr[0] = str[0:3]
                 arr[1] = str[4:]
                 #arr = criterion.split(' ')
