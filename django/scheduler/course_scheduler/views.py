@@ -444,7 +444,7 @@ def customevent(request):
             startTimeArr, endTimeArr = parse_time(time)
 
             dayStr = ''
-            for day in days:
+            for day in days.iterKeys():
                 dayStr += days[day]
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)

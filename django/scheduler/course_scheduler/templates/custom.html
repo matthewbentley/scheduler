@@ -23,17 +23,10 @@
 <div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
-           <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span>
+        {% if field not form.days %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
+{% form.days.as_table %}
 </div>
-<!--<label for="e_name">Event Title:</label>
-<input id="name" type="text" name="Enter" maxlength="100" />
-
-<label for="e_name">Time (e.g. 9:00am - 1:00pm):</label>
-
-<input id="start_time" type="text" name="Search" maxlength="100" /><br>
-<label for="e_days">Days (SuMTuWThFSa):</label>
-<input id="recur_type" type="text" name="Search" maxlength="100" /><br>-->
 <input type="hidden" name="id" value="{{id}}"/>
 <input type="submit" value="Create Event"/>
 </form>
