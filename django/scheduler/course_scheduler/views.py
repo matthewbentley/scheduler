@@ -119,7 +119,7 @@ def add(request):
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
         patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
-        if form.isValid():
+        if form.is_Valid():
             criterion = form.cleaned_data['criterion']
             if patt.match(criterion):
                 str = string.replace(criterion, ' ', '')
