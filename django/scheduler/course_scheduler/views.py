@@ -112,13 +112,15 @@ def add(request):
     if cookie != "":
         setcookie = True
 
+    toSend = {}
     if request.method == 'GET':
-        criterion = request.GET.get('Search', None)
+        form = SearchFrom(request.GET)
+        #criterion = request.GET.get('Search', None)
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
         patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
-        if criterion != None:
-            toSend = {}
+        if form.isValid():
+            criterion = form.cleaned_data['criterion']
             if patt.match(criterion):
                 str = string.replace(criterion, ' ', '')
                 arr = [None]*2
@@ -135,13 +137,12 @@ def add(request):
                     toSend[c] = True
                 else:
                     toSend[c] = False
-
-            response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
-            if setcookie == True:
-                response.__setitem__('Set-Cookie', cookie)
-            return response
-        else:
-            return render(request, 'add.html', {'id' : id})
+    else:
+        form = SearchForm()
+    response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : form})
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
 
 #   The info view is called whenever
 #   the user clicks on a meeting-time's
@@ -555,4 +556,7 @@ class EventForm(forms.Form):
     start_date=forms.DateField()
     end_date=forms.DateField()
     days=forms.CharField(max_length=14, validators=[validate_day])
+
+class SearchForm(forms.Form):
+    criterion=forms.CharField(max_length=100)
 
