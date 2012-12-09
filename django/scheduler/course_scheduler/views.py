@@ -11,6 +11,7 @@ import datetime
 import re
 import sys
 import random
+import string
 
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
