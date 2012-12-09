@@ -19,8 +19,7 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/add" action="get">{% csrf_token %}
-<p>{{ form.criterion }}</p>
-	<!--<input id="criterion" type="text" name="Search" maxlength="100" /></p>-->
+<p><label for="criterion">Search: </label>{{ form.criterion }}</p>
 	</form>
     <table border="1">
     <tr>
