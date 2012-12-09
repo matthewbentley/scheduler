@@ -114,7 +114,7 @@ def add(request):
 
     toSend = {}
     if request.method == 'GET':
-        form = SearchFrom(request.GET)
+        form = SearchForm(request.GET)
         #criterion = request.GET.get('Search', None)
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
