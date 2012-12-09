@@ -116,7 +116,7 @@ def add(request):
         criterion = request.GET.get('Search', None)
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
-        patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w))')
+        patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
         if criterion != None:
             toSend = {}
             if patt.match(criterion):
