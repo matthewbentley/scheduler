@@ -563,7 +563,8 @@ class EventForm(forms.Form):
             choices=CHOICES, 
             label="Recurrence", 
             required=True,
-            widget=forms.CheckboxSelectMultiple()) 
+            widget=forms.CheckboxSelectMultiple(),
+            id="rec") 
 
 class SearchForm(forms.Form):
     criterion=forms.CharField(max_length=100)
