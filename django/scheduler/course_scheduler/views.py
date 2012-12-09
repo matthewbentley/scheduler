@@ -442,10 +442,12 @@ def customevent(request):
                 loc = ""
 
             startTimeArr, endTimeArr = parse_time(time)
-            
-            
+
+            dayStr = ''
+            for day in days:
+                dayStr += days[day]
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
-            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=days, event_name=name, location=loc)
+            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
             event.save()
 
             stu = Student.objects.get(case_id=id)
@@ -560,7 +562,8 @@ class EventForm(forms.Form):
     days = forms.MultipleChoiceField(
             choices=CHOICES, 
             label="Recurrence", 
-            required=False) 
+            required=True,
+            widget=forms.CheckboxSelectMultiple()) 
 
 class SearchForm(forms.Form):
     criterion=forms.CharField(max_length=100)
