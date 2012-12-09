@@ -555,7 +555,12 @@ class EventForm(forms.Form):
     times=forms.CharField(max_length=20, validators=[validate_time])
     start_date=forms.DateField()
     end_date=forms.DateField()
-    days=forms.CharField(max_length=14, validators=[validate_day])
+    #days=forms.CharField(max_length=14, validators=[validate_day])
+    CHOICES=((0,'M'),(0,'Tu'),(0,'W'),(0,'Th'),(0,'F'),(0,'Sa'),(0,'Su'))
+    days = forms.MultipleChoiceField(
+            choices=CHOICES, 
+            label="Recurrence", 
+            required=False) 
 
 class SearchForm(forms.Form):
     criterion=forms.CharField(max_length=100)
