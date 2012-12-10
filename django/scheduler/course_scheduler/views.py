@@ -435,7 +435,7 @@ def customevent(request):
             time = form.cleaned_data['times']
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
-            days = form.cleaned_data['days']
+            
             try:
                 loc = form.cleaned_data['location']
             except:
@@ -444,8 +444,24 @@ def customevent(request):
             startTimeArr, endTimeArr = parse_time(time)
 
             dayStr = ''
-            for day in days.iterKeys():
-                dayStr += days[day]
+            if form.cleaned_data['su']:
+                dayStr += 'Su
+            if form.cleaned_data['m']:
+                dayStr += 'M'
+            if form.cleaned_data['tu']:
+                dayStr += 'tu'
+            if form.cleaned_data['w']:
+                dayStr += 'w'
+            if form.cleaned_data['th']:
+                dayStr += 'th'
+            if form.cleaned_data['f']:
+                dayStr += 'f'
+            if form.cleaned_data['sa']:
+                dayStr += 'sa'
+
+            if '' == dayStr:
+                return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
+            
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
             event.save()

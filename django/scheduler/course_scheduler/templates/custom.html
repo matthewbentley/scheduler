@@ -26,13 +26,18 @@
         {% if field.label != 'day' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
 <label for="days" style="padding-right: 5px">Days:</label>
-<span style="float:right">M{{form.m}}
+{% if dayErr %}
+Error! At least 1 day required.<br/>
+{%endif%}
+<span style="float:right">
+Su{{form.su}}
+M{{form.m}}
 Tu{{form.tu}}
 W{{form.w}}<br/>
 Th{{form.th}}
 F{{form.f}}
 Sa{{form.sa}}
-Su{{form.su}}</span>
+</span>
 <!--{% for value, text in form.days.field.choices %}
 {{value}} : {{text}}
 {% endfor %}-->
