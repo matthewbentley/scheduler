@@ -27,8 +27,7 @@
     {% endfor %}
 {% for value, text in form.days.field.choices $}
 {{value}} : {{text}}
-{% endfor  %}s
-{% form.days.as_table %}
+{% endfor %}
 </div>
 <input type="hidden" name="id" value="{{id}}"/>
 <input type="submit" value="Create Event"/>
