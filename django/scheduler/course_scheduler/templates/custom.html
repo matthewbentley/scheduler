@@ -25,10 +25,11 @@
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
         {% if field.label != 'day' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
-<label for="days" style="padding-right: 5px">Days:</label>
-{% if dayErr %}
+	{% if dayErr %}
 Error! At least 1 day required.<br/>
 {%endif%}
+<label for="days" style="padding-right: 5px">Days:</label>
+
 <span style="float:right">
 Su{{form.su}}
 M{{form.m}}
