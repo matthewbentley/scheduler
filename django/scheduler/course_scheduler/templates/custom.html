@@ -23,7 +23,7 @@
 <div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
-        {% if field != form.days.field %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
+        {% if field.label != 'Recurrence' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
 <!--{% for value, text in form.days.field.choices %}
 {{value}} : {{text}}
