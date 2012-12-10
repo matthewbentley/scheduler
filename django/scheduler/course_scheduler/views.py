@@ -261,11 +261,11 @@ def inscourse(request):
             else:
                 toSend[c] = False
 
-        response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
+        response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : SearchForm()})
         if setcookie == True:
             response.__setitem__('Set-Cookie', cookie)
         return response
-    return render(request, 'add.html', {'id' : id})
+    return render(request, 'add.html', {'id' : id, 'form' : SearchForm()})
 
 #   The insearch view is the view function
 #   for the insearch.html page. This view
@@ -378,7 +378,7 @@ def mycourses(request):
     for c in classes:
         toSend[c]=True
 
-    response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
+    response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : SearchForm()})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
