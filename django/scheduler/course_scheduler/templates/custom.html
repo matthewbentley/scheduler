@@ -23,8 +23,15 @@
 <div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
-        {% if field.label != 'Recurrence' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
+        {% if field.label != 'day' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
+<label for="m">M</label>{{form.m.field}}
+<label for="tu">Tu</label>{{form.tu.field}}
+<label for="w">W</label>{{form.w.field}}
+<label for="th">Th</label>{{form.th.field}}
+<label for="f">F</label>{{form.f.field}}
+<label for="sa">Sa</label>{{form.sa.field}}
+<label for="su">Su</label>{{form.su.field}}
 <!--{% for value, text in form.days.field.choices %}
 {{value}} : {{text}}
 {% endfor %}-->
