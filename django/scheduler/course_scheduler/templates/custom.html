@@ -20,12 +20,12 @@
 <div class="content">
 <p>&nbsp;</p>
 <form action="/scheduler/customevent" method="post">{% csrf_token %}
-<div style="padding-left:20px; width: 300px; padding-bottom: 20px">
+<div style="padding-left:20px; width: 320px; padding-bottom: 20px">
 {% for field in form %}
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
         {% if field.label != 'day' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
-<label for="days">Days</label>M{{form.m}}
+<label for="days" style="padding-right: 5px">Days:</label>M{{form.m}}
 Tu{{form.tu}}
 W{{form.w}}
 Th{{form.th}}
