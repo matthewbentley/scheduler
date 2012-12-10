@@ -279,17 +279,60 @@ WHERE NOT EXISTS (
     )
 \end{verbatim}
 \end{enumerate}
-\item Query: Find the names of instructors who teaches any course taken by srl51 after 3:00pm and don't teach any course taken by jrk126
+\item Query: Find the names of instructors who teaches any offering taken by srl51 after 3:00pm and don't teach any offering taken by jrk126
 \begin{enumerate}[i.]
 \item RA:
 \item TRC: $\{t^1\vert(\exists p)(\exists s)(\exists i)(\exists e)(\exists m)(Instructors(p) \wedge Students(s) \wedge Instructs(i) \wedge Enrollment(e) \wedge MeetingTime(m) \wedge t[1]=p.name \wedge s.case\_id="srl51" \wedge i.instructor=p.name \wedge e.student=s.case\_id \wedge e.event\_id=i.meeting\_id \wedge m.start\_time>"3:00pm" \wedge (\exists s2)(Students(s2) \wedge s2.case\_id="jrk126" \wedge (\forall e2)(Enrollment(e2) \wedge e2.student=s2.case\_id \rightarrow \wedge (\exists i2)(Instructs(i2) \wedge i2.meeting\_id=e2.event\_id \wedge i2.instructor<>p.name))))\}$
 \item SQL:
+\begin{verbatim}
+SELECT p.name
+FROM Instructor p
+WHERE
+    EXISTS (
+        SELECT *
+        FROM Enroll e, MeetingTime m, Instructs i
+        WHERE e.student_id = "sr151" AND e.meeting_id = m.id AND i.meeting_id = m.id
+                AND TIMESTAMPDIFF(MINUTE, m.start_time, '15:00:00') > 0
+                AND i.instructor_id = p.name
+            )
+    AND
+    NOT EXISTS (
+        SELECT *
+        FROM Enroll e, MeetingTime m, Instructs i
+        WHERE e.student_id = "jrk126" AND e.meeting_id = m.id AND i.meeting_id = m.id
+                AND i.instructor_id = p.name
+        )
+
+\end{verbatim}
 \end{enumerate}
 \item Query: Find the names of the teachers and ids of the students who are busy at the same time on Friday, time wise.
 \begin{enumerate}[i.]
 \item RA:
 \item TRC: $\{t^2\vert(\exists p)(\exists s)(Instructors(p) \wedge Students(s) \wedge t[1]=p.name \wedge t[2]=s.case\_id \wedge (\forall i)(Instructs(i) \wedge i.instructor=p.name \rightarrow (\exists e)(Enrollment(e) \wedge e.event\_id=i.event\_id \wedge e.student=s.case\_id)) \wedge (\forall e)(Enrollment(e) \wedge e.student=s.case\_id \rightarrow (\exists i)(Instructs(i) \wedge e.event\_id=i.event\_id \wedge i.instructor=p.name)))\}$
 \item SQL:
+\begin{verbatim}
+SELECT s.case_id and p.name
+FROM Student s, Instructor p
+WHERE EXISTS (
+        SELECT *
+        FROM Events e1, Events e2
+        WHERE EXISTS (
+                SELECT *
+                FROM Enroll e
+                WHERE e.student_id = s.case_id AND e.event_id = e1.id
+                )
+            AND EXISTS (
+                SELECT *
+                FROM Instructs i
+                WHERE i.instructor_id = p.name AND i.meeting_id = e2.id
+            )
+            AND e1.recur_type LIKE '%F%' AND e2.recur_type LIKE '%F%' AND
+            (TIMESTAMPDIFF(MINUTE, e1.start_time, e2.start_time) >= 0 AND
+            TIMESTAMPDIFF(MINUTE, e1.end_time, e2.start_time) <= 0) OR
+            (TIMESTAMPDIFF(MINUTE, e2.start_time, e1.start_time) >= 0 AND
+            TIMESTAMPDIFF(MINUTE, e2.end_time, e1.start_time) <= 0)
+        )
+\end{verbatim}
 \end{enumerate}
 \item Query: Find the names of the classes on Thursday that srl51 can't take because the custom event "band practice" conflicts with the class.
 \begin{enumerate}[i.]
