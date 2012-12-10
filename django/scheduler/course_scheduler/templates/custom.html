@@ -23,19 +23,28 @@
 <div style="padding-left:20px; width: 300px; padding-bottom: 20px">
 {% for field in form %}
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
-           <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span>
+        {% if field.label != 'day' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
+	{% if dayErr %}
+Error! At least 1 day required.<br/>
+{%endif%}
+<label for="days" style="padding-right: 5px">Days:</label>
+
+<span style="float:right">
+Su{{form.su}}
+M{{form.m}}
+Tu{{form.tu}}
+W{{form.w}}<br/>
+Th{{form.th}}
+F{{form.f}}
+Sa{{form.sa}}
+</span>
+<!--{% for value, text in form.days.field.choices %}
+{{value}} : {{text}}
+{% endfor %}-->
 </div>
-<!--<label for="e_name">Event Title:</label>
-<input id="name" type="text" name="Enter" maxlength="100" />
-
-<label for="e_name">Time (e.g. 9:00am - 1:00pm):</label>
-
-<input id="start_time" type="text" name="Search" maxlength="100" /><br>
-<label for="e_days">Days (SuMTuWThFSa):</label>
-<input id="recur_type" type="text" name="Search" maxlength="100" /><br>-->
 <input type="hidden" name="id" value="{{id}}"/>
-<input type="submit" value="Create Event"/>
+<input type="submit" value="Create Event"  style="margin-left:20px"/>
 </form>
 </div>
 </div>

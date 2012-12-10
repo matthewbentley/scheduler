@@ -11,6 +11,7 @@ import datetime
 import re
 import sys
 import random
+import string
 
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
@@ -111,15 +112,18 @@ def add(request):
     if cookie != "":
         setcookie = True
 
+    toSend = {}
     if request.method == 'GET':
-        criterion = request.GET.get('Search', None)
+        form = SearchForm(request.GET)
+        #criterion = request.GET.get('Search', None)
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
-        patt = re.compile('(\w\w\w\w( )*((\d\d\d)|(\d\d\d\w)))')
-        if criterion != None:
-            toSend = {}
+        patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
+        if form.is_valid():
+            criterion = form.cleaned_data['criterion']
             if patt.match(criterion):
                 str = string.replace(criterion, ' ', '')
+                arr = [None]*2
                 arr[0] = str[0:3]
                 arr[1] = str[4:]
                 #arr = criterion.split(' ')
@@ -133,13 +137,12 @@ def add(request):
                     toSend[c] = True
                 else:
                     toSend[c] = False
-
-            response = render(request, 'add.html', {'classes' : toSend, 'id' : id})
-            if setcookie == True:
-                response.__setitem__('Set-Cookie', cookie)
-            return response
-        else:
-            return render(request, 'add.html', {'id' : id})
+    else:
+        form = SearchForm()
+    response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : form})
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
 
 #   The info view is called whenever
 #   the user clicks on a meeting-time's
@@ -432,17 +435,35 @@ def customevent(request):
             time = form.cleaned_data['times']
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
-            days = form.cleaned_data['days']
+            
             try:
                 loc = form.cleaned_data['location']
             except:
                 loc = ""
 
             startTimeArr, endTimeArr = parse_time(time)
-            
+
+            dayStr = ''
+            if form.cleaned_data['su']:
+                dayStr += 'Su'
+            if form.cleaned_data['m']:
+                dayStr += 'M'
+            if form.cleaned_data['tu']:
+                dayStr += 'Tu'
+            if form.cleaned_data['w']:
+                dayStr += 'W'
+            if form.cleaned_data['th']:
+                dayStr += 'Th'
+            if form.cleaned_data['f']:
+                dayStr += 'F'
+            if form.cleaned_data['sa']:
+                dayStr += 'Sa'
+
+            if '' == dayStr:
+                return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
             
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
-            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=days, event_name=name, location=loc)
+            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
             event.save()
 
             stu = Student.objects.get(case_id=id)
@@ -552,5 +573,16 @@ class EventForm(forms.Form):
     times=forms.CharField(max_length=20, validators=[validate_time])
     start_date=forms.DateField()
     end_date=forms.DateField()
-    days=forms.CharField(max_length=14, validators=[validate_day])
+    #days=forms.CharField(max_length=14, validators=[validate_day])
+    CHOICES=((0,'M'),(0,'Tu'),(0,'W'),(0,'Th'),(0,'F'),(0,'Sa'),(0,'Su'))
+    m = forms.BooleanField(label="day", required=False)
+    tu = forms.BooleanField(label="day", required=False)
+    w = forms.BooleanField(label="day", required=False)
+    th = forms.BooleanField(label="day", required=False)
+    f = forms.BooleanField(label="day", required=False)
+    sa = forms.BooleanField(label="day", required=False)
+    su = forms.BooleanField(label="day", required=False)
+    
+class SearchForm(forms.Form):
+    criterion=forms.CharField(max_length=100)
 

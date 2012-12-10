@@ -215,74 +215,35 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \end{flushleft}
 
 \section{SQL Queries}
-Due to our table design, our queries are relatively straightforward.
-\begin{enumerate}[1.]
-\item Query: All instructs tuples whose events have a given dept/number combination.
+\item Query: Find the id of the student who only takes all of the courses taught by Professor X in Fall 2012\\
 \begin{enumerate}[i.]
-\item RA: $   \pi_{instrutor, meeting} (\bowtie_{meeting=id} (MeetingTime \\\bowtie_{meeting\_class=id} (\sigma_{dept=in\_dept, classnumber=in\_number}(Class)))) $
-\item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists c)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.id \wedge c.dept=input\_dept \wedge c.class\_number = input\_number)\}$
-\item SQL: 
-\begin{verbatim}
-SELECT i.MeetingTime, i.instructor
-FROM Instructs i, MeetingTime m, Class c
-WHERE 	i.meeting=m.id
-AND		m.meeting_class=c.id
-AND		c.dept='input_dept'
-AND		c.class_number=input_number
-\end{verbatim}
-\end{enumerate}
-\item Query: All instructs tuples whose events have a dept that contains a passed string or have a number that contains a passed string or whose names contains a
-passed string
-\begin{enumerate}[i.]
-\item RA: $\Pi_{MeetingTime, instructor}(Instructs\bowtie_{meeting=id}\Pi_{id}(MeetingTime\bowtie_{meeting\_class=id}\Pi_{pk}(\sigma_{input\_number  IN  dept  OR  input\_number  IN  number  OR  input\_name  IN  classname}Class)))$
-\item TRC:$\{v^2\vert(\exists i)(\exists m)(\exists c)(\exists)(Instructs(i) \wedge MeetingTime(m) \wedge Class(c) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge m.meeting\_class = c.id \wedge (Contains(c.dept, input\_dept) \vee Contains(c.number, input\_number) \vee Contains(c.classname, input\_name)))\}$
+\item RA: 
+\item TRC: $\{t^1\vert(\exists s)(Students(s)\wedge t[1]=s.case\_id)\wedge(\forall m)(\forall c)(\forall e)(MeetingTime(m) \wedge Class(c) \wedge Enrollment(e) \wedge m.meeting_class=c.pk \wedge c.term="Fall 2012" \wedge e.student=s.case\_id \wedge e.event=m.id \rightarrow (\exists p)(\exists i)(Instructor(p) \wedge Instructs(i) \wedge p.name = "Professor X" \wedge i.instructor=p.name \wedge i.meeting=m.id))\}$
 \item SQL:
-\begin{verbatim}
-SELECT i.MeetingTime, i.instructor
-FROM Instructs i, MeetingTime m, Class c
-WHERE 	i.meeting=m.id
-AND		m.meeting_class=c.id
-AND		(c.dept LIKE '%input_dept%'
-	 	OR c.number = input_number
-	 	OR c.classname LIKE '%input_name%')
-\end{verbatim}
 \end{enumerate}
-\item Query: All instructs tuples whose meetings are in an enroll relation with a
-passed student's id
+\item Query: Find the name of the EECS class for which there is a meeting time taken by all students that doesn't conflict with any other EECS class\\
 \begin{enumerate}[i.]
-\item RA: $ \pi_{instrutor, meeting} (Instructs \bowtie_{meeting\_id=id} (MeetingTime \bowtie_{id=event\_id}(\sigma_{student=in\_id} Enrollment)))$
-\item TRC: $\{v^2\vert(\exists i)(\exists m)(\exists en)(Instructs(i) \wedge MeetingTime(m) \wedge Enrollment(e) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.meeting=m.id \wedge en.student=input\_id \wedge en.event=m.id)\}$
+\item RA:
+\item TRC: $\{v^1\vert(\exists c)(\exists m)(Class(c) \wedge MeetingTime(m) \wedge v[1]=c.classname \wedge m.meeting\_class=c.pk \wedge ((\forall s)(Student(s) \rightarrow (\exists e)(Enrollment(e) \wedge e.student=s.case\_id \wedge e.event\_id = m.id))) \wedge (\forall t)(MeetingTime(t) \wedge m.id\le\ge t.id \rightarrow (m.recur\_type<>t.recur\_type) \vee ((m.start\_date \leq t.start\_date \wedge m.end\_date \leq t.start\_date) \vee (m.end\_date \geq t.end\_date \wedge m.start\_date \geq t.end\_date)) \vee (m.start\_time \leq t.start\_time \wedge m.end\_time \leq t.start\_time) \vee (m.end\_time \geq t.end\_time \wedge m.end\_time \geq t.end\_time)))\}$
 \item SQL:
-\begin{verbatim}
-SELECT i.MeetingTime, i.instructor
-FROM Instructs i, MeetingTime m
-WHERE 	i.meeting=m.id
-AND		i.student=passed\_id
-\end{verbatim}
 \end{enumerate}
-\item Query: All instructs tuples whose instructor's name matches exactly a passed string
+\item Query: Find the names of instructors who teaches any course taken by srl51 after 3:00pm and don't teach any course taken by jrk126
 \begin{enumerate}[i.]
-\item RA:$(\sigma_{instructor=passed\_name}Instructs)$
-\item TRC: $\{v^2\vert(\exists i)(\exists p)(Instructs(i) \wedge Instructor(p) \wedge v[1]=i.instructor \wedge v[2]=i.meeting \wedge i.instructor=p.name \wedge p.name=input\_name\} $
+\item RA:
+\item TRC: $\{t^1\vert(\exists p)(\exists s)(\exists i)(\exists e)(\exists m)(Instructors(p) \wedge Students(s) \wedge Instructs(i) \wedge Enrollment(e) \wedge MeetingTime(m) \wedge t[1]=p.name \wedge s.case\_id="srl51" \wedge i.instructor=p.name \wedge e.student=s.case\_id \wedge e.event\_id=i.meeting\_id \wedge m.start\_time>"3:00pm" \wedge (\exists s2)(Students(s2) \wedge s2.case\_id="jrk126" \wedge (\forall e2)(Enrollment(e2) \wedge e2.student=s2.case\_id \rightarrow \wedge (\exists i2)(Instructs(i2) \wedge i2.meeting\_id=e2.event\_id \wedge i2.instructor<>p.name))))\}$
 \item SQL:
-\begin{verbatim}
-SELECT *
-FROM Instructs i
-WHERE 	i.instructor=passed_name
-\end{verbatim}
 \end{enumerate}
-\item Query: the event with a passed id that is in an enroll relationship with a
-student with a passed id
+\item Query: Find the names of the teachers and ids of the students who have the exact same class schedule, time wise, ie they are busy with classes at the same times.
 \begin{enumerate}[i.]
-\item RA:$\Pi_{id, start\_time, end\_time, start\_date, end\_date, recur\_type}(Event\bowtie_{id = event AND}$\\$_{passed\_id = student}Enroll)$
-\item TRC: $\{v^6 \vert (\exists ev)(\exists en)(Enrollment(en) \wedge Event(ev) \wedge v[1]=ev.start\_time \wedge v[2]=ev.end\_time \wedge v[3]=ev.start\_date \wedge v[4].ev.end\_date \wedge v[5]=ev.recur\_type \wedge v[6]=ev.id \wedge en.event = ev.id \wedge en.student=input\_case\_id \wedge ev.id=\wedge input\_event\_id)\}$
+\item RA:
+\item TRC: $\{t^2\vert(\exists p)(\exists s)(Instructors(p) \wedge Students(s) \wedge t[1]=p.name \wedge t[2]=s.case\_id \wedge (\forall i)(Instructs(i) \wedge i.instructor=p.name \rightarrow (\exists e)(Enrollment(e) \wedge e.event\_id=i.event\_id \wedge e.student=s.case\_id)) \wedge (\forall e)(Enrollment(e) \wedge e.student=s.case\_id \rightarrow (\exists i)(Instructs(i) \wedge e.event\_id=i.event\_id \wedge i.instructor=p.name)))\}$
 \item SQL:
-\begin{verbatim}
-SELECT e.id, e.start_time, e.end_time, e.start_date,
-    e.end_date, e.recur_type
-FROM Event e, Enroll en
-WHERE 	en.event=e.id
-AND		en.student=passed_id
+\end{enumerate}
+\item Query: Find the names of the classes that srl51 can't take because the custom event "band practice" conflicts with the class.
+\begin{enumerate}[i.]
+\item RA:
+\item TRC: $\{t^1\vert(\exists c)(\exists e)(\exists n)(Class(c) \wedge CustomEvent(e) \wedge Enrollment(n) \wedge t[1]=c.classname \wedge n.event=e.id \wedge n.student="srl51" \wedge e.event\_name="Band Practice"(\forall m)(MeetingTime(m) \wedge m.meeting\_class=c.pk \rightarrow m.recur\_type=e.recur\_type \wedge ((m.start\_date \geq e.start\_date \wedge m.start\_date \leq e.end\_date) \vee (m.end\_date \leq e.end\_date \wedge m.end\_date \geq e.start\_date)) \wedge ((m.start\_time \geq e.start\_time \wedge m.start\_time \leq e.end\_time) \vee (m.end\_time \leq e.end\_time \wedge m.end\_time \geq e.start\_time))\}$
+\item SQL:
 \end{verbatim}
 \end{enumerate}
 \end{enumerate}
