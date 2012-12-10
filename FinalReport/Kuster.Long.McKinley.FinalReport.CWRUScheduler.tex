@@ -222,12 +222,62 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \item RA: 
 \item TRC: $\{t^1\vert(\exists s)(Students(s)\wedge t[1]=s.case\_id)\wedge(\forall m)(\forall c)(\forall e)(MeetingTime(m) \wedge Class(c) \wedge Enrollment(e) \wedge m.meeting_class=c.pk \wedge c.term="Fall 2012" \wedge e.student=s.case\_id \wedge e.event=m.id \rightarrow (\exists p)(\exists i)(Instructor(p) \wedge Instructs(i) \wedge p.name = "Professor X" \wedge i.instructor=p.name \wedge i.meeting=m.id))\}$
 \item SQL:
+\begin{verbatim}
+SELECT s.id
+FROM Student s
+WHERE NOT EXISTS (
+    SELECT *
+    FROM MeetingTime m, Class c, Instructs i
+    WHERE i.instructor_name = "Professor X" AND i.meeting_id = m.id
+          AND m.meeting_class_id = c.id
+          AND NOT EXISTS (
+                SELECT *
+                FROM Enrollment e, MeetingTime m2
+                WHERE e.student_id = s.id AND e.meeting_id = m2.id
+                        AND m2.meeting_course_id = c.id
+                )
+    )
+AND NOT EXISTS (
+    SELECT *
+    FROM Enrollment e, MeetingTime m, Instructs i
+    WHERE e.student_id = s.id AND e.meeting_id = m.id AND i.meeting_id = m.id
+            AND i.instructor_name != "Professor X" AND
+            NOT EXISTS (
+                SELECT *
+                FROM Instructs i2, Instructor p2, MeetingTime m2
+                WHERE i2.instructor_id = p2.id AND p2.name = "Professor X"
+                        AND i2.meeting_id = m2.id 
+                        AND m2.meeting_course_id = m.meeting_course_id
+            )
+)   
+\end{verbatim}
 \end{enumerate}
-\item Query: Find the name of the EECS class for which there is a meeting time taken by all students that doesn't conflict with any other EECS class\\
+\item Query: Find the names of the instructors who teach the most EECS courses.\\
 \begin{enumerate}[i.]
 \item RA:
-\item TRC: $\{v^1\vert(\exists c)(\exists m)(Class(c) \wedge MeetingTime(m) \wedge v[1]=c.classname \wedge m.meeting\_class=c.pk \wedge ((\forall s)(Student(s) \rightarrow (\exists e)(Enrollment(e) \wedge e.student=s.case\_id \wedge e.event\_id = m.id))) \wedge (\forall t)(MeetingTime(t) \wedge m.id\le\ge t.id \rightarrow (m.recur\_type<>t.recur\_type) \vee ((m.start\_date \leq t.start\_date \wedge m.end\_date \leq t.start\_date) \vee (m.end\_date \geq t.end\_date \wedge m.start\_date \geq t.end\_date)) \vee (m.start\_time \leq t.start\_time \wedge m.end\_time \leq t.start\_time) \vee (m.end\_time \geq t.end\_time \wedge m.end\_time \geq t.end\_time)))\}$
+\item TRC: 
 \item SQL:
+\begin{verbatim}
+SELECT t1.instructor_name
+FROM (
+        SELECT i.instructor_name, COUNT(i.instructor_name) AS n_classes
+        FROM Instructs i, MeetingTime m, Class c
+        WHERE i.meeting_id = m.id AND m.meeting_class_id = c.id
+                AND c.dept = "EECS"
+        GROUP BY i.instrutor_name
+     ) t1
+WHERE NOT EXISTS (
+    SELECT *
+    FROM (
+        SELECT i.instructor_name, COUNT(i.instructor_name) AS n_classes
+        FROM Instructs i, MeetingTime m, Class c
+        WHERE i.meeting_id = m.id AND m.meeting_class_id = c.id
+                AND c.dept = "EECS"
+        GROUP BY i.instrutor_name
+         ) t2
+    WHERE t2.n_classes > t1.n_classes
+    )
+\end{verbatim}
 \end{enumerate}
 \item Query: Find the names of instructors who teaches any course taken by srl51 after 3:00pm and don't teach any course taken by jrk126
 \begin{enumerate}[i.]
