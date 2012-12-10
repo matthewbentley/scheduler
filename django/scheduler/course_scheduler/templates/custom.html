@@ -25,7 +25,7 @@
 		{% if field.errors %} <br/>{{ field.errors }}  <br/>{% endif %}
         {% if field.label != 'day' %}   <span style="margin-bottom: 10px;"><span > {{ field.label_tag }}:</span> <span style="float:right"> {{ field }} </span><br/><br/> </span> {% endif %}
     {% endfor %}
-<label for="m">M</label>{{form.m.field}}
+<label for="m">M</label>{{form.m}}
 <label for="tu">Tu</label>{{form.tu.field}}
 <label for="w">W</label>{{form.w.field}}
 <label for="th">Th</label>{{form.th.field}}
