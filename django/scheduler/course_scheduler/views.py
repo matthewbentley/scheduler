@@ -445,19 +445,19 @@ def customevent(request):
 
             dayStr = ''
             if form.cleaned_data['su']:
-                dayStr += 'Su
+                dayStr += 'Su'
             if form.cleaned_data['m']:
                 dayStr += 'M'
             if form.cleaned_data['tu']:
-                dayStr += 'tu'
+                dayStr += 'Tu'
             if form.cleaned_data['w']:
-                dayStr += 'w'
+                dayStr += 'W'
             if form.cleaned_data['th']:
-                dayStr += 'th'
+                dayStr += 'Th'
             if form.cleaned_data['f']:
-                dayStr += 'f'
+                dayStr += 'F'
             if form.cleaned_data['sa']:
-                dayStr += 'sa'
+                dayStr += 'Sa'
 
             if '' == dayStr:
                 return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
