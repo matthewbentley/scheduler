@@ -255,7 +255,7 @@ AND NOT EXISTS (
 \item Query: Find the names of the instructors who teach the most EECS courses.\\
 \begin{enumerate}[i.]
 \item RA:
-\item TRC: 
+\item TRC: $\{t^1\vert(\exists i)(Instructors(p) \wedge t[1]=p.name \wedge (\forall p2)(Instructors(p2) \wedge p2.name<>p.name \rightarrow (\{COUNT(t)|(Instructs(t) \wedge t.instructor=p.name \wedge (\exists m)MeetingTime(m) \wedge t.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\} \ge {COUNT(i)|(Instructs(i) \wedge i.instructor=p2.name \wedge (\exists m)MeetingTime(m) \wedge i.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\}  )))\})
 \item SQL:
 \begin{verbatim}
 SELECT t1.instructor_name
@@ -342,14 +342,14 @@ WHERE EXISTS (
 \begin{verbatim}
 SELECT c.classname
 FROM Class c, CustomEvent e
-WHERE	e.event_name="band practice"
-AND		e.recur_type LIKE 'Th'
-AND		EXISTS (SELECT *
-				FROM MeetingTime m
-				WHERE m.meeting_class.id
-				AND m.recur_type LIKE 'Th'
-				AND ((m.start_time > e.start_time AND m.start_time < e.end_time)
-					OR (m.start_time < e.start_time AND m.end_tine > e.start_time)))
+WHERE   e.event_name="band practice"
+AND     e.recur_type LIKE 'Th'
+AND     EXISTS (SELECT *
+                FROM MeetingTime m
+                WHERE m.meeting_class.id
+                AND m.recur_type LIKE 'Th'
+                AND ((m.start_time > e.start_time AND m.start_time < e.end_time)
+                    OR (m.start_time < e.start_time AND m.end_tine > e.start_time)))
 \end{verbatim}
 \end{enumerate}
 \end{enumerate}
