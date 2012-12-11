@@ -255,7 +255,7 @@ AND NOT EXISTS (
 \item Query: Find the names of the instructors who teach the most EECS courses.\\
 \begin{enumerate}[i.]
 \item RA:
-\item TRC: $\{t^1\vert(\exists i)(Instructors(p) \wedge t[1]=p.name \wedge (\forall p2)(Instructors(p2) \wedge p2.name<>p.name \rightarrow (\{COUNT(t)|(Instructs(t) \wedge t.instructor=p.name \wedge (\exists m)MeetingTime(m) \wedge t.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\} \ge {COUNT(i)|(Instructs(i) \wedge i.instructor=p2.name \wedge (\exists m)MeetingTime(m) \wedge i.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\}  )))\})
+\item TRC: $\{t^1\vert(\exists i)(Instructors(p) \wedge t[1]=p.name \wedge (\forall p2)(Instructors(p2) \wedge p2.name<>p.name \rightarrow (\{COUNT(t)|(Instructs(t) \wedge t.instructor=p.name \wedge (\exists m)MeetingTime(m) \wedge t.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\} \ge \{COUNT(i)|(Instructs(i) \wedge i.instructor=p2.name \wedge (\exists m)MeetingTime(m) \wedge i.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\}  )))\})$
 \item SQL:
 \begin{verbatim}
 SELECT t1.instructor_name
