@@ -176,16 +176,16 @@ COMMIT;
 \end{verbatim}
 \subsection{Justification of Relational Model}
 \begin{itemize}
-\item User HAS Custom Event (1:N, full participation from Custom Event to Has)
-\subitem This relationship is satisfied by two pieces: first, the Custom Event has a key for the id of the user to which it is attached. This satisfies the 1:N part of the relationship. Second, the id is listed as NOT NULL, which enforces the full participation.
-\item User Enrolled-In Course Offering (M:N)
-\subitem This relationship is satisfied by the inclusion of the Enrolled-In table, which contains a user id and an offering id.
-\item Instructor Teaches Course Offering (1:N, full participation from Instructor to Course Offering)
-\subitem This relationship is satisfied by two pieces: first, each Course Offering has an Instructor id key corresponding to the instructor who teaches the class. This satisfies the 1:N part of the relationship. The full participation from Course Offering to Teaches is enforced by the NOT NULL on the Instructor ID.
-\item Course Offering IS-A Course
-\subitem The IS-A relationship here is satisfied by having each Course Offering contain a catalog number, which connects it to a specific instance of a course. It thus becomes an instance of that course.
-\item Course Has\_Prerequisite
-\subitem The Has\_Prerequisite relationship is satisfied by the inclusion of the Has\_Prerequisite table. It contains two keys, one key for the course in question, and another for the course for which it is a prerequisite. In this way, one course can have multiple prerequisites and can also be a prerequisite for multiple classes.
+\item Class HAS MeetingTime (1:N, full participation from MeetingTime to Has)
+\subitem This relationship is satisfied by two pieces: first, each MeetingTime has a foreign key for the id of the class to which it is attached. This satisfies the 1:N part of the relationship. Second, the id is listed as NOT NULL, which enforces the full participation.
+\item User Enrollment Event (M:N)
+\subitem This relationship is satisfied by the inclusion of the Enrollment table, which contains a user id and an event id.
+\item Instructor Instructs MeetingTime (1:N, full participation from Instructor to MeetingTime)
+\subitem This relationship is satisfied the inclusion of the Instructs table which has a MeetingTime id and an instructor id. We do not enforce the constraints here because we wanted a separate Instructs relation for extensibility and simplicity. 
+\item MeetingTime IS-A Event 
+\subitem The IS-A relationship here is satisfied by having each MeetingTime contain an event\_id which connects it to a specific instance of an event. It thus becomes an instance of that event.
+\item CustomEvent IS-A Event
+\subitem The IS-A relationship here is satisfied by having each CustomEvent contain an event\_id which connects it to a specific instance of an event. It thus becomes an instance of that event.
 \end{itemize}
 \section{Installing on a DBMS}
 We successfully installed mysql on a linux machine that one of our group members owns.  The machine is running Ubuntu, so the installation was a very straightforward process.  We simply ran 'apt-get install mysql-server'.  After that, we needed to create the scheduler database, which was done simply:\\\\
@@ -222,30 +222,135 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \item RA: $(\Pi_{id}(enrolls/\Pi_{id}(\sigma_{name=prof}Instructors\bowtie Instructs))-\Pi{id}(Enrolls-(Enrolls\int\Pi_{id}(\sigma_{name=prof}Instructors\bowtie Instructs)))$
 \item TRC: $\{t^1\vert(\exists s)(Students(s)\wedge t[1]=s.case\_id)\wedge(\forall m)(\forall c)(\forall e)(MeetingTime(m) \wedge Class(c) \wedge Enrollment(e) \wedge m.meeting_class=c.pk \wedge c.term="Fall 2012" \wedge e.student=s.case\_id \wedge e.event=m.id \rightarrow (\exists p)(\exists i)(Instructor(p) \wedge Instructs(i) \wedge p.name = "Professor X" \wedge i.instructor=p.name \wedge i.meeting=m.id))\}$
 \item SQL:
+\begin{verbatim}
+SELECT s.id
+FROM Student s
+WHERE NOT EXISTS (
+    SELECT *
+    FROM MeetingTime m, Class c, Instructs i
+    WHERE i.instructor_name = "Professor X" AND i.meeting_id = m.id
+          AND m.meeting_class_id = c.id
+          AND NOT EXISTS (
+                SELECT *
+                FROM Enrollment e, MeetingTime m2
+                WHERE e.student_id = s.id AND e.meeting_id = m2.id
+                        AND m2.meeting_course_id = c.id
+                )
+    )
+AND NOT EXISTS (
+    SELECT *
+    FROM Enrollment e, MeetingTime m, Instructs i
+    WHERE e.student_id = s.id AND e.meeting_id = m.id AND i.meeting_id = m.id
+            AND i.instructor_name != "Professor X" AND
+            NOT EXISTS (
+                SELECT *
+                FROM Instructs i2, Instructor p2, MeetingTime m2
+                WHERE i2.instructor_id = p2.id AND p2.name = "Professor X"
+                        AND i2.meeting_id = m2.id 
+                        AND m2.meeting_course_id = m.meeting_course_id
+            )
+)   
+\end{verbatim}
 \end{enumerate}
-\item Query: Find the name of the professor who teaches the most EECS courses.\\
+\item Query: Find the names of the instructors who teach the most EECS courses.\\
 \begin{enumerate}[i.]
-\item RA: $\Pi_{name}(Instructors\bowtie (\gamma_{tid, MAX(cidcount)}(\gamma_{tid, COUNT(cid) AS cidcount}(Instructs))$
-\item TRC: 
+\item RA:$\Pi_{name}(Instructors\bowtie (\gamma_{tid, MAX(cidcount)}(\gamma_{tid, COUNT(cid) AS cidcount}(Instructs))$
+\item TRC: $\{t^1\vert(\exists i)(Instructors(p) \wedge t[1]=p.name \wedge (\forall p2)(Instructors(p2) \wedge p2.name<>p.name \rightarrow (\{COUNT(t)|(Instructs(t) \wedge t.instructor=p.name \wedge (\exists m)MeetingTime(m) \wedge t.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\} \ge \{COUNT(i)|(Instructs(i) \wedge i.instructor=p2.name \wedge (\exists m)MeetingTime(m) \wedge i.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\}  )))\})$
 \item SQL:
+\begin{verbatim}
+SELECT t1.instructor_name
+FROM (
+        SELECT i.instructor_name, COUNT(i.instructor_name) AS n_classes
+        FROM Instructs i, MeetingTime m, Class c
+        WHERE i.meeting_id = m.id AND m.meeting_class_id = c.id
+                AND c.dept = "EECS"
+        GROUP BY i.instrutor_name
+     ) t1
+WHERE NOT EXISTS (
+    SELECT *
+    FROM (
+        SELECT i.instructor_name, COUNT(i.instructor_name) AS n_classes
+        FROM Instructs i, MeetingTime m, Class c
+        WHERE i.meeting_id = m.id AND m.meeting_class_id = c.id
+                AND c.dept = "EECS"
+        GROUP BY i.instrutor_name
+         ) t2
+    WHERE t2.n_classes > t1.n_classes
+    )
+\end{verbatim}
 \end{enumerate}
-\item Query: Find the names of instructors who teaches any course taken by srl51 after 3:00pm and don't teach any course taken by jrk126
+\item Query: Find the names of instructors who teaches any offering taken by srl51 after 3:00pm and don't teach any offering taken by jrk126
 \begin{enumerate}[i.]
 \item RA:
 \item TRC: $\{t^1\vert(\exists p)(\exists s)(\exists i)(\exists e)(\exists m)(Instructors(p) \wedge Students(s) \wedge Instructs(i) \wedge Enrollment(e) \wedge MeetingTime(m) \wedge t[1]=p.name \wedge s.case\_id="srl51" \wedge i.instructor=p.name \wedge e.student=s.case\_id \wedge e.event\_id=i.meeting\_id \wedge m.start\_time>"3:00pm" \wedge (\exists s2)(Students(s2) \wedge s2.case\_id="jrk126" \wedge (\forall e2)(Enrollment(e2) \wedge e2.student=s2.case\_id \rightarrow \wedge (\exists i2)(Instructs(i2) \wedge i2.meeting\_id=e2.event\_id \wedge i2.instructor<>p.name))))\}$
 \item SQL:
+\begin{verbatim}
+SELECT p.name
+FROM Instructor p
+WHERE
+    EXISTS (
+        SELECT *
+        FROM Enroll e, MeetingTime m, Instructs i
+        WHERE e.student_id = "sr151" AND e.meeting_id = m.id AND i.meeting_id = m.id
+                AND TIMESTAMPDIFF(MINUTE, m.start_time, '15:00:00') > 0
+                AND i.instructor_id = p.name
+            )
+    AND
+    NOT EXISTS (
+        SELECT *
+        FROM Enroll e, MeetingTime m, Instructs i
+        WHERE e.student_id = "jrk126" AND e.meeting_id = m.id AND i.meeting_id = m.id
+                AND i.instructor_id = p.name
+        )
+
+\end{verbatim}
 \end{enumerate}
-\item Query: Find the names of the teachers and ids of the students who have the exact same class schedule, time wise, ie they are busy with classes at the same times.
+\item Query: Find the names of the teachers and ids of the students who are busy at the same time on Friday, time wise.
 \begin{enumerate}[i.]
 \item RA:
 \item TRC: $\{t^2\vert(\exists p)(\exists s)(Instructors(p) \wedge Students(s) \wedge t[1]=p.name \wedge t[2]=s.case\_id \wedge (\forall i)(Instructs(i) \wedge i.instructor=p.name \rightarrow (\exists e)(Enrollment(e) \wedge e.event\_id=i.event\_id \wedge e.student=s.case\_id)) \wedge (\forall e)(Enrollment(e) \wedge e.student=s.case\_id \rightarrow (\exists i)(Instructs(i) \wedge e.event\_id=i.event\_id \wedge i.instructor=p.name)))\}$
 \item SQL:
+\begin{verbatim}
+SELECT s.case_id and p.name
+FROM Student s, Instructor p
+WHERE EXISTS (
+        SELECT *
+        FROM Events e1, Events e2
+        WHERE EXISTS (
+                SELECT *
+                FROM Enroll e
+                WHERE e.student_id = s.case_id AND e.event_id = e1.id
+                )
+            AND EXISTS (
+                SELECT *
+                FROM Instructs i
+                WHERE i.instructor_id = p.name AND i.meeting_id = e2.id
+            )
+            AND e1.recur_type LIKE '%F%' AND e2.recur_type LIKE '%F%' AND
+            (TIMESTAMPDIFF(MINUTE, e1.start_time, e2.start_time) >= 0 AND
+            TIMESTAMPDIFF(MINUTE, e1.end_time, e2.start_time) <= 0) OR
+            (TIMESTAMPDIFF(MINUTE, e2.start_time, e1.start_time) >= 0 AND
+            TIMESTAMPDIFF(MINUTE, e2.end_time, e1.start_time) <= 0)
+        )
+\end{verbatim}
 \end{enumerate}
-\item Query: Find the names of the classes that srl51 can't take because the custom event "band practice" conflicts with the class.
+\item Query: Find the names of the classes on Thursday that srl51 can't take because the custom event "band practice" conflicts with the class.
 \begin{enumerate}[i.]
 \item RA:
-\item TRC: $\{t^1\vert(\exists c)(\exists e)(\exists n)(Class(c) \wedge CustomEvent(e) \wedge Enrollment(n) \wedge t[1]=c.classname \wedge n.event=e.id \wedge n.student="srl51" \wedge e.event\_name="Band Practice"(\forall m)(MeetingTime(m) \wedge m.meeting\_class=c.pk \rightarrow m.recur\_type=e.recur\_type \wedge ((m.start\_date \geq e.start\_date \wedge m.start\_date \leq e.end\_date) \vee (m.end\_date \leq e.end\_date \wedge m.end\_date \geq e.start\_date)) \wedge ((m.start\_time \geq e.start\_time \wedge m.start\_time \leq e.end\_time) \vee (m.end\_time \leq e.end\_time \wedge m.end\_time \geq e.start\_time))\}$
+\item TRC: $\{t^1\vert(\exists c)(\exists e)(\exists n)(Class(c) \wedge CustomEvent(e) \wedge Enrollment(n) \wedge t[1]=c.classname \wedge n.event=e.id \wedge n.student="srl51" \wedge e.event\_name="Band Practice" \wedge Contains(e.recur\_type, 'Th') \wedge (\forall m)(MeetingTime(m) \wedge m.meeting\_class=c.pk \rightarrow Contains(m.recur\_type, 'Th') \wedge ((m.start\_date \geq e.start\_date \wedge m.start\_date \leq e.end\_date) \vee (m.end\_date \leq e.end\_date \wedge m.end\_date \geq e.start\_date)) \wedge ((m.start\_time \geq e.start\_time \wedge m.start\_time \leq e.end\_time) \vee (m.end\_time \leq e.end\_time \wedge m.end\_time \geq e.start\_time))\}$
 \item SQL:
+\begin{verbatim}
+SELECT c.classname
+FROM Class c, CustomEvent e
+WHERE   e.event_name="band practice"
+AND     e.recur_type LIKE 'Th'
+AND     EXISTS (SELECT *
+                FROM MeetingTime m
+                WHERE m.meeting_class.id
+                AND m.recur_type LIKE 'Th'
+                AND ((m.start_time > e.start_time AND m.start_time < e.end_time)
+                    OR (m.start_time < e.start_time AND m.end_tine > e.start_time)))
+\end{verbatim}
 \end{enumerate}
 \end{enumerate}
 
