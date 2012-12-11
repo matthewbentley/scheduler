@@ -180,8 +180,8 @@ COMMIT;
 \subitem This relationship is satisfied by two pieces: first, each MeetingTime has a foreign key for the id of the class to which it is attached. This satisfies the 1:N part of the relationship. Second, the id is listed as NOT NULL, which enforces the full participation.
 \item User Enrollment Event (M:N)
 \subitem This relationship is satisfied by the inclusion of the Enrollment table, which contains a user id and an event id.
-\item Instructor Instructs MeetingTime (1:N, full participation from Instructor to MeetingTime)
-\subitem This relationship is satisfied the inclusion of the Instructs table which has a MeetingTime id and an instructor id. We do not enforce the constraints here because we wanted a separate Instructs relation for extensibility and simplicity. 
+\item Instructor Instructs MeetingTime (M:N)
+\subitem This relationship is satisfied the inclusion of the Instructs table which has a MeetingTime id and an instructor id.
 \item MeetingTime IS-A Event 
 \subitem The IS-A relationship here is satisfied by having each MeetingTime contain an event\_id which connects it to a specific instance of an event. It thus becomes an instance of that event.
 \item CustomEvent IS-A Event
