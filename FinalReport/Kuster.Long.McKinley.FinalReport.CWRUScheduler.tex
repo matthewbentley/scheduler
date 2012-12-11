@@ -219,14 +219,14 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \begin{enumerate}[1)]
 \item Query: Find the id of the student who only takes all of the courses taught by Professor X in Fall 2012\\
 \begin{enumerate}[i.]
-\item RA: 
+\item RA: $(\Pi_{id}(enrolls/\Pi_{id}(\sigma_{name=prof}Instructors\bowtie Instructs))-\Pi{id}(Enrolls-(Enrolls\int\Pi_{id}(\sigma_{name=prof}Instructors\bowtie Instructs)))$
 \item TRC: $\{t^1\vert(\exists s)(Students(s)\wedge t[1]=s.case\_id)\wedge(\forall m)(\forall c)(\forall e)(MeetingTime(m) \wedge Class(c) \wedge Enrollment(e) \wedge m.meeting_class=c.pk \wedge c.term="Fall 2012" \wedge e.student=s.case\_id \wedge e.event=m.id \rightarrow (\exists p)(\exists i)(Instructor(p) \wedge Instructs(i) \wedge p.name = "Professor X" \wedge i.instructor=p.name \wedge i.meeting=m.id))\}$
 \item SQL:
 \end{enumerate}
-\item Query: Find the name of the EECS class for which there is a meeting time taken by all students that doesn't conflict with any other EECS class\\
+\item Query: Find the name of the professor who teaches the most EECS courses.\\
 \begin{enumerate}[i.]
-\item RA:
-\item TRC: $\{v^1\vert(\exists c)(\exists m)(Class(c) \wedge MeetingTime(m) \wedge v[1]=c.classname \wedge m.meeting\_class=c.pk \wedge ((\forall s)(Student(s) \rightarrow (\exists e)(Enrollment(e) \wedge e.student=s.case\_id \wedge e.event\_id = m.id))) \wedge (\forall t)(MeetingTime(t) \wedge m.id\le\ge t.id \rightarrow (m.recur\_type<>t.recur\_type) \vee ((m.start\_date \leq t.start\_date \wedge m.end\_date \leq t.start\_date) \vee (m.end\_date \geq t.end\_date \wedge m.start\_date \geq t.end\_date)) \vee (m.start\_time \leq t.start\_time \wedge m.end\_time \leq t.start\_time) \vee (m.end\_time \geq t.end\_time \wedge m.end\_time \geq t.end\_time)))\}$
+\item RA: $\Pi_{name}(Instructors\bowtie (\gamma_{tid, MAX(cidcount)}(\gamma_{tid, COUNT(cid) AS cidcount}(Instructs))$
+\item TRC: 
 \item SQL:
 \end{enumerate}
 \item Query: Find the names of instructors who teaches any course taken by srl51 after 3:00pm and don't teach any course taken by jrk126
