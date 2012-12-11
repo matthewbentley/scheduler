@@ -219,7 +219,7 @@ Then it got fairly complicated.  It became apparent (see figure 1) that the synt
 \begin{enumerate}[1)]
 \item Query: Find the id of the student who only takes all of the courses taught by Professor X in Fall 2012\\
 \begin{enumerate}[i.]
-\item RA: 
+\item RA: $(\Pi_{id}(enrolls/\Pi_{id}(\sigma_{name=prof}Instructors\bowtie Instructs))-\Pi{id}(Enrolls-(Enrolls\int\Pi_{id}(\sigma_{name=prof}Instructors\bowtie Instructs)))$
 \item TRC: $\{t^1\vert(\exists s)(Students(s)\wedge t[1]=s.case\_id)\wedge(\forall m)(\forall c)(\forall e)(MeetingTime(m) \wedge Class(c) \wedge Enrollment(e) \wedge m.meeting_class=c.pk \wedge c.term="Fall 2012" \wedge e.student=s.case\_id \wedge e.event=m.id \rightarrow (\exists p)(\exists i)(Instructor(p) \wedge Instructs(i) \wedge p.name = "Professor X" \wedge i.instructor=p.name \wedge i.meeting=m.id))\}$
 \item SQL:
 \begin{verbatim}
@@ -254,7 +254,7 @@ AND NOT EXISTS (
 \end{enumerate}
 \item Query: Find the names of the instructors who teach the most EECS courses.\\
 \begin{enumerate}[i.]
-\item RA:
+\item RA:$\Pi_{name}(Instructors\bowtie (\gamma_{tid, MAX(cidcount)}(\gamma_{tid, COUNT(cid) AS cidcount}(Instructs))$
 \item TRC: $\{t^1\vert(\exists i)(Instructors(p) \wedge t[1]=p.name \wedge (\forall p2)(Instructors(p2) \wedge p2.name<>p.name \rightarrow (\{COUNT(t)|(Instructs(t) \wedge t.instructor=p.name \wedge (\exists m)MeetingTime(m) \wedge t.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\} \ge \{COUNT(i)|(Instructs(i) \wedge i.instructor=p2.name \wedge (\exists m)MeetingTime(m) \wedge i.meeting=m.id (\exists c)Class(c) \wedge m.meeting\_class=c.id \wedge c.dept="EECS")\}  )))\})$
 \item SQL:
 \begin{verbatim}
