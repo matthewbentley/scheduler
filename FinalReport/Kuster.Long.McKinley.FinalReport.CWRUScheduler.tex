@@ -281,7 +281,9 @@ WHERE NOT EXISTS (
 \end{enumerate}
 \item Query: Find the names of instructors who teaches any offering taken by srl51 after 3:00pm and don't teach any offering taken by jrk126
 \begin{enumerate}[i.]
-\item RA:
+\item RA:$ \Pi_{tid}(Instructs\bowtie\Pi_{cid}(\sigma_{id=srl51}Students\bowtie(Enrollment\bowtie$\\
+$\Pi_{cid}(\sigma_{start\_time>1500}MeetingTime)))- \Pi_{tid}(Instructs\bowtie$\\
+$\Pi_{cid}(\sigma_{id=jrk126}Students\bowtie Enrollment)))$
 \item TRC: $\{t^1\vert(\exists p)(\exists s)(\exists i)(\exists e)(\exists m)(Instructors(p) \wedge Students(s) \wedge Instructs(i) \wedge Enrollment(e) \wedge MeetingTime(m) \wedge t[1]=p.name \wedge s.case\_id="srl51" \wedge i.instructor=p.name \wedge e.student=s.case\_id \wedge e.event\_id=i.meeting\_id \wedge m.start\_time>"3:00pm" \wedge (\exists s2)(Students(s2) \wedge s2.case\_id="jrk126" \wedge (\forall e2)(Enrollment(e2) \wedge e2.student=s2.case\_id \rightarrow \wedge (\exists i2)(Instructs(i2) \wedge i2.meeting\_id=e2.event\_id \wedge i2.instructor<>p.name))))\}$
 \item SQL:
 \begin{verbatim}
@@ -307,7 +309,7 @@ WHERE
 \end{enumerate}
 \item Query: Find the names of the teachers and ids of the students who are busy at the same time on Friday, time wise.
 \begin{enumerate}[i.]
-\item RA:
+\item RA: $ \Pi_{tname, sid}(Instructors\bowtie (Instructs\bowtie(\sigma_{"F" IN recur\_type}Courses))\bowtie_{cid}(Enrollment\bowtie(\sigma_{"F" IN recur\_type}Courses))$
 \item TRC: $\{t^2\vert(\exists p)(\exists s)(Instructors(p) \wedge Students(s) \wedge t[1]=p.name \wedge t[2]=s.case\_id \wedge (\forall i)(Instructs(i) \wedge i.instructor=p.name \rightarrow (\exists e)(Enrollment(e) \wedge e.event\_id=i.event\_id \wedge e.student=s.case\_id)) \wedge (\forall e)(Enrollment(e) \wedge e.student=s.case\_id \rightarrow (\exists i)(Instructs(i) \wedge e.event\_id=i.event\_id \wedge i.instructor=p.name)))\}$
 \item SQL:
 \begin{verbatim}
@@ -336,7 +338,10 @@ WHERE EXISTS (
 \end{enumerate}
 \item Query: Find the names of the classes on Thursday that srl51 can't take because the custom event "band practice" conflicts with the class.
 \begin{enumerate}[i.]
-\item RA:
+\item RA: $\Pi_{classname}(\sigma_{"Th" IN recur\_type}MeetingTime)$\\
+$\bowtie_{(MT.start\_time > CE.start\_time AND MT.start\_time < CE.end\_time)OR}$\\
+$_{(MT.end\_time < CE.end\_time AND MT.end\_time > CE.start\_time)}$\\
+$\Pi_{start\_time, end\_time}(\sigma_{sid=srl51}Students\bowtie (\sigma_{name="Band Practice"}CustomEvent))$
 \item TRC: $\{t^1\vert(\exists c)(\exists e)(\exists n)(Class(c) \wedge CustomEvent(e) \wedge Enrollment(n) \wedge t[1]=c.classname \wedge n.event=e.id \wedge n.student="srl51" \wedge e.event\_name="Band Practice" \wedge Contains(e.recur\_type, 'Th') \wedge (\forall m)(MeetingTime(m) \wedge m.meeting\_class=c.pk \rightarrow Contains(m.recur\_type, 'Th') \wedge ((m.start\_date \geq e.start\_date \wedge m.start\_date \leq e.end\_date) \vee (m.end\_date \leq e.end\_date \wedge m.end\_date \geq e.start\_date)) \wedge ((m.start\_time \geq e.start\_time \wedge m.start\_time \leq e.end\_time) \vee (m.end\_time \leq e.end\_time \wedge m.end\_time \geq e.start\_time))\}$
 \item SQL:
 \begin{verbatim}
