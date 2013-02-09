@@ -36,3 +36,8 @@ Following Apache's naming structure, create a file in /etc/apache2/sites-availab
 	Alias /static /srv/www/scheduler/public_html/static
 </VirtualHost>
 
+After these steps are done, execute:
+
+sudo service apache2 restart
+
+Congratulations!
