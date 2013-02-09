@@ -1,0 +1,28 @@
+{% load url from future %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Add a course</title>
+<LINK href="{{ STATIC_URL }}cwruBW.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+		<div id="top">
+			<table id="header">
+				<tr>
+					<td class="menuitem"><a href="/scheduler">Back to Schedule</a></td>
+					<td class="menuitem"><a href="/scheduler/add">Add a Course</a></td>
+				</tr>
+			</table>		
+		</div>
+<div class="content">
+<p>&nbsp;</p>
+<h2>{{prof.name}}</h2>
+<p>{% if prof.email %} {{prof.email}} {% else %} No email listed {% endif %}<br>
+{% if prof.office  %} {{prof.office}} {% else %} No office listed {% endif %}</p>
+<a href="inscourse?name={{prof.name}}">View all classes</a>
+</div>
+</div>
+</body>
+</html>
