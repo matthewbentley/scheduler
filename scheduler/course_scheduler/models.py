@@ -33,7 +33,7 @@ class Instructs(models.Model):
 
 class Student(models.Model):
     case_id = models.CharField(max_length=6, primary_key=True)
-    
+
 class Enrollment(models.Model):
     student = models.ForeignKey('Student')
     event = models.ForeignKey('Event')

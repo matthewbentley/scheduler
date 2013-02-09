@@ -41,13 +41,11 @@ def format_times(s_time, e_time):
 
     return (s_time, e_time)
 
-def main():
+def main(opened_file):
 
     xml_file = ""
 # read entire file as string into xml_file
-
-    with open(sys.argv[1]) as f:
-        xml_file += f.read()
+    xml_file += opened_file.read()
 
     print 'file opened'
 
@@ -136,4 +134,8 @@ def main():
                     instructs.save()
 
 if __name__ == "__main__":
-    main()
+    try:
+        opened_file = open(sys.argv[1])
+    except Exception:
+        opened_file = urllib2.urlopen('http://case.edu/projects/erpextract/soc.xml')
+    main(opened_file)
