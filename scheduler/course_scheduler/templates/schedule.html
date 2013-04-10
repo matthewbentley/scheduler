@@ -1,0 +1,202 @@
+{% load url from future %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>CWRU Scheduler</title>
+<LINK href="{{ STATIC_URL }}cwruBW.css" rel="stylesheet" type="text/css">
+<LINK rel="stylesheet" href="{{ STATIC_URL }}print.css" type="text/css" media="print" />
+</head>
+
+<body>
+
+
+<div class="container">
+		<div id="top">
+			<table id="header">
+				<tr>
+					<td class="menuitem"><a href="/scheduler/add">Add a Course</a></td>
+					<td class="menuitem"><a href="/scheduler/inssearch">Search for a Professor</a></td>
+					<td class="menuitem"><a href="/scheduler/mycourses">My Courses</a></td>
+					<td class="menuitem"><a href="/scheduler/customevent">Custom Event</a></td>
+					<td style="float:right;"><a href="/scheduler/about">About</a></td>
+				</tr>
+			</table>		
+		</div>
+
+  <div class="content">
+  	<p>&nbsp;</p>
+    <h1>Scheduler</h1>
+ 	<div>
+    <table cellpadding="0" cellspacing="0">
+    	<tr>
+    		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+    		<th>Sunday</th>
+			<th>Monday</th>
+			<th>Tuesday</th>
+			<th>Wednesday</th>
+			<th>Thursday</th>
+			<th>Friday</th>
+			<th>Saturday</th>
+		</tr>
+		<tr>
+			<td class="times">
+			<div style="position:absolute;top:130px">6:00am</div>
+			<div style="position:absolute;top:195px">7:00am</div>
+			<div style="position:absolute;top:270px">8:00am</div>
+			<div style="position:absolute;top:345px">9:00am</div>
+			<div style="position:absolute;top:415px">10:00am</div>
+			<div style="position:absolute;top:495px">11:00am</div>
+			<div style="position:absolute;top:570px">12:00pm</div>
+			<div style="position:absolute;top:645px">1:00pm</div>
+			<div style="position:absolute;top:715px">2:00pm</div>
+			<div style="position:absolute;top:795px">3:00pm</div>
+			<div style="position:absolute;top:870px">4:00pm</div>
+			<div style="position:absolute;top:945px">5:00pm</div>
+			<div style="position:absolute;top:1015px">6:00pm</div>
+			<div style="position:absolute;top:1095px">7:00pm</div>
+			<div style="position:absolute;top:1165px">8:00pm</div>
+			<div style="position:absolute;top:1245px">9:00pm</div>
+			</td>
+			<td class="day" >
+				{% for e, t in events.iteritems %}
+					{% if "Su" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+							{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value=""  class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</td>
+			<td class="day">
+				{% for e, t in events.iteritems %}
+					{% if "M" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+						{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value=""  class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</td>
+			<td class="day">
+				{% for e, t in events.iteritems %}
+					{% if "Tu" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+						{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value="" class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+					
+				{% endfor %}
+			</td>
+			<td class="day">
+				{% for e, t in events.iteritems %}
+					{% if "W" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+						{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value=""  class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</td>
+			<td class="day">
+				{% for e, t in events.iteritems %}
+					{% if "Th" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+						{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>
+							{{e.customevent.location}}							
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value=""  class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</td>
+			<td class="day">
+				{% for e, t in events.iteritems %}
+					{% if "F" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+						<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+						{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value=""  class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</td>
+			<td class="day">
+				{% for e, t in events.iteritems %}
+					{% if "Sa" in e.recur_type %}
+						<div class="event" style="top:{{t.0}}px;height:{{t.1}}px;background-color:{{t.2}}">
+						{% if e.meetingtime %}
+							<a class="daylink" href="/scheduler/info?course={{e.meetingtime.meeting_class.dept}}~!~{{e.meetingtime.meeting_class.class_number}}">{{e.meetingtime.meeting_class.dept}}: {{e.meetingtime.meeting_class.class_number}}</a><br>
+							{{e.meetingtime.meeting_location}}
+						{% else %}
+							{{e.customevent.event_name}}<br>{{e.customevent.location}}
+						{% endif %}
+							<form name="delete" action="/scheduler/removecourse" method="post">{% csrf_token %}
+							<input type="hidden" name="eventID" value="{{e.id}}"/>
+							<input type="hidden" name="id" value="{{id}}"/>
+							<input type="submit" value=""  class="delbutton"/>
+							</form>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</td>
+		</tr>
+	</table>
+	</div>
+    <!-- end .content --></div>
+  <!-- end .container --></div>
+</body>
+</html>

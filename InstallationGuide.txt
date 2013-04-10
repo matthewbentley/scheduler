@@ -1,0 +1,43 @@
+Case Scheduler Installation Guide
+r1.0 - Jason Kuster
+
+Installing scheduler onto a server is a simple process with a few basic steps.
+
+1. Install apache and mod_wsgi
+
+If running Ubuntu or another Debian derivative, you should be able to type:
+sudo apt-get install apache2 libapache2-mod-wsgi
+
+Otherwise, use your distribution's package-management software or download the sources and compile them by hand.
+
+2. Get the code.
+
+Our code is hosted on Github, at http://github.com/hacsoc/scheduler. Simply clone our repository into a directory of your choice.
+
+3. Configure Apache
+
+Following Apache's naming structure, create a file in /etc/apache2/sites-available named xxx-scheduler, then create a link to it in /etc/apache2/sites-enabled. In this file, you will be configuring the site. Apache's documentation, plus any other sites in the folder will be very helpful for figuring out how to do this, and a sample is included below. Change the directory locations to whichever directory structure you have chosen.
+
+<VirtualHost *:80>
+	ServerName scheduler.case.edu
+	ServerAlias www.scheduler.case.edu
+	ServerAdmin jrk126@case.edu
+	
+	DocumentRoot /srv/www/scheduler/public_html
+	
+	ErrorLog /srv/www/scheduler/logs/error.log
+	CustomLog /srv/www/scheduler/logs/access.log combined LogLevel info
+
+	WSGIScriptAlias / /srv/www/scheduler/application/wsgi.py
+
+	Alias /robots.txt /srv/www/scheduler/public_html/robots.txt
+	Alias /favicon.ico /srv/www/scheduler/public_html/favicon.ico
+	Alias /images /srv/www/scheduler/public_html/images
+	Alias /static /srv/www/scheduler/public_html/static
+</VirtualHost>
+
+After these steps are done, execute:
+
+sudo service apache2 restart
+
+Congratulations!
