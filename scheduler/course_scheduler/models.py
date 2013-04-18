@@ -41,3 +41,7 @@ class Enrollment(models.Model):
 class PublicSchedule(models.Model):
     student = models.ForeignKey('Student')
     schedule_string = models.CharField(max_length=18, primary_key=True)
+
+class Shares(models.Model):
+    shareid = models.IntegerField()
+    event = models.ForeignKey('Event')
