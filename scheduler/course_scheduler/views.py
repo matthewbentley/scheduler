@@ -42,10 +42,10 @@ from checklogin import redirect_to_cas
 def schedule(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/')
     if cookie != "":
         setcookie = True
 
@@ -105,10 +105,10 @@ def schedule(request):
 def add(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/add/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/add/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/add/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/add/')
     if cookie != "":
         setcookie = True
 
@@ -165,10 +165,10 @@ def add(request):
 def info(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/info/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/info/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/info/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/info/')
     if cookie != "":
         setcookie = True
 
@@ -206,10 +206,10 @@ def info(request):
 def instructor(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -243,10 +243,10 @@ def instructor(request):
 def inscourse(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -282,10 +282,10 @@ def inscourse(request):
 def inssearch(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -364,10 +364,10 @@ def removecourse(request):
 def mycourses(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -390,10 +390,10 @@ def mycourses(request):
 def about(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -421,10 +421,10 @@ def about(request):
 def customevent(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -482,10 +482,10 @@ def customevent(request):
 def share(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://concertina.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://concertina.case.edu/scheduler/instructor/')
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
     if cookie != "":
         setcookie = True
     share_ids = Shares.objects.values_list('shareid', flat=True)

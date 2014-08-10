@@ -4,7 +4,7 @@ Created on Nov 14, 2012
 @author: Stuart Long
 '''
 
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url, include
 
 urlpatterns = patterns('',
     url(r'^scheduler/$', 'course_scheduler.views.schedule', name='base'),

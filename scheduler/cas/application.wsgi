@@ -10,7 +10,7 @@ from pycas import CAS_TICKET_INVALID, CAS_GATEWAY, CAS_NOTLOGGED, CAS_MSG
 
 def application(environ, start_response):
 	CAS_SERVER  = "http://login.case.edu"
-    SERVICE_URL = "http://concertina.case.edu/"
+    SERVICE_URL = "http://scheduler.acm.case.edu/"
 	
 	status, id, cookie = pycas.login(CAS_SERVER, SERVICE_URL, environ, secure=0, opt="gateway")
 	if (status == CAS_OK):
