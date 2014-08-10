@@ -10,3 +10,4 @@
 *.dvi
 local_settings.py
 stuarts/
+soc/
