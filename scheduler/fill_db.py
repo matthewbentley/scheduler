@@ -5,6 +5,7 @@ from course_scheduler.models import Class, MeetingTime, Instructor, Instructs, E
 import course_scheduler
 import sys
 import re
+import urllib2
 
 def add_twelve_hours(time):
     """Make time into PM.  Requires time in format 'XX:YY'"""
