@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
 from course_scheduler.models import *
+from course_scheduler.scheduler_strings import *
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -13,7 +14,7 @@ import sys
 import random
 import string
 import logging
-import course_scheduler.scheduler_strings
+
 
 sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 from checklogin import check_login
