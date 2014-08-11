@@ -1,8 +1,8 @@
 import sys
 import course_scheduler
-from course_scheduler.strings import *
+from course_scheduler.strings import Strings
 
-sys.path.append(strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
+sys.path.append(Strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 import pycas
 from pycas import CAS_OK, CAS_COOKIE_EXPIRED, CAS_COOKIE_INVALID
 from pycas import CAS_TICKET_INVALID, CAS_GATEWAY, CAS_NOTLOGGED, CAS_MSG
