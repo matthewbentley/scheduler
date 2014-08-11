@@ -4,6 +4,7 @@ Created on Nov 14, 2012
 @author: Stuart Long
 '''
 
+from django.conf import settings
 from django.conf.urls import patterns, url, include
 
 urlpatterns = patterns('',
@@ -23,4 +24,9 @@ urlpatterns = patterns('',
     url(r'^scheduler/searchtest$', 'course_scheduler.views.searchtest', name='searchtest'),
     url(r'^scheduler/new_search/$', 'course_scheduler.views.new_search', name='new_search'),
     url(r'^scheduler/return_test/$', 'course_scheduler.views.return_test', name='return_test'),
+)
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('', rl(r'^__debug__/', include(debug_toolbar.urls)),
 )
