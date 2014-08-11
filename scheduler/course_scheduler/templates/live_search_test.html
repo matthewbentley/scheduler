@@ -9,14 +9,14 @@
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/scheduler.css">
 	
 	<script type="text/javascript">
-	function search()
-	{
-		$.get("/scheduler/return_test/", { 'criterion' : $("#course_search").val() }, searchSuccess, 'html');
-	}
-	
 	function searchSuccess(data, textState, jqXHR)
 	{
 		$("#search_result").html(data);
+	}
+	
+	function search()
+	{
+		$.get("/scheduler/return_test/", { 'criterion' : $("#course_search").val() }, searchSuccess, 'html');
 	}
 	</script>
 </head>
