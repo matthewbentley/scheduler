@@ -1,7 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-import course_scheduler
 from course_scheduler.models import *
 from course_scheduler.strings import *
 from django.http import Http404
@@ -17,7 +16,7 @@ import string
 import logging
 
 
-sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
+sys.path.append(strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 from checklogin import check_login
 from checklogin import redirect_to_cas
 
