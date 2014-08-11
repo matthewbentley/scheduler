@@ -127,6 +127,8 @@ def event_json(request):
             elif "Sa" in event.recur_type and dt.weekday() == 5:
                 event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            else:
+                continue
             response_data.append(event_data)
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
