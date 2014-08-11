@@ -31,7 +31,7 @@
 	<script>
 	function search()
 	{
-		$.get("/new_search/", { 'criterion' : $("#course_search").val() }, searchSuccess);
+		$.get("/scheduler/new_search/", { 'criterion' : $("#course_search").val() }, searchSuccess);
 	});
 	
 	function searchSuccess(data, textState, jqXHR)
