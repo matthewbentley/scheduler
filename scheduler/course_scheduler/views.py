@@ -108,8 +108,8 @@ def event_json(request):
         #        response_data.append(event_data)
         #else:
         #  raise Http404
-        date_to_start = event.start_date if event.start_date > start_date else start_date
-        date_to_end = event.end_date if event.end_date < end_date else end_date
+        date_to_start = event.start_date if event.start_date > start_date.date() else start_date.date()
+        date_to_end = event.end_date if event.end_date < end_date.date() else end_date.date()
 
         for dt in rrule.rrule(rrule.DAILY, dtstart=date_to_start, until=date_to_end):
             event_data = {}
