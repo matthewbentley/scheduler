@@ -1,3 +1,4 @@
 import string
 
-SYSTEM_PATH_PREFIX = '/srv/www/scheduler2/'
+class Strings
+    SYSTEM_PATH_PREFIX = '/srv/www/scheduler2/'
