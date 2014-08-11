@@ -13,7 +13,8 @@
 <style type='text/css'>
 
 #calendar {
-	background-color: "white"
+	background-color: #ffffff;
+	padding: 5px;
 }
 
 </style>
@@ -46,7 +47,9 @@
 						defaultView: 'agendaWeek',
 						editable: true,
 						minTime: "08:00:00",
-						maxTime: "22:00:00"
+						maxTime: "22:00:00",
+						allDaySlot: false,
+						events: 'event_json'
 					});
 				});
 			</script>
