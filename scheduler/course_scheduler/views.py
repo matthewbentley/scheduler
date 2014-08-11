@@ -50,9 +50,9 @@ def schedule(request):
     if cookie != "":
         setcookie = True
 
-        
+
     colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
-    
+
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     toSend = {}
@@ -77,6 +77,34 @@ def schedule(request):
 
 
     response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
+
+def event_json(request):
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/')
+    if cookie != "":
+        setcookie = True
+    stu = Student.objects.get(case_id=id)
+    enrolls = Enrollment.objects.filter(student__case_id=id)
+
+    response_data = {}
+    for enroll in enrolls:
+        event = Event.objects.get(id=enroll.event_id)
+        event_data = {}
+        event_data.id = enroll.event_id
+        if event.meetingtime:
+            event_data.title = event.meetingtime.meeting_class.dept + ':' + e.meetingtime.meeting_class.class_number
+        else:
+            event_data.title = event.customevent.event_name
+        event_data.allDay = False
+        event_data.start = event.start_time
+        event_data.end = event.end_time
+
+    response = HttpResponse(json.dumps(response_data), content_type="application/json")
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
@@ -186,7 +214,7 @@ def new_search(request):
                 toSend[c] = False
     else:
         form = SearchForm()
-    
+
     response = render(request, 'search_result.html', {'classes' : toSend})
     logging.debug('RETURNING')
     return response
@@ -231,7 +259,7 @@ def info(request):
                 toSend[c] = True
             else:
                 toSend[c] = False
-                    
+
         response = render(request, 'info.html', {'classes' : toSend, 'id' : id})
         if setcookie == True:
             response.__setitem__('Set-Cookie', cookie)
@@ -421,7 +449,7 @@ def mycourses(request):
     toSend={}
     eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
     classes = Instructs.objects.filter(meeting_id__in=eventIDs)
-        
+
     for c in classes:
         toSend[c]=True
 
@@ -492,7 +520,7 @@ def customevent(request):
             time = form.cleaned_data['times']
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
-            
+
             try:
                 loc = form.cleaned_data['location']
             except:
@@ -518,7 +546,7 @@ def customevent(request):
 
             if '' == dayStr:
                 return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
-            
+
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
             event.save()
@@ -526,11 +554,11 @@ def customevent(request):
             stu = Student.objects.get(case_id=id)
             enroll = Enrollment(student_id=stu.pk, event_id=event.id)
             enroll.save()
-            
+
             return HttpResponseRedirect('/scheduler/')
     else:
         form = EventForm()
-    
+
     response = render(request, 'custom.html', {'id' : id, 'form' : form})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
@@ -583,7 +611,7 @@ def shareview(request, share):
         toSend[event] = [top, height, color]
     response = render(request, 'view.html', {'events' : toSend})
     return response
-    
+
 
 #   This function is the validation function for
 #   the times field in EventForm. It uses regexes
@@ -598,16 +626,16 @@ def validate_time(value):
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
     validTimes = '(' + validAMs + '( )*-( )*' + validAMs + ')|(' + validAMs + '( )*-( )*' + validPMs + ')|(' + validPMs + '( )*-( )*' + validPMs + ')'
-    
+
     patt = re.compile(validTimes)
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
     if not ""==(re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid time format!' % value)
-    
+
     startTimeArr, endTimeArr = parse_time(value)
-    
+
     actSTime = startTimeArr[0] + startTimeArr[1] / 60.0
     actETime = endTimeArr[0] + endTimeArr[1] / 60.0
 
@@ -653,7 +681,7 @@ def parse_time(array):
     if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
         if startTimeArr != 12:
             startTimeArr[0] = startTimeArr[0] + 12
-            
+
     endTimeArr = timeArr[1].split(':')
     endTimeArr[1] = endTimeArr[1][:2]
     endTimeArr[0] = int(endTimeArr[0])
@@ -688,7 +716,6 @@ class EventForm(forms.Form):
     f = forms.BooleanField(label="day", required=False)
     sa = forms.BooleanField(label="day", required=False)
     su = forms.BooleanField(label="day", required=False)
-    
+
 class SearchForm(forms.Form):
     criterion=forms.CharField(max_length=100)
-
