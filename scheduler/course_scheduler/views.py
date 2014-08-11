@@ -96,14 +96,14 @@ def event_json(request):
     for enroll in enrolls:
         event = Event.objects.get(id=enroll.event_id)
         event_data = {}
-        event_data.id = enroll.event_id
+        event_data['id'] = enroll.event_id
         if event.meetingtime:
-            event_data.title = event.meetingtime.meeting_class.dept + ':' + e.meetingtime.meeting_class.class_number
+            event_data['title'] = event.meetingtime.meeting_class.dept + ':' + e.meetingtime.meeting_class.class_number
         else:
-            event_data.title = event.customevent.event_name
-        event_data.allDay = False
-        event_data.start = event.start_time
-        event_data.end = event.end_time
+            event_data['title'] = event.customevent.event_name
+        event_data['allDay'] = False
+        event_data['start'] = event.start_time
+        event_data['end'] = event.end_time
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
     if setcookie == True:
