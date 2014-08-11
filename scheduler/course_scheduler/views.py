@@ -151,6 +151,12 @@ def return_test(request):
         return render(request, 'search_result.html', {'classes' : toSend});
     return None;
 
+def calendar_test(request):
+    if request.method == 'GET':
+        toSend = {}
+        return render(request, 'calendar.html', {'classes' : toSend});
+    return None;
+
 def new_search(request):
     logging.basicConfig(level=logging.DEBUG)
     logging.debug('GOT A REQUEST')
