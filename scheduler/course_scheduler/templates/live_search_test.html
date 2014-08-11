@@ -12,11 +12,11 @@
 	function search()
 	{
 		$.get("/scheduler/new_search/", { 'criterion' : $("#course_search").val() }, searchSuccess, 'html');
-	};
+	}
 	
 	function searchSuccess(data, textState, jqXHR)
 	{
-		$("#search_result").html(data)
+		$("#search_result").html(data);
 	}
 	</script>
 </head>
