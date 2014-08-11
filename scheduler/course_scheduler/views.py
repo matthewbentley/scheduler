@@ -13,8 +13,9 @@ import sys
 import random
 import string
 import logging
+import scheduler_strings
 
-sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
+sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 from checklogin import check_login
 from checklogin import redirect_to_cas
 

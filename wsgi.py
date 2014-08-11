@@ -15,9 +15,10 @@ framework.
 """
 import os
 import sys
+import scheduler_strings
 
-sys.path.append('/srv/www/scheduler/application')
-sys.path.append('/srv/www/scheduler/application/scheduler')
+sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application')
+sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scheduler.settings")
 
 # This application object is used by any WSGI server configured to use this

@@ -1,5 +1,7 @@
 import sys
-sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
+import scheduler_strings
+
+sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 import pycas
 from pycas import CAS_OK, CAS_COOKIE_EXPIRED, CAS_COOKIE_INVALID
 from pycas import CAS_TICKET_INVALID, CAS_GATEWAY, CAS_NOTLOGGED, CAS_MSG
