@@ -13,7 +13,7 @@ import sys
 import random
 import string
 import logging
-import scheduler.scheduler_strings
+from scheduler.scheduler_strings import *
 
 sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 from checklogin import check_login
