@@ -102,8 +102,8 @@ def event_json(request):
         else:
             event_data['title'] = event.customevent.event_name
         event_data['allDay'] = False
-        event_data['start'] = event.start_time
-        event_data['end'] = event.end_time
+        event_data['start'] = event.start_time.isoformat()
+        event_data['end'] = event.end_time.isoformat()
         response_data.append(event_data)
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
