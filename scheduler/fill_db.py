@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from bs4 import BeautifulSoup
-from course_scheduler.models import Class, MeetingTime, Instructor, Instructs, Event
+from course_scheduler.models import Class, MeetingTime, Instructor, Instructs, Event, Term
 import course_scheduler
 import sys
 import re
