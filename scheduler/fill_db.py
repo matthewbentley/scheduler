@@ -59,13 +59,13 @@ def main(opened_file):
 # for every term, for every class, add the class
 
     for curr_term in b.find_all('term'):
-        print curr_term
-        continue
 
         classes = curr_term.classes.find_all('class')
         term_name = unicode(curr_term.descr.contents[0])
 
-        term_model = Term(term_id=, term_year=, term_semester=)
+        term_split = term_name.split()
+        term_model = Term(term_id=int(curr_term['code']), term_year=int(term_split[1]), term_semester=term_split[0])
+        term_model.save()
 
         for c in classes:
             c_num = c.catalognbr.contents[0]
@@ -95,7 +95,7 @@ def main(opened_file):
                 # if they have non-unicode characters in their description, we don't add it to the DB.
                 continue
 
-            c_model = Class(class_number=c_num, dept=d, classname=name, description=desc, term=term_name)
+            c_model = Class(class_number=c_num, dept=d, classname=name, description=desc, term=term_model)
             c_model.save()
 
 # if there are meetings, find and add them.  If there are no meetings, don't add any.
