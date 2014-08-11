@@ -399,6 +399,16 @@ def about(request):
 
     return render(request, 'about.html')
 
+def searchtest(request):
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+
+    return render(request, 'live_search_test.html')
+
 #   The customevent view function is the view
 #   for the custom.html field. If the event
 #   is passed a request with a POST method,
