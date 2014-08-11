@@ -144,6 +144,46 @@ def add(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
+def new_search(request)
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/add/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/add/')
+    if cookie != "":
+        setcookie = True
+
+    toSend = {}
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
+        #criterion = request.GET.get('Search', None)
+        #TODO better regexes
+        #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
+        patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
+        if form.is_valid():
+            criterion = form.cleaned_data['criterion']
+            if patt.match(criterion):
+                str = string.replace(criterion, ' ', '')
+                arr = [None]*2
+                arr[0] = str[0:3]
+                arr[1] = str[4:]
+                #arr = criterion.split(' ')
+                classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+            else:
+                classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
+                numb = len(Class.objects.all())
+
+            for c in classes:
+                if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+                    toSend[c] = True
+                else:
+                    toSend[c] = False
+    else:
+        form = SearchForm()
+    response = render(request, 'search_result.html', {'classes' : toSend, 'id' : id, 'form' : form})
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
+
 #   The info view is called whenever
 #   the user clicks on a meeting-time's
 #   name. The function is passed a

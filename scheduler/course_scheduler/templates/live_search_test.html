@@ -14,43 +14,30 @@
 	
 	 <div class="col-sm-10"> Here goes the schedule!</div> 
 	 <div class="col-sm-2">
-	 <div class="row sm-bottom-margin">
+	
 		<form role="form">
-			<input type="text" class="form-control" placeholder="Search" type="search"> 
+			<div class="row sm-bottom-margin">
+				<input type="text" id="course_search" class="form-control" placeholder="Search" type="search" onkeyup="search()"> 
+			</div>
+			
+			<div class="row" id="search_result"></div>
+			
 		</form>
-		</div>
-			<div class="row">
-			<div class="well well-sm no-buffer panel panel-default">
-			<div class="panel-body no-padding">
-			<div class="col-sm-8">
-			<div class="row">
-			EECS 302
-			</div>
-			<div class="row">
-			TuTh 8:30-9:30
-			</div>
-			</div>
-			
-			<div class="col-sm-4">
-			<div class="row">
-			<button type="button" class="btn btn-danger btn-xs">Add</button>
-			<button type="button" class="btn btn-info btn-xs">Info</button>
-			</div>
-			</div>
-			</div>
-			
-			
-			</div>
-			</div>
-			<div class="row">
-			<div class="well well-lg">
-			Hey2
-			</div>
 	</div>
 	</div>
 
 	<script src="http://code.jquery.com/jquery.min.js"></script>
 	<script src="{ { STATIC_URL } }js/bootstrap.min.js"></script>
+	<script>
+	function search()
+	{
+		$.get("/new_search/", { 'criterion' : $("#course_search").val() }, searchSuccess);
+	});
+	
+	function searchSuccess(data, textState, jqXHR)
+	{
+		$.('#search_result').html(data)
+	}
 
 </body>
 </html>
