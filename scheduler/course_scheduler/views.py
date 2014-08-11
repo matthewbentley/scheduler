@@ -98,7 +98,7 @@ def event_json(request):
         event_data = {}
         event_data['id'] = enroll.event_id
         if event.meetingtime:
-            event_data['title'] = event.meetingtime.meeting_class.dept + ':' + event.meetingtime.meeting_class.class_number
+            event_data['title'] = event.meetingtime.meeting_class.dept + ': ' + str(event.meetingtime.meeting_class.class_number)
         else:
             event_data['title'] = event.customevent.event_name
         event_data['allDay'] = False
