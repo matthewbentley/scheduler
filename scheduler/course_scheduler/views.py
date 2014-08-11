@@ -92,7 +92,7 @@ def event_json(request):
     stu = Student.objects.get(case_id=id)
     enrolls = Enrollment.objects.filter(student__case_id=id)
 
-    response_data = {}
+    response_data = []
     for enroll in enrolls:
         event = Event.objects.get(id=enroll.event_id)
         event_data = {}
@@ -104,6 +104,7 @@ def event_json(request):
         event_data['allDay'] = False
         event_data['start'] = event.start_time
         event_data['end'] = event.end_time
+        response_data.push(event_data)
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
     if setcookie == True:
