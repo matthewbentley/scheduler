@@ -104,7 +104,7 @@ def event_json(request):
         event_data['allDay'] = False
         event_data['start'] = event.start_time
         event_data['end'] = event.end_time
-        response_data.push(event_data)
+        response_data.append(event_data)
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
     if setcookie == True:
