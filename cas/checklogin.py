@@ -1,8 +1,7 @@
 import sys
-sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
-import pycas
-from pycas import CAS_OK, CAS_COOKIE_EXPIRED, CAS_COOKIE_INVALID
-from pycas import CAS_TICKET_INVALID, CAS_GATEWAY, CAS_NOTLOGGED, CAS_MSG
+from .pycas import CAS_OK, CAS_COOKIE_EXPIRED, CAS_COOKIE_INVALID
+from .pycas import CAS_TICKET_INVALID, CAS_GATEWAY, CAS_NOTLOGGED, CAS_MSG
+from .pycas import login
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
@@ -15,12 +14,12 @@ def check_login(request, SERVICE_URL):
     CAS_SERVER  = "http://login.case.edu"
     ticket = request.GET.get('ticket', None)
     cookies = {}
-    print >> sys.stderr, "testing"
+#    print >> sys.stderr, "testing"
     if request.COOKIES != None:
         cookies = request.COOKIES
     if ticket == None:
         ticket = ""
-    status, id, cookie = pycas.login(CAS_SERVER, SERVICE_URL, cookies, ticket, secure=0, opt="gateway")
+    status, id, cookie = login(CAS_SERVER, SERVICE_URL, cookies, ticket, secure=0, opt="gateway")
     if (status == CAS_OK):
         return True, id, cookie
     else:

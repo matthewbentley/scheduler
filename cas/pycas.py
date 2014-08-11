@@ -98,6 +98,7 @@ import cgi
 import md5
 import time
 import urllib
+from urllib import urlopen
 import urlparse
 
 
@@ -116,15 +117,15 @@ def writelog(msg):
 #  <tag>.....</tag> and return text (striped of leading and
 #  trailing whitespace) between tags.  Return "" if tag not
 #  found.
-def parse_tag(str,tag):
-   tag1_pos1 = str.find("<" + tag)
+def parse_tag(string,tag):
+   tag1_pos1 = string.find("<" + tag)
    #  No tag found, return empty string.
    if tag1_pos1==-1: return ""
-   tag1_pos2 = str.find(">",tag1_pos1)
+   tag1_pos2 = string.find(">",tag1_pos1)
    if tag1_pos2==-1: return ""
-   tag2_pos1 = str.find("</" + tag,tag1_pos2)
+   tag2_pos1 = string.find("</" + tag,tag1_pos2)
    if tag2_pos1==-1: return ""
-   return str[tag1_pos2+1:tag2_pos1].strip()
+   return string[tag1_pos2+1:tag2_pos1].strip()
 
 
 #  Split string in exactly two pieces, return '' for missing pieces.
@@ -175,14 +176,14 @@ def decode_cookie(cookie_val,lifetime=None):
 		return COOKIE_NONE, ""
 	#  Test each cookie value
 	cookie_attrs = []
-	
+
 	#  Remove trailing ;
 	if cookie_val and cookie_val[-1]==";":
 		cookie_val = cookie_val[0:-1]
 	#  Test for pycas gateway cookie
 	if cookie_val=="gateway":
 		cookie_attrs.append(COOKIE_GATEWAY)
-	
+
 	#  Test for valid pycas authentication cookie.
 	else:
 		# Separate cookie parts
@@ -248,7 +249,7 @@ def validate_cas_2(cas_host, service_url, ticket, opt):
 	cas_validate = cas_host + "/cas/serviceValidate?ticket=" + ticket + "&service=" + service_url
 	if opt:
 		cas_validate += "&%s=true" % opt
-	f_validate   = urllib.urlopen(cas_validate)
+	f_validate = urlopen(cas_validate)
 	#  Get first line - should be yes or no
 	response = f_validate.read()
 	id = parse_tag(response,"cas:user")
@@ -297,8 +298,8 @@ def get_ticket_status(cas_host,service_url,protocol,opt,ticket):
 			return TICKET_OK, id
 		#  Return error status
 		else:
-			print ticket_status
-			print ticket
+			print(ticket_status)
+			print(ticket)
 			return ticket_status, ""
 	else:
         	#print "no ticket"
@@ -315,7 +316,7 @@ def get_ticket_status(cas_host,service_url,protocol,opt,ticket):
 #
 
 # Login takes in a CAS host and a service url, a list of cookies, a ticket, and an optional lifetime, security level, protocol, path, and options.
-# The CAS host is the address of the Central Authentication System server against which the application will be authenticating. 
+# The CAS host is the address of the Central Authentication System server against which the application will be authenticating.
 # The service url is the web address of the service which is attempting to authenticate against CAS.
 # Cookies and Ticket will be passed along from the web browser and are both methods of authenticating against CAS.
 # In the absence of a valid cookie or ticket, the service will return that the user has not been authenticated against CAS.
@@ -367,4 +368,3 @@ def login(cas_host, service_url, cookies, ticket, lifetime=None, secure=1, proto
 
 	#  Do redirect
 	return CAS_NOTLOGGED, "", ""
-

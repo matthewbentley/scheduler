@@ -11,3 +11,5 @@
 local_settings.py
 stuarts/
 soc/
+venv/
+db.sqlite3

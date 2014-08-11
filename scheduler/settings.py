@@ -1,7 +1,10 @@
 # Django settings for sampleDjango project.
 
+import os
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -9,25 +12,25 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': 'test',                      # Or path to database file if using sqlite3.
-#        'USER': 'root',                      # Not used with sqlite3.
-#        'PASSWORD': 'Ebonhawk7!',                  # Not used with sqlite3.
-#        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
-#    }
-
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'django_scheduler',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'scheduleradmin',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+if DEBUG == False:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'django_scheduler',                      # Or path to database file if using sqlite3.
+            'USER': 'root',                      # Not used with sqlite3.
+            'PASSWORD': 'scheduleradmin',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -130,6 +133,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'course_scheduler',
+    'cas',
 )
 
 # A sample logging configuration. The only tangible logging

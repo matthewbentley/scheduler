@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scheduler.settings")
+
 from bs4 import BeautifulSoup
 from course_scheduler.models import Class, MeetingTime, Instructor, Instructs, Event
 import course_scheduler
 import sys
 import re
 import urllib2
+
 
 def add_twelve_hours(time):
     """Make time into PM.  Requires time in format 'XX:YY'"""
@@ -48,13 +52,13 @@ def main(opened_file):
 # read entire file as string into xml_file
     xml_file += opened_file.read()
 
-    print 'file opened'
+    print('file opened')
 
 # parse entire file as XML into a beautifulsoup object.
 
     b = BeautifulSoup(xml_file, "lxml")
 
-    print 'file parsed'
+    print('file parsed')
 
 # for every term, for every class, add the class
 
