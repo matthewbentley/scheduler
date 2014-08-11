@@ -146,7 +146,8 @@ def add(request):
 
 def return_test(request):
     if request.method == 'GET':
-        return render(request, '<div>Hello!\n</div>');
+        toSend = {}
+        return render(request, 'search_result.html', {'classes' : toSend});
     return None;
 
 def new_search(request):
