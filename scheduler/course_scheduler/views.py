@@ -108,22 +108,22 @@ def event_json(request):
             if "Su" in event.recur_type and dt.weekday() == 6:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
-            else if "M" in event.recur_type and dt.weekday() == 0:
+            elif "M" in event.recur_type and dt.weekday() == 0:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
-            else if "Tu" in event.recur_type and dt.weekday() == 1:
+            elif "Tu" in event.recur_type and dt.weekday() == 1:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
-            else if "W" in event.recur_type and dt.weekday() == 2:
+            elif "W" in event.recur_type and dt.weekday() == 2:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
-            else if "Th" in event.recur_type and dt.weekday() == 3:
+            elif "Th" in event.recur_type and dt.weekday() == 3:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
-            else if "F" in event.recur_type and dt.weekday() == 4:
+            elif "F" in event.recur_type and dt.weekday() == 4:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
-            else if "Sa" in event.recur_type and dt.weekday() == 5:
+            elif "Sa" in event.recur_type and dt.weekday() == 5:
                 event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
                 event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
             response_data.append(event_data)
