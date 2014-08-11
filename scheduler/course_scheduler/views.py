@@ -2,7 +2,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
 import course_scheduler
-import course_scheduler.scheduler_strings
 from course_scheduler.models import *
 from course_scheduler.scheduler_strings import *
 from django.http import Http404
