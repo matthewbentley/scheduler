@@ -98,11 +98,11 @@ def event_json(request):
         event_data = {}
         event_data['id'] = enroll.event_id
         if event.meetingtime:
-            event_data['title'] = event.meetingtime.meeting_class.dept + ': ' + str(event.meetingtime.meeting_class.class_number)
+            event_data['title'] = event.meetingtime.meeting_class.dept + ' ' + str(event.meetingtime.meeting_class.class_number)
         else:
             event_data['title'] = event.customevent.event_name
         event_data['allDay'] = False
-        event_data['start'] = event.start_time.isoformat()
+        event_data['start'] = str(event.start_date.isoformat()) + 'T' + str(event.start_time.isoformat())
         event_data['end'] = event.end_time.isoformat()
         response_data.append(event_data)
 
