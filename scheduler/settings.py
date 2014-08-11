@@ -130,7 +130,6 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'course_scheduler',
-    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
