@@ -147,9 +147,9 @@ def add(request):
 def return_test(request):
     if request.method == 'GET':
         return render(request, '<div>Hello!\n</div>');
-    return null;
+    return None;
 
-def new_search(request)
+def new_search(request):
     toSend = {}
     if request.method == 'GET':
         #criterion = request.GET.get('Search', None)
