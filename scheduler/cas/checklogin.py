@@ -1,5 +1,5 @@
 import sys
-import scheduler_strings
+import scheduler.scheduler_strings
 
 sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/scheduler/cas/')
 import pycas

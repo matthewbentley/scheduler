@@ -3,7 +3,7 @@
 
 from cgi import parse_qs, escape
 import sys
-import scheduler_strings
+import scheduler.scheduler_strings
 sys.path.append(scheduler_strings.SYSTEM_PATH_PREFIX + 'application/')
 import pycas
 from pycas import CAS_OK, CAS_COOKIE_EXPIRED, CAS_COOKIE_INVALID
