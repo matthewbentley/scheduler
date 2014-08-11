@@ -14,6 +14,7 @@ import random
 import string
 import logging
 import json
+from dateutil import rrule
 
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
@@ -102,14 +103,41 @@ def event_json(request):
         else:
             event_data['title'] = event.customevent.event_name
         event_data['allDay'] = False
-        event_data['start'] = str(event.start_date.isoformat()) + 'T' + str(event.start_time.isoformat())
-        event_data['end'] = str(event.end_date.isoformat()) + 'T' + str(event.end_time.isoformat())
-        response_data.append(event_data)
+
+        for dt in rrule.rrule(rrule.DAILY, dtstart=event.start_date, until=event.end_date):
+            if "Su" in event.recur_type && dt.weekday() == 6:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            else if "M" in event.recur_type && dt.weekday() == 0:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            else if "Tu" in event.recur_type && dt.weekday() == 1:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            else if "W" in event.recur_type && dt.weekday() == 2:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            else if "Th" in event.recur_type && dt.weekday() == 3:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            else if "F" in event.recur_type && dt.weekday() == 4:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            else if "Sa" in event.recur_type && dt.weekday() == 5:
+                event_data['start'] = str(dt.isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.isoformat()) + 'T' + str(event.end_time.isoformat())
+            response_data.append(event_data)
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
+
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + datetime.timedelta(days_ahead)
 
 #   The view for add.html. This
 #   view function is a little more
