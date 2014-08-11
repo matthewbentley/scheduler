@@ -59,9 +59,13 @@ def main(opened_file):
 # for every term, for every class, add the class
 
     for curr_term in b.find_all('term'):
+        print curr_term
+        continue
 
         classes = curr_term.classes.find_all('class')
         term_name = unicode(curr_term.descr.contents[0])
+
+        term_model = Term(term_id=, term_year=, term_semester=)
 
         for c in classes:
             c_num = c.catalognbr.contents[0]

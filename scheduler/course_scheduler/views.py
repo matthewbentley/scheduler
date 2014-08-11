@@ -17,6 +17,7 @@ sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
 from checklogin import redirect_to_cas
 
+SCHEDULER_ROOT = 'http://scheduler.acm.case.edu/scheduler/'
 
 #   The view for schedule.html
 #   once the user has logged in
@@ -42,21 +43,25 @@ from checklogin import redirect_to_cas
 def schedule(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT)
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/')
+        return redirect_to_cas(SCHEDULER_ROOT)
     if cookie != "":
         setcookie = True
 
-        
+
     colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
-    
+
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     toSend = {}
     if created == False:
-        enrolls = Enrollment.objects.filter(student__case_id=id)
+        schedule_id = request.GET.get('id', None)
+        if schedule_id == None:
+            schedules = Schedule.objects.filter(student__case_id=id)
+            schedule_id = schedules[0].id
+        enrolls = Enrollment.objects.filter(schedule__id=schedule_id)
 
         for enroll in enrolls:
             event = Event.objects.get(id=enroll.event_id)
@@ -73,6 +78,8 @@ def schedule(request):
             color = colors[randColor] + ''
             del colors[randColor]
             toSend[event] = [top, height, color]
+    else:
+        s = Schedule(is_shared=False, student=id, )
 
 
     response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
@@ -105,10 +112,10 @@ def schedule(request):
 def add(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/add/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'add/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/add/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'add/')
     if cookie != "":
         setcookie = True
 
@@ -165,10 +172,10 @@ def add(request):
 def info(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/info/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'info/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/info/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'info/')
     if cookie != "":
         setcookie = True
 
@@ -184,7 +191,7 @@ def info(request):
                 toSend[c] = True
             else:
                 toSend[c] = False
-                    
+
         response = render(request, 'info.html', {'classes' : toSend, 'id' : id})
         if setcookie == True:
             response.__setitem__('Set-Cookie', cookie)
@@ -206,10 +213,10 @@ def info(request):
 def instructor(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
 
@@ -243,10 +250,10 @@ def instructor(request):
 def inscourse(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
 
@@ -282,10 +289,10 @@ def inscourse(request):
 def inssearch(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
 
@@ -364,17 +371,17 @@ def removecourse(request):
 def mycourses(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
 
     toSend={}
     eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
     classes = Instructs.objects.filter(meeting_id__in=eventIDs)
-        
+
     for c in classes:
         toSend[c]=True
 
@@ -390,10 +397,10 @@ def mycourses(request):
 def about(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
 
@@ -421,10 +428,10 @@ def about(request):
 def customevent(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
 
@@ -435,7 +442,7 @@ def customevent(request):
             time = form.cleaned_data['times']
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
-            
+
             try:
                 loc = form.cleaned_data['location']
             except:
@@ -461,7 +468,7 @@ def customevent(request):
 
             if '' == dayStr:
                 return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
-            
+
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
             event.save()
@@ -469,11 +476,11 @@ def customevent(request):
             stu = Student.objects.get(case_id=id)
             enroll = Enrollment(student_id=stu.pk, event_id=event.id)
             enroll.save()
-            
+
             return HttpResponseRedirect('/scheduler/')
     else:
         form = EventForm()
-    
+
     response = render(request, 'custom.html', {'id' : id, 'form' : form})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
@@ -482,10 +489,10 @@ def customevent(request):
 def share(request):
     #check to see if the user is logged in
     #if not make the user login
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request, SCHEDULER_ROOT + 'instructor/')
     setcookie = False
     if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+        return redirect_to_cas(SCHEDULER_ROOT + 'instructor/')
     if cookie != "":
         setcookie = True
     share_ids = Shares.objects.values_list('shareid', flat=True)
@@ -505,7 +512,7 @@ def shareview(request, share):
 
     classes = []
     toSend = {}
-    shares = Shares.objects.filter(shareid=share)
+    shares = Shares.objects.filter(share_id=share)
     if shares == None:
         raise Http404
 
@@ -526,7 +533,7 @@ def shareview(request, share):
         toSend[event] = [top, height, color]
     response = render(request, 'view.html', {'events' : toSend})
     return response
-    
+
 
 #   This function is the validation function for
 #   the times field in EventForm. It uses regexes
@@ -541,16 +548,16 @@ def validate_time(value):
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
     validTimes = '(' + validAMs + '( )*-( )*' + validAMs + ')|(' + validAMs + '( )*-( )*' + validPMs + ')|(' + validPMs + '( )*-( )*' + validPMs + ')'
-    
+
     patt = re.compile(validTimes)
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
     if not ""==(re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid time format!' % value)
-    
+
     startTimeArr, endTimeArr = parse_time(value)
-    
+
     actSTime = startTimeArr[0] + startTimeArr[1] / 60.0
     actETime = endTimeArr[0] + endTimeArr[1] / 60.0
 
@@ -596,7 +603,7 @@ def parse_time(array):
     if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
         if startTimeArr != 12:
             startTimeArr[0] = startTimeArr[0] + 12
-            
+
     endTimeArr = timeArr[1].split(':')
     endTimeArr[1] = endTimeArr[1][:2]
     endTimeArr[0] = int(endTimeArr[0])
@@ -631,7 +638,6 @@ class EventForm(forms.Form):
     f = forms.BooleanField(label="day", required=False)
     sa = forms.BooleanField(label="day", required=False)
     su = forms.BooleanField(label="day", required=False)
-    
+
 class SearchForm(forms.Form):
     criterion=forms.CharField(max_length=100)
-
