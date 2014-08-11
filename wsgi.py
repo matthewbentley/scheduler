@@ -15,8 +15,6 @@ framework.
 """
 import os
 import sys
-import course_scheduler
-from scheduler.course_scheduler.strings import Strings
 
 sys.path.append('/srv/www/scheduler2/application')
 sys.path.append('/srv/www/scheduler2/application/scheduler')
