@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django import forms
 import course_scheduler
 from course_scheduler.models import *
-from course_scheduler.scheduler_strings import *
+from course_scheduler.strings import *
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
