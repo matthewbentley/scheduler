@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/scheduler.css">
 	
-	<script>
+	<script type="text/javascript">
 	function search()
 	{
 		$.get("/scheduler/new_search/", { 'criterion' : $("#course_search").val() }, searchSuccess);
