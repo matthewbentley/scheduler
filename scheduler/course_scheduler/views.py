@@ -59,8 +59,8 @@ def schedule(request):
     if created == False:
         schedule_id = request.GET.get('id', None)
         if schedule_id == None:
-            schedules = Schedule.objects.filter(student__case_id=id)
-            schedule_id = schedules[0].id
+            schedule = Schedule.objects.filter(student__case_id=id)[:1].get()
+            schedule_id = schedule.id
         enrolls = Enrollment.objects.filter(schedule__id=schedule_id)
 
         for enroll in enrolls:
@@ -79,7 +79,8 @@ def schedule(request):
             del colors[randColor]
             toSend[event] = [top, height, color]
     else:
-        s = Schedule(is_shared=False, student=id, )
+        first_term = Term.objects.filter()[:1].get()
+        s = Schedule(is_shared=False, student=id, term=first_term)
 
 
     response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
