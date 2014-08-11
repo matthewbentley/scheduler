@@ -12,6 +12,7 @@ import re
 import sys
 import random
 import string
+import logging
 
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
@@ -151,8 +152,11 @@ def return_test(request):
     return None;
 
 def new_search(request):
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug('GOT A REQUEST')
     toSend = {}
     if request.method == 'GET':
+        logging.debug('IT IS A GET')
         #criterion = request.GET.get('Search', None)
         #TODO better regexes
         #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
@@ -176,7 +180,9 @@ def new_search(request):
                 toSend[c] = False
     else:
         form = SearchForm()
+    
     response = render(request, 'search_result.html', {'classes' : toSend})
+    logging.debug('RETURNING')
     return response
 
 #   The info view is called whenever
