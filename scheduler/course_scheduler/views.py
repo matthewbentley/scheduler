@@ -13,6 +13,7 @@ import sys
 import random
 import string
 import logging
+import json
 
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
 from checklogin import check_login
