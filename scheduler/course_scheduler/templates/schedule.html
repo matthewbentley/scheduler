@@ -10,6 +10,13 @@
 <link rel='stylesheet' href='/static/js/fullcalendar/fullcalendar.css'/>
 <script src='/static/js/fullcalendar/lib/moment.min.js'></script>
 <script src='/static/js/fullcalendar/fullcalendar.js'></script>
+<style type='text/css'>
+
+#calendar {
+	background-color: "white"
+}
+
+</style>
 </head>
 
 <body>
@@ -32,7 +39,7 @@
   	<p>&nbsp;</p>
     <h1>Scheduler</h1>
 
-			<div id='calendar'></div>
+			<div id='calendar' ></div>
 			<script>
 				$('document').ready(function() {
 					$('#calendar').fullCalendar({
