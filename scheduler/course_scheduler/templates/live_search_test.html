@@ -16,7 +16,7 @@
 	
 	function search()
 	{
-		$.get("/scheduler/return_test/", { 'criterion' : $("#course_search").val() }, searchSuccess, 'html');
+		$.get("/scheduler/new_search/", { 'criterion' : $("#course_search").val() }, searchSuccess, 'html');
 	}
 	</script>
 </head>
