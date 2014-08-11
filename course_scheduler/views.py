@@ -12,6 +12,10 @@ import re
 import sys
 import random
 import string
+import logging
+import json
+import dateutil.parser
+from dateutil import rrule
 
 from cas.checklogin import check_login
 from cas.checklogin import redirect_to_cas
@@ -48,9 +52,9 @@ def schedule(request):
     if cookie != "":
         setcookie = True
 
-        
+
     colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
-    
+
     stu, created = Student.objects.get_or_create(case_id=id)
     classes = []
     toSend = {}
@@ -78,6 +82,78 @@ def schedule(request):
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
     return response
+
+def event_json(request):
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/')
+    if cookie != "":
+        setcookie = True
+    stu = Student.objects.get(case_id=id)
+    enrolls = Enrollment.objects.filter(student__case_id=id)
+
+    response_data = []
+    for enroll in enrolls:
+        event = Event.objects.get(id=enroll.event_id)
+        start = request.GET.get('start', None)
+        end = request.GET.get('end', None)
+        #if start != None && end != None:
+        start_date = dateutil.parser.parse(start)
+        end_date = dateutil.parser.parse(end)
+        #    if event.start_date < :
+        #        event_data['start'] = str(event.start_date.isoformat()) + 'T' + str(event.start_time.isoformat())
+        #        event_data['end'] = str(event.end_date.isoformat()) + 'T' + str(event.end_time.isoformat())
+        #        response_data.append(event_data)
+        #else:
+        #  raise Http404
+        date_to_start = event.start_date if event.start_date > start_date.date() else start_date.date()
+        date_to_end = event.end_date if event.end_date < end_date.date() else end_date.date()
+
+        for dt in rrule.rrule(rrule.DAILY, dtstart=date_to_start, until=date_to_end):
+            event_data = {}
+            event_data['id'] = enroll.event_id
+            if event.meetingtime:
+                event_data['title'] = event.meetingtime.meeting_class.dept + ' ' + str(event.meetingtime.meeting_class.class_number)
+            else:
+                event_data['title'] = event.customevent.event_name
+            event_data['allDay'] = False
+
+            if "Su" in event.recur_type and dt.weekday() == 6:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            elif "M" in event.recur_type and dt.weekday() == 0:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            elif "Tu" in event.recur_type and dt.weekday() == 1:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            elif "W" in event.recur_type and dt.weekday() == 2:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            elif "Th" in event.recur_type and dt.weekday() == 3:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            elif "F" in event.recur_type and dt.weekday() == 4:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            elif "Sa" in event.recur_type and dt.weekday() == 5:
+                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
+                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+            else:
+                continue
+            response_data.append(event_data)
+
+    response = HttpResponse(json.dumps(response_data), content_type="application/json")
+    if setcookie == True:
+        response.__setitem__('Set-Cookie', cookie)
+    return response
+
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + datetime.timedelta(days_ahead)
 
 #   The view for add.html. This
 #   view function is a little more
@@ -143,6 +219,52 @@ def add(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
+def return_test(request):
+    if request.method == 'GET':
+        toSend = {}
+        return render(request, 'search_result.html', {'classes' : toSend});
+    return None;
+
+def calendar_test(request):
+    if request.method == 'GET':
+        toSend = {}
+        return render(request, 'calendar.html', {'classes' : toSend});
+    return None;
+
+def new_search(request):
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug('GOT A REQUEST')
+    toSend = {}
+    if request.method == 'GET':
+        logging.debug('IT IS A GET')
+        #criterion = request.GET.get('Search', None)
+        #TODO better regexes
+        #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
+        patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
+        criterion = request.GET['criterion']
+        if patt.match(criterion):
+            str = string.replace(criterion, ' ', '')
+            arr = [None]*2
+            arr[0] = str[0:3]
+            arr[1] = str[4:]
+            #arr = criterion.split(' ')
+            classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+        else:
+            classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
+            numb = len(Class.objects.all())
+
+        for c in classes:
+            if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+                toSend[c] = True
+            else:
+                toSend[c] = False
+    else:
+        form = SearchForm()
+
+    response = render(request, 'search_result.html', {'classes' : toSend})
+    logging.debug('RETURNING')
+    return response
+
 #   The info view is called whenever
 #   the user clicks on a meeting-time's
 #   name. The function is passed a
@@ -183,7 +305,7 @@ def info(request):
                 toSend[c] = True
             else:
                 toSend[c] = False
-                    
+
         response = render(request, 'info.html', {'classes' : toSend, 'id' : id})
         if setcookie == True:
             response.__setitem__('Set-Cookie', cookie)
@@ -373,7 +495,7 @@ def mycourses(request):
     toSend={}
     eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
     classes = Instructs.objects.filter(meeting_id__in=eventIDs)
-        
+
     for c in classes:
         toSend[c]=True
 
@@ -397,6 +519,16 @@ def about(request):
         setcookie = True
 
     return render(request, 'about.html')
+
+def searchtest(request):
+    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    setcookie = False
+    if status == False:
+        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+    if cookie != "":
+        setcookie = True
+
+    return render(request, 'live_search_test.html')
 
 #   The customevent view function is the view
 #   for the custom.html field. If the event
@@ -434,7 +566,7 @@ def customevent(request):
             time = form.cleaned_data['times']
             sdate = form.cleaned_data['start_date']
             edate = form.cleaned_data['end_date']
-            
+
             try:
                 loc = form.cleaned_data['location']
             except:
@@ -460,7 +592,7 @@ def customevent(request):
 
             if '' == dayStr:
                 return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
-            
+
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
             event.save()
@@ -468,11 +600,11 @@ def customevent(request):
             stu = Student.objects.get(case_id=id)
             enroll = Enrollment(student_id=stu.pk, event_id=event.id)
             enroll.save()
-            
+
             return HttpResponseRedirect('/scheduler/')
     else:
         form = EventForm()
-    
+
     response = render(request, 'custom.html', {'id' : id, 'form' : form})
     if setcookie == True:
         response.__setitem__('Set-Cookie', cookie)
@@ -525,7 +657,6 @@ def shareview(request, share):
         toSend[event] = [top, height, color]
     response = render(request, 'view.html', {'events' : toSend})
     return response
-    
 
 #   This function is the validation function for
 #   the times field in EventForm. It uses regexes
@@ -540,16 +671,16 @@ def validate_time(value):
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
     validTimes = '(' + validAMs + '( )*-( )*' + validAMs + ')|(' + validAMs + '( )*-( )*' + validPMs + ')|(' + validPMs + '( )*-( )*' + validPMs + ')'
-    
+
     patt = re.compile(validTimes)
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
     if not ""==(re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid time format!' % value)
-    
+
     startTimeArr, endTimeArr = parse_time(value)
-    
+
     actSTime = startTimeArr[0] + startTimeArr[1] / 60.0
     actETime = endTimeArr[0] + endTimeArr[1] / 60.0
 
@@ -595,7 +726,7 @@ def parse_time(array):
     if 'pm' in timeArr[0] or 'PM' in timeArr[0]:
         if startTimeArr != 12:
             startTimeArr[0] = startTimeArr[0] + 12
-            
+
     endTimeArr = timeArr[1].split(':')
     endTimeArr[1] = endTimeArr[1][:2]
     endTimeArr[0] = int(endTimeArr[0])
@@ -630,7 +761,6 @@ class EventForm(forms.Form):
     f = forms.BooleanField(label="day", required=False)
     sa = forms.BooleanField(label="day", required=False)
     su = forms.BooleanField(label="day", required=False)
-    
+
 class SearchForm(forms.Form):
     criterion=forms.CharField(max_length=100)
-
