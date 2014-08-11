@@ -14,6 +14,7 @@ import random
 import string
 import logging
 import json
+import dateutil.parser
 from dateutil import rrule
 
 sys.path.append('/srv/www/scheduler/application/scheduler/cas/')
@@ -96,8 +97,21 @@ def event_json(request):
     response_data = []
     for enroll in enrolls:
         event = Event.objects.get(id=enroll.event_id)
+        start = request.GET.get('start', None)
+        end = request.GET.get('end', None)
+        #if start != None && end != None:
+        start_date = dateutil.parser.parse(start)
+        end_date = dateutil.parser.parse(end)
+        #    if event.start_date < :
+        #        event_data['start'] = str(event.start_date.isoformat()) + 'T' + str(event.start_time.isoformat())
+        #        event_data['end'] = str(event.end_date.isoformat()) + 'T' + str(event.end_time.isoformat())
+        #        response_data.append(event_data)
+        #else:
+        #  raise Http404
+        date_to_start = event.start_date if event.start_date > start_date else start_date
+        date_to_end = event.end_date if event.end_date < end_date else end_date
 
-        for dt in rrule.rrule(rrule.DAILY, dtstart=event.start_date, until=event.end_date):
+        for dt in rrule.rrule(rrule.DAILY, dtstart=date_to_start, until=date_to_end):
             event_data = {}
             event_data['id'] = enroll.event_id
             if event.meetingtime:
