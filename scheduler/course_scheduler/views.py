@@ -144,7 +144,7 @@ def add(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
-def return_test:
+def return_test(request):
     if request.method == 'GET':
         return render(request, '<div>Hello!\n</div>');
     return null;
