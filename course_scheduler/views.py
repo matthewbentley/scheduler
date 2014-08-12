@@ -1,15 +1,15 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from course_scheduler.models import *
+from course_scheduler.models import (Class, Event, CustomEvent,
+                                     Instructor, Instructs, Student,
+                                     Enrollment, Shares)
 from django.http import Http404
 from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.core.exceptions import ValidationError
 import datetime
 import re
-import sys
 import random
 import string
 import logging
@@ -43,22 +43,23 @@ from cas.checklogin import redirect_to_cas
 #   webrowser as an HTTPresponse
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
 def schedule(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    """
+    check to see if the user is logged in
+    if not make the user login
+    """
     status, id, cookie = check_login(request, '/scheduler/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/')
     if cookie != "":
         setcookie = True
 
-
-    colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
+    colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF',
+              '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
 
     stu, created = Student.objects.get_or_create(case_id=id)
-    classes = []
     toSend = {}
-    if created == False:
+    if created is False:
         enrolls = Enrollment.objects.filter(student__case_id=id)
 
         for enroll in enrolls:
@@ -68,7 +69,8 @@ def schedule(request):
             top *= 75
             top += 135
             height = event.start_time.hour + (event.start_time.minute / 60.0)
-            height = (event.end_time.hour + event.end_time.minute / 60.0) - height
+            height = (
+                event.end_time.hour + event.end_time.minute / 60.0) - height
             height *= 60
             height *= 1.2
             height += 3
@@ -77,20 +79,20 @@ def schedule(request):
             del colors[randColor]
             toSend[event] = [top, height, color]
 
-
-    response = render(request, 'schedule.html', {'events' : toSend, 'id' : id})
-    if setcookie == True:
+    response = render(request, 'schedule.html', {'events': toSend, 'id': id})
+    if setcookie is True:
         response.__setitem__('Set-Cookie', cookie)
     return response
 
+
 def event_json(request):
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/')
+    status, id, cookie = check_login(
+        request, 'http://scheduler.acm.case.edu/scheduler/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/')
     if cookie != "":
         setcookie = True
-    stu = Student.objects.get(case_id=id)
     enrolls = Enrollment.objects.filter(student__case_id=id)
 
     response_data = []
@@ -98,23 +100,24 @@ def event_json(request):
         event = Event.objects.get(id=enroll.event_id)
         start = request.GET.get('start', None)
         end = request.GET.get('end', None)
-        #if start != None && end != None:
+        # if start != None && end != None:
         start_date = dateutil.parser.parse(start)
         end_date = dateutil.parser.parse(end)
-        #    if event.start_date < :
-        #        event_data['start'] = str(event.start_date.isoformat()) + 'T' + str(event.start_time.isoformat())
-        #        event_data['end'] = str(event.end_date.isoformat()) + 'T' + str(event.end_time.isoformat())
-        #        response_data.append(event_data)
-        #else:
-        #  raise Http404
-        date_to_start = event.start_date if event.start_date > start_date.date() else start_date.date()
-        date_to_end = event.end_date if event.end_date < end_date.date() else end_date.date()
+        if event.start_date > start_date.date():
+            date_to_start = event.start_date
+        else:
+            date_to_start = start_date.date()
+        if event.end_date < end_date.date():
+            date_to_end = event.end_date
+        else:
+            date_to_end = end_date.date()
 
-        for dt in rrule.rrule(rrule.DAILY, dtstart=date_to_start, until=date_to_end):
+        for dt in rrule.rrule(rrule.DAILY, dtstart=date_to_start,
+                              until=date_to_end):
             event_data = {}
             event_data['id'] = enroll.event_id
             if event.meetingtime:
-                event_data['title'] = event.meetingtime.meeting_class.dept + ' ' + str(event.meetingtime.meeting_class.class_number)
+                event_data['title'] = event.meetingtime.meeting_class.dept + ' ' +  str(event.meetingtime.meeting_class.class_number)
             else:
                 event_data['title'] = event.customevent.event_name
             event_data['allDay'] = False
@@ -144,14 +147,16 @@ def event_json(request):
                 continue
             response_data.append(event_data)
 
-    response = HttpResponse(json.dumps(response_data), content_type="application/json")
-    if setcookie == True:
+    response = HttpResponse(json.dumps(response_data),
+                            content_type="application/json")
+    if setcookie is True:
         response.__setitem__('Set-Cookie', cookie)
     return response
 
+
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
-    if days_ahead <= 0: # Target day already happened this week
+    if days_ahead <= 0:  # Target day already happened this week
         days_ahead += 7
     return d + datetime.timedelta(days_ahead)
 
@@ -177,12 +182,14 @@ def next_weekday(d, weekday):
 #   template which is returned to the
 #   webrowser as an HTTPresponse
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def add(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/add/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/add/')
     if cookie != "":
         setcookie = True
@@ -208,28 +215,33 @@ def add(request):
                 numb = len(Class.objects.all())
 
             for c in classes:
-                if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+                if Enrollment.objects.filter(student_id=id,
+                                             event_id=c.meeting.id).exists():
                     toSend[c] = True
                 else:
                     toSend[c] = False
     else:
         form = SearchForm()
-    response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : form})
-    if setcookie == True:
+    response = render(request, 'add.html', {'classes': toSend,
+                                            'id': id, 'form': form})
+    if setcookie is True:
         response.__setitem__('Set-Cookie', cookie)
     return response
+
 
 def return_test(request):
     if request.method == 'GET':
         toSend = {}
-        return render(request, 'search_result.html', {'classes' : toSend});
-    return None;
+        return render(request, 'search_result.html', {'classes': toSend});
+    return None
+
 
 def calendar_test(request):
     if request.method == 'GET':
         toSend = {}
-        return render(request, 'calendar.html', {'classes' : toSend});
-    return None;
+        return render(request, 'calendar.html', {'classes': toSend});
+    return None
+
 
 def new_search(request):
     logging.basicConfig(level=logging.DEBUG)
@@ -237,9 +249,9 @@ def new_search(request):
     toSend = {}
     if request.method == 'GET':
         logging.debug('IT IS A GET')
-        #criterion = request.GET.get('Search', None)
-        #TODO better regexes
-        #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
+        # criterion = request.GET.get('Search', None)
+        # TODO better regexes
+        # patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
         patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
         criterion = request.GET['criterion']
         if patt.match(criterion):
@@ -254,14 +266,15 @@ def new_search(request):
             numb = len(Class.objects.all())
 
         for c in classes:
-            if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+            if Enrollment.objects.filter(student_id=id,
+                                         event_id=c.meeting.id).exists():
                 toSend[c] = True
             else:
                 toSend[c] = False
     else:
         form = SearchForm()
 
-    response = render(request, 'search_result.html', {'classes' : toSend})
+    response = render(request, 'search_result.html', {'classes': toSend})
     logging.debug('RETURNING')
     return response
 
@@ -283,34 +296,37 @@ def new_search(request):
 #   template which is returned to the
 #   webrowser as an HTTPresponse
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def info(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/info/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/info/')
     if cookie != "":
         setcookie = True
 
     theCourse = request.GET.get('course', None)
-    if theCourse != None:
-        #the course is passed in as dept~!~coursenumber
+    if theCourse is not None:
+        # the course is passed in as dept~!~coursenumber
         arr = theCourse.split('~!~')
         classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
 
         toSend = {}
         for c in classes:
-            if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+            if Enrollment.objects.filter(student_id=id,
+                                         event_id=c.meeting.id).exists():
                 toSend[c] = True
             else:
                 toSend[c] = False
 
-        response = render(request, 'info.html', {'classes' : toSend, 'id' : id})
-        if setcookie == True:
+        response = render(request, 'info.html', {'classes': toSend, 'id': id})
+        if setcookie is True:
             response.__setitem__('Set-Cookie', cookie)
         return response
-    return render(request, 'info.html', {'id' : id})
+    return render(request, 'info.html', {'id': id})
 
 #   The instructor view is the view
 #   function for the instructor.html.
@@ -324,25 +340,27 @@ def info(request):
 #   that html file is returned as a
 #   HTTPresponse page
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/s
+
+
 def instructor(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
     ins = request.GET.get('instructor', None)
-    if ins != None:
+    if ins is not None:
         prof = Instructor.objects.get(name=ins)
 
-        response = render(request, 'instructor.html', {'prof' : prof, 'id' : id})
-        if setcookie == True:
+        response = render(request, 'instructor.html', {'prof': prof, 'id': id})
+        if setcookie is True:
             response.__setitem__('Set-Cookie', cookie)
         return response
-    return render(request, 'instructor.html', {'id' : id})
+    return render(request, 'instructor.html', {'id': id})
 
 #   The inscourse view is a temporary view
 #   that redirects the user back to the
@@ -361,32 +379,36 @@ def instructor(request):
 #   and pass that as a context to the add.html template
 #   and return as a HttpResponse
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def inscourse(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
     toSend={}
     ins = request.GET.get('name', None)
-    if ins != None:
+    if ins is not None:
         classes = Instructs.objects.filter(instructor=ins)
 
         for c in classes:
-            if Enrollment.objects.filter(student_id=id, event_id=c.meeting.id).exists():
+            if Enrollment.objects.filter(student_id=id,
+                                         event_id=c.meeting.id).exists():
                 toSend[c] = True
             else:
                 toSend[c] = False
 
-        response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : SearchForm()})
-        if setcookie == True:
+        response = render(request, 'add.html', {'classes': toSend, 'id': id,
+                                                'form': SearchForm()})
+        if setcookie is True:
             response.__setitem__('Set-Cookie', cookie)
         return response
-    return render(request, 'add.html', {'id' : id, 'form' : SearchForm()})
+    return render(request, 'add.html', {'id': id, 'form': SearchForm()})
 
 #   The insearch view is the view function
 #   for the insearch.html page. This view
@@ -400,28 +422,33 @@ def inscourse(request):
 #   file which is then returned as a
 #   HttpResponse
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def inssearch(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
     if request.method == 'GET':
         name = request.GET.get('name', None)
-        if name != None:
-            profs = Instructor.objects.filter(Q(name__icontains=name) | Q(email__icontains=name))
+        if name is not None:
+            profs = Instructor.objects.filter(
+                Q(
+                    name__icontains=name) | Q(email__icontains=name))
 
-            response = render(request, 'inssearch.html', {'profs' : profs, 'id' : id})
-            if setcookie == True:
+            response = render(request, 'inssearch.html', {'profs': profs,
+                                                          'id': id})
+            if setcookie is True:
                 response.__setitem__('Set-Cookie', cookie)
             return response
         return render(request, 'inssearch.html')
     else:
-        return render(request, 'inssearch.html', {'id' : id})
+        return render(request, 'inssearch.html', {'id': id})
 
 #   The addcourse is a temporary view
 #   that is called when a user click
@@ -438,6 +465,8 @@ def inssearch(request):
 #   scheduler page with a
 #   HttpResponseRedirect
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def addcourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
@@ -464,6 +493,8 @@ def addcourse(request):
 #   scheduler page with a
 #   HttpResponseRedirect
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def removecourse(request):
     if request.method == 'POST':
         eventId = request.POST['eventID']
@@ -482,25 +513,29 @@ def removecourse(request):
 #   and sends that dictionary as a context
 #   to add.html
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def mycourses(request):
     #check to see if the user is logged in
     #if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
     toSend={}
-    eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id', flat=True)
+    eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id',
+                                                                    flat=True)
     classes = Instructs.objects.filter(meeting_id__in=eventIDs)
 
     for c in classes:
-        toSend[c]=True
+        toSend[c] = True
 
-    response = render(request, 'add.html', {'classes' : toSend, 'id' : id, 'form' : SearchForm()})
-    if setcookie == True:
+    response = render(request, 'add.html', {'classes': toSend, 'id': id,
+                                            'form': SearchForm()})
+    if setcookie is True:
         response.__setitem__('Set-Cookie', cookie)
     return response
 
@@ -508,23 +543,27 @@ def mycourses(request):
 #   is the trivial view function
 #   that just returns the rendering
 #   of the about.html template file
+
+
 def about(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
     return render(request, 'about.html')
 
+
 def searchtest(request):
-    status, id, cookie = check_login(request, 'http://scheduler.acm.case.edu/scheduler/instructor/')
+    status, id, cookie = check_login(request,
+                                     '/scheduler/instructor/')
     setcookie = False
-    if status == False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/instructor/')
+    if status is False:
+        return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
 
@@ -549,12 +588,14 @@ def searchtest(request):
 #   (see below) and return the rendered
 #   custom.html page as a HttpResponse.
 #   See https://docs.djangoproject.com/en/dev/topics/http/views/
+
+
 def customevent(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
@@ -591,7 +632,8 @@ def customevent(request):
                 dayStr += 'Sa'
 
             if '' == dayStr:
-                return render(request, 'custom.html', {'id' : id, 'form' : form, 'dayErr' : True})
+                return render(request, 'custom.html', {'id': id, 'form': form,
+                                                       'dayErr': True})
 
             #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
             event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
@@ -605,17 +647,18 @@ def customevent(request):
     else:
         form = EventForm()
 
-    response = render(request, 'custom.html', {'id' : id, 'form' : form})
-    if setcookie == True:
+    response = render(request, 'custom.html', {'id': id, 'form': form})
+    if setcookie is True:
         response.__setitem__('Set-Cookie', cookie)
     return response
 
+
 def share(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
-    if status == False:
+    if status is False:
         return redirect_to_cas('/scheduler/instructor/')
     if cookie != "":
         setcookie = True
@@ -625,19 +668,19 @@ def share(request):
         rand = random.randint(1111111111, 9999999999)
 
 
+# This function does no require login and
+# checks the database for a shared schedule
+# with the same share id it has, then displays
+# the shared schedule.
 
-#This function does no require login and
-#checks the database for a shared schedule
-#with the same share id it has, then displays
-#the shared schedule.
 
 def shareview(request, share):
-    colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF', '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
+    colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF',
+              '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
 
-    classes = []
     toSend = {}
     shares = Shares.objects.filter(shareid=share)
-    if shares == None:
+    if shares is None:
         raise Http404
 
     for enroll in shares:
@@ -655,7 +698,7 @@ def shareview(request, share):
         color = colors[randColor] + ''
         del colors[randColor]
         toSend[event] = [top, height, color]
-    response = render(request, 'view.html', {'events' : toSend})
+    response = render(request, 'view.html', {'events': toSend})
     return response
 
 #   This function is the validation function for
@@ -667,6 +710,8 @@ def shareview(request, share):
 #   which refuses the user's submission
 #   and supplies the appropriate error message.
 #   See https://docs.djangoproject.com/en/dev/ref/validators/
+
+
 def validate_time(value):
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
@@ -676,7 +721,7 @@ def validate_time(value):
     if not patt.match(value):
         raise ValidationError('%s is not a valid time format!' % value)
 
-    if not ""==(re.sub(validTimes, "", value)):
+    if not "" == (re.sub(validTimes, "", value)):
         raise ValidationError('%s is not a valid time format!' % value)
 
     startTimeArr, endTimeArr = parse_time(value)
@@ -695,13 +740,15 @@ def validate_time(value):
 #   which refuses the user's submission
 #   and supplies the appropriate error message.
 #   See https://docs.djangoproject.com/en/dev/ref/validators/
+
+
 def validate_day(value):
     validDays = '((Su)|(M)|(Tu)|(W)|(Th)|(F)|(Sa))+'
     patt = re.compile(validDays)
     if not patt.match(value):
         raise ValidationError('%s is not a valid day format!' % value)
 
-    if not ""==(re.sub(validDays, "", value)):
+    if not "" == (re.sub(validDays, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
 
 #   The parse_time function
@@ -714,10 +761,12 @@ def validate_day(value):
 #   objects and returns two arrays, one
 #   for the converted starttime and one
 #   for the converted endtime
+
+
 def parse_time(array):
     timeArr = array.split('-')
-    timeArr[0]=re.sub(r'( )+', "", timeArr[0])
-    timeArr[1]=re.sub(r'( )+', "", timeArr[1])
+    timeArr[0] = re.sub(r'( )+', "", timeArr[0])
+    timeArr[1] = re.sub(r'( )+', "", timeArr[1])
 
     startTimeArr = timeArr[0].split(':')
     startTimeArr[1] = startTimeArr[1][:2]
@@ -746,14 +795,17 @@ def parse_time(array):
 #   want those strings to have a certain form, eg
 #   MWF is valid for days but CANDV is not.
 #   See https://docs.djangoproject.com/en/dev/topics/forms/?from=olddocs
+
+
 class EventForm(forms.Form):
-    event_title=forms.CharField(max_length=100)
-    location=forms.CharField(max_length=100, required=False)
-    times=forms.CharField(max_length=20, validators=[validate_time])
-    start_date=forms.DateField()
-    end_date=forms.DateField()
-    #days=forms.CharField(max_length=14, validators=[validate_day])
-    CHOICES=((0,'M'),(0,'Tu'),(0,'W'),(0,'Th'),(0,'F'),(0,'Sa'),(0,'Su'))
+    event_title = forms.CharField(max_length=100)
+    location = forms.CharField(max_length=100, required=False)
+    times = forms.CharField(max_length=20, validators=[validate_time])
+    start_date = forms.DateField()
+    end_date = forms.DateField()
+    # days=forms.CharField(max_length=14, validators=[validate_day])
+    CHOICES = ((0, 'M'), (0, 'Tu'), (0, 'W'), (0, 'Th'),
+               (0, 'F'), (0, 'Sa'), (0, 'Su'))
     m = forms.BooleanField(label="day", required=False)
     tu = forms.BooleanField(label="day", required=False)
     w = forms.BooleanField(label="day", required=False)
@@ -762,5 +814,6 @@ class EventForm(forms.Form):
     sa = forms.BooleanField(label="day", required=False)
     su = forms.BooleanField(label="day", required=False)
 
+
 class SearchForm(forms.Form):
-    criterion=forms.CharField(max_length=100)
+    criterion = forms.CharField(max_length=100)
