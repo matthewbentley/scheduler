@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from course_scheduler.models import (Class, Event, CustomEvent,
+from course_scheduler.models import (Event, CustomEvent,
                                      Instructor, Instructs, Student,
                                      Enrollment, Shares)
 from django.http import Http404
@@ -21,32 +21,20 @@ from cas.checklogin import check_login
 from cas.checklogin import redirect_to_cas
 
 
-#   The view for schedule.html
-#   once the user has logged in
-#   database is queried for all
-#   the events associated with
-#   that user's id.
-#   The function calculates the
-#   absolute position for the colored
-#   square for each event and the height
-#   for each square for display on the
-#   user's schedule. The function also
-#   assigns each event a different
-#   random color. Each event is put
-#   into a dictionary with the event
-#   as a key and an array corresponding
-#   to the top, height, and color
-#   of the square as the value.
-#   This dictionary is passed as a
-#   context to the schedule.html
-#   template which is returned to the
-#   webrowser as an HTTPresponse
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
 def schedule(request):
+    """The view for schedule.html once the user has logged in database is
+    queried for all the events associated with that user'self id. The function
+    calculates the absolute position for the colored square for each event and
+    the height for each square for display on the user's schedule. The function
+    also assigns each event a different random color. Each event is put into a
+    dictionary with the event as a key and an array corresponding to the top,
+    height, and color of the square as the value. This dictionary is passed as
+    a context to the schedule.html template which is returned to the webrowser
+    as an HTTPresponse
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
     """
-    check to see if the user is logged in
-    if not make the user login
-    """
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/')
     setcookie = False
     if status is False:
@@ -117,32 +105,89 @@ def event_json(request):
             event_data = {}
             event_data['id'] = enroll.event_id
             if event.meetingtime:
-                event_data['title'] = event.meetingtime.meeting_class.dept + ' ' +  str(event.meetingtime.meeting_class.class_number)
+                event_data['title'] = event.meetingtime.meeting_class.dept \
+                    + ' ' + str(event.meetingtime.meeting_class.class_number)
             else:
                 event_data['title'] = event.customevent.event_name
             event_data['allDay'] = False
 
             if "Su" in event.recur_type and dt.weekday() == 6:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             elif "M" in event.recur_type and dt.weekday() == 0:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             elif "Tu" in event.recur_type and dt.weekday() == 1:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             elif "W" in event.recur_type and dt.weekday() == 2:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             elif "Th" in event.recur_type and dt.weekday() == 3:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             elif "F" in event.recur_type and dt.weekday() == 4:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             elif "Sa" in event.recur_type and dt.weekday() == 5:
-                event_data['start'] = str(dt.date().isoformat()) + 'T' + str(event.start_time.isoformat())
-                event_data['end'] = str(dt.date().isoformat()) + 'T' + str(event.end_time.isoformat())
+                event_data['start'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.start_time.isoformat()
+                )
+                event_data['end'] = str(
+                    dt.date().isoformat()
+                ) + 'T' + str(
+                    event.end_time.isoformat()
+                )
             else:
                 continue
             response_data.append(event_data)
@@ -160,31 +205,21 @@ def next_weekday(d, weekday):
         days_ahead += 7
     return d + datetime.timedelta(days_ahead)
 
-#   The view for add.html. This
-#   view function is a little more
-#   complicated because it sometimes
-#   a 'Search' parameter as part
-#   of the passed request. It also
-#   uses python regexes to check
-#   the request against formats
-#   such as EECS 337 or EECS341, that
-#   way we can query on the proper
-#   event attributes. Finally, after
-#   finding the querySet for the passed
-#   search parameter, we create a dictionary
-#   with each event as a key. Then, we run
-#   through all of the results and check to see
-#   if the current user is enrolled in that event.
-#   If so we set the value for that event's key
-#   in our dict to the corresponding boolean value.
-#   This dictionary is passed as a
-#   context to the add.html
-#   template which is returned to the
-#   webrowser as an HTTPresponse
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def add(request):
+    """
+    The view for add.html. This view function is a little more complicated
+    because it sometimes a 'Search' parameter as part of the passed request. It
+    also uses python regexes to check the request against formats such as EECS
+    337 or EECS341, that way we can query on the proper event attributes.
+    Finally, after finding the querySet for the passed search parameter, we
+    create a dictionary with each event as a key. Then, we run through all of
+    the results and check to see if the current user is enrolled in that event.
+    If so we set the value for that event's key in our dict to the
+    corresponding boolean value. This dictionary is passed as a context to the
+    add.html template which is returned to the webrowser as an HTTPresponse
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/add/')
@@ -197,9 +232,9 @@ def add(request):
     toSend = {}
     if request.method == 'GET':
         form = SearchForm(request.GET)
-        #criterion = request.GET.get('Search', None)
-        #TODO better regexes
-        #patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
+        # criterion = request.GET.get('Search', None)
+        # TODO better regexes
+        # patt=re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
         patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
         if form.is_valid():
             criterion = form.cleaned_data['criterion']
@@ -208,11 +243,20 @@ def add(request):
                 arr = [None]*2
                 arr[0] = str[0:3]
                 arr[1] = str[4:]
-                #arr = criterion.split(' ')
-                classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+                # arr = criterion.split(' ')
+                classes = Instructs.objects.filter(
+                    meeting__meeting_class__dept__icontains=arr[0],
+                    meeting__meeting_class__class_number__icontains=arr[1])
             else:
-                classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
-                numb = len(Class.objects.all())
+                classes = Instructs.objects.filter(
+                    Q(
+                        meeting__meeting_class__classname__icontains=criterion
+                    ) | Q(
+                        meeting__meeting_class__dept__icontains=criterion
+                    ) | Q(
+                        meeting__meeting_class__class_number__icontains=criterion
+                    ))
+                # numb = len(Class.objects.all())
 
             for c in classes:
                 if Enrollment.objects.filter(student_id=id,
@@ -232,14 +276,14 @@ def add(request):
 def return_test(request):
     if request.method == 'GET':
         toSend = {}
-        return render(request, 'search_result.html', {'classes': toSend});
+        return render(request, 'search_result.html', {'classes': toSend})
     return None
 
 
 def calendar_test(request):
     if request.method == 'GET':
         toSend = {}
-        return render(request, 'calendar.html', {'classes': toSend});
+        return render(request, 'calendar.html', {'classes': toSend})
     return None
 
 
@@ -251,7 +295,7 @@ def new_search(request):
         logging.debug('IT IS A GET')
         # criterion = request.GET.get('Search', None)
         # TODO better regexes
-        # patt = re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
+        # patt=re.compile('(\w\w\w\w ((\w\w\w)|(\w\w\w\w)))|(\w\w\w\w\w\w\w)')
         patt = re.compile('(\w\w\w\w( )*(\d+|(\d+w)))')
         criterion = request.GET['criterion']
         if patt.match(criterion):
@@ -259,11 +303,21 @@ def new_search(request):
             arr = [None]*2
             arr[0] = str[0:3]
             arr[1] = str[4:]
-            #arr = criterion.split(' ')
-            classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+            # arr = criterion.split(' ')
+            classes = Instructs.objects.filter(
+                meeting__meeting_class__dept__icontains=arr[0],
+                meeting__meeting_class__class_number__icontains=arr[1],
+            )
         else:
-            classes = Instructs.objects.filter(Q(meeting__meeting_class__classname__icontains=criterion) | Q(meeting__meeting_class__dept__icontains=criterion) | Q(meeting__meeting_class__class_number__icontains=criterion))
-            numb = len(Class.objects.all())
+            classes = Instructs.objects.filter(
+                Q(
+                    meeting__meeting_class__classname__icontains=criterion
+                ) | Q(
+                    meeting__meeting_class__dept__icontains=criterion
+                ) | Q(
+                    meeting__meeting_class__class_number__icontains=criterion
+                ))
+            # numb = len(Class.objects.all())
 
         for c in classes:
             if Enrollment.objects.filter(student_id=id,
@@ -272,33 +326,27 @@ def new_search(request):
             else:
                 toSend[c] = False
     else:
-        form = SearchForm()
+        # form = SearchForm()
+        pass
 
     response = render(request, 'search_result.html', {'classes': toSend})
     logging.debug('RETURNING')
     return response
 
-#   The info view is called whenever
-#   the user clicks on a meeting-time's
-#   name. The function is passed a
-#   request with a query string containing
-#   the desired course's department and
-#   course number. We perform a query search
-#   on the Instructs relation to find all
-#   classes that match the passed dept and
-#   number combination (or at least contain
-#   those strings). Then we perform the same
-#   search throught the enrollment table
-#   to find classes the user is already enrolled
-#   in as we did in the add view.
-#   This dictionary is passed as a
-#   context to the add.html
-#   template which is returned to the
-#   webrowser as an HTTPresponse
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def info(request):
+    """
+    The info view is called whenever the user clicks on a meeting-time's name.
+    The function is passed a request with a query string containing the desired
+    course's department and course number. We perform a query search on the
+    Instructs relation to find all classes that match the passed dept and
+    number combination (or at least contain those strings). Then we perform the
+    same search throught the enrollment table to find classes the user is
+    already enrolled in as we did in the add view. This dictionary is passed as
+    a context to the add.html template which is returned to the webrowser as an
+    HTTPresponse
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/info/')
@@ -312,7 +360,10 @@ def info(request):
     if theCourse is not None:
         # the course is passed in as dept~!~coursenumber
         arr = theCourse.split('~!~')
-        classes = Instructs.objects.filter(meeting__meeting_class__dept__icontains=arr[0], meeting__meeting_class__class_number__icontains=arr[1])
+        classes = Instructs.objects.filter(
+            meeting__meeting_class__dept__icontains=arr[0],
+            meeting__meeting_class__class_number__icontains=arr[1],
+        )
 
         toSend = {}
         for c in classes:
@@ -328,21 +379,17 @@ def info(request):
         return response
     return render(request, 'info.html', {'id': id})
 
-#   The instructor view is the view
-#   function for the instructor.html.
-#   page. This function expects to be
-#   sent an 'instructor' query string
-#   with the name of the 'clicked-on'
-#   instructor. We query the instructor
-#   table for the instructor with that name
-#   and send that instructor as a context
-#   to the instructor.html template, and
-#   that html file is returned as a
-#   HTTPresponse page
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/s
-
 
 def instructor(request):
+    """
+    The instructor view is the view function for the instructor.html page. This
+    function expects to be sent an 'instructor' query string with the name of
+    the 'clicked-on' instructor. We query the instructor table for the
+    instructor with that name and send that instructor as a context to the
+    instructor.html template, and that html file is returned as a HTTPresponse
+    page
+    See https://docs.djangoproject.com/en/dev/topics/http/views/s
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
@@ -362,26 +409,20 @@ def instructor(request):
         return response
     return render(request, 'instructor.html', {'id': id})
 
-#   The inscourse view is a temporary view
-#   that redirects the user back to the
-#   add.html page. However, the query we
-#   have to perform is slightly different,
-#   thus neccessitating an entirely new view.
-#   Here we are passed an instructor name
-#   as part of the request. We query the
-#   Instructs table for all of the tuples
-#   whose instructor's name matched the
-#   name query string. We then perform
-#   the same filter from add where
-#   we check to see which of the courses
-#   from the first queryset the user is enrolled
-#   in. We create a dictionary of classes to booleans
-#   and pass that as a context to the add.html template
-#   and return as a HttpResponse
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def inscourse(request):
+    """
+    The inscourse view is a temporary view that redirects the user back to the
+    add.html page. However, the query we have to perform is slightly different,
+    thus neccessitating an entirely new view. Here we are passed an instructor
+    name as part of the request. We query the Instructs table for all of the
+    tuples whose instructor's name matched the name query string. We then
+    perform the same filter from add where we check to see which of the courses
+    from the first queryset the user is enrolled in. We create a dictionary of
+    classes to booleans and pass that as a context to the add.html template and
+    return as a HttpResponse
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
@@ -391,7 +432,7 @@ def inscourse(request):
     if cookie != "":
         setcookie = True
 
-    toSend={}
+    toSend = {}
     ins = request.GET.get('name', None)
     if ins is not None:
         classes = Instructs.objects.filter(instructor=ins)
@@ -410,21 +451,17 @@ def inscourse(request):
         return response
     return render(request, 'add.html', {'id': id, 'form': SearchForm()})
 
-#   The insearch view is the view function
-#   for the insearch.html page. This view
-#   can take in a name query string but does
-#   not neccessarily expect it. If there is
-#   a valid name query string, we query the
-#   intructor table for all of the instructors
-#   whose name or email contains the query
-#   string. We then send that query set as a
-#   context to the 'inssearch.html' template
-#   file which is then returned as a
-#   HttpResponse
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def inssearch(request):
+    """
+    The insearch view is the view function for the insearch.html page. This
+    view can take in a name query string but does not neccessarily expect it.
+    If there is a valid name query string, we query the intructor table for all
+    of the instructors whose name or email contains the query string. We then
+    send that query set as a context to the 'inssearch.html' template file
+    which is then returned as a HttpResponse
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
@@ -450,24 +487,18 @@ def inssearch(request):
     else:
         return render(request, 'inssearch.html', {'id': id})
 
-#   The addcourse is a temporary view
-#   that is called when a user click
-#   an 'add course' button. The view
-#   expects a request containing an
-#   'eventId' string representing the
-#   id of the event the user is trying
-#   to add and an 'id' query string that
-#   is the id of the current user. We then
-#   create a new enroll tuple with the
-#   student's id and the event's id
-#   as the two foreign keys. Then we
-#   redirect the application to the
-#   scheduler page with a
-#   HttpResponseRedirect
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def addcourse(request):
+    """
+    The addcourse is a temporary view that is called when a user click an 'add
+    course' button. The view expects a request containing an 'eventId' string
+    representing the id of the event the user is trying to add and an 'id'
+    query string that is the id of the current user. We then create a new
+    enroll tuple with the student's id and the event's id as the two foreign
+    keys. Then we redirect the application to the scheduler page with a
+    HttpResponseRedirect
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     if request.method == 'POST':
         eventId = request.POST['eventID']
         caseId = request.POST['id']
@@ -477,25 +508,18 @@ def addcourse(request):
         return HttpResponseRedirect('/scheduler/')
     raise Http404
 
-#   The removecourse is a temporary view
-#   that is called when a user click
-#   an 'remove course' button. The view
-#   expects a request containing an
-#   'eventId' string representing the
-#   id of the event the user is trying
-#   to remove and an 'id' query string that
-#   is the id of the current user. We then
-#   query the enroll table for the tuple
-#   ith the user's id as the event's id
-#   as the query parameters and delete
-#   the resulting tupe. Then we
-#   redirect the application to the
-#   scheduler page with a
-#   HttpResponseRedirect
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def removecourse(request):
+    """
+    The removecourse is a temporary view that is called when a user click an
+    'remove course' button. The view expects a request containing an 'eventId'
+    string representing the id of the event the user is trying to remove and an
+    'id' query string that is the id of the current user. We then query the
+    enroll table for the tuple ith the user's id as the event's id as the query
+    parameters and delete the resulting tupe. Then we redirect the application
+    to the scheduler page with a HttpResponseRedirect
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     if request.method == 'POST':
         eventId = request.POST['eventID']
         caseId = request.POST['id']
@@ -505,19 +529,17 @@ def removecourse(request):
         return HttpResponseRedirect('/scheduler/')
     raise Http404
 
-#   The mycourses view function is another
-#   view function for the add.html page.
-#   Unlike the other two, this function
-#   immediately finds all of the courses
-#   that the current user is enrolled in
-#   and sends that dictionary as a context
-#   to add.html
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def mycourses(request):
-    #check to see if the user is logged in
-    #if not make the user login
+    """
+    The mycourses view function is another view function for the add.html page.
+    Unlike the other two, this function immediately finds all of the courses
+    that the current user is enrolled in and sends that dictionary as a context
+    to add.html
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
+    # check to see if the user is logged in
+    # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
     setcookie = False
     if status is False:
@@ -525,7 +547,7 @@ def mycourses(request):
     if cookie != "":
         setcookie = True
 
-    toSend={}
+    toSend = {}
     eventIDs = Enrollment.objects.filter(student_id=id).values_list('event_id',
                                                                     flat=True)
     classes = Instructs.objects.filter(meeting_id__in=eventIDs)
@@ -539,21 +561,20 @@ def mycourses(request):
         response.__setitem__('Set-Cookie', cookie)
     return response
 
-#   The about view function
-#   is the trivial view function
-#   that just returns the rendering
-#   of the about.html template file
-
 
 def about(request):
+    """
+    The about view function is the trivial view function that just returns the
+    rendering of the about.html template file
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
-    setcookie = False
+    # setcookie = False
     if status is False:
         return redirect_to_cas('/scheduler/instructor/')
-    if cookie != "":
-        setcookie = True
+    # if cookie != "":
+    #    setcookie = True
 
     return render(request, 'about.html')
 
@@ -561,36 +582,29 @@ def about(request):
 def searchtest(request):
     status, id, cookie = check_login(request,
                                      '/scheduler/instructor/')
-    setcookie = False
+    # setcookie = False
     if status is False:
         return redirect_to_cas('/scheduler/instructor/')
-    if cookie != "":
-        setcookie = True
+    # if cookie != "":
+        # setcookie = True
 
     return render(request, 'live_search_test.html')
 
-#   The customevent view function is the view
-#   for the custom.html field. If the event
-#   is passed a request with a POST method,
-#   ie the user hit a submit button, then
-#   the view all of the query strings and,
-#   if the strings are valid (see below),
-#   we create a new entry in the customevent
-#   table with the query strings set as the
-#   corresponding attributes. Then we create
-#   a new enrollment table entry linking the
-#   current user to the newly created custom
-#   event. Then we return a HttpResponseRedirect
-#   to the home page If this view is called without
-#   a POST request method, then we simply
-#   pass the custom.html template
-#   an empty instance of an EventForm
-#   (see below) and return the rendered
-#   custom.html page as a HttpResponse.
-#   See https://docs.djangoproject.com/en/dev/topics/http/views/
-
 
 def customevent(request):
+    """
+    The customevent view function is the view for the custom.html field. If the
+    event is passed a request with a POST method, ie the user hit a submit
+    button, then the view all of the query strings and, if the strings are
+    valid (see below), we create a new entry in the customevent table with the
+    query strings set as the corresponding attributes. Then we create a new
+    enrollment table entry linking the current user to the newly created custom
+    event. Then we return a HttpResponseRedirect to the home page If this view
+    is called without a POST request method, then we simply pass the
+    custom.html template an empty instance of an EventForm (see below) and
+    return the rendered custom.html page as a HttpResponse.
+    See https://docs.djangoproject.com/en/dev/topics/http/views/
+    """
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
@@ -635,8 +649,16 @@ def customevent(request):
                 return render(request, 'custom.html', {'id': id, 'form': form,
                                                        'dayErr': True})
 
-            #event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), recur_type=days, event_name=name)
-            event = CustomEvent(start_time=datetime.time(startTimeArr[0], startTimeArr[1]), end_time=datetime.time(endTimeArr[0], endTimeArr[1]), start_date=sdate, end_date=edate, recur_type=dayStr, event_name=name, location=loc)
+            # event = CustomEvent(
+            # start_time=datetime.time(startTimeArr[0], startTimeArr[1]),
+            # end_time=datetime.time(endTimeArr[0], endTimeArr[1]),
+            # recur_type=days, event_name=name)
+            event = CustomEvent(
+                start_time=datetime.time(startTimeArr[0], startTimeArr[1]),
+                end_time=datetime.time(endTimeArr[0], endTimeArr[1]),
+                start_date=sdate, end_date=edate, recur_type=dayStr,
+                event_name=name, location=loc,
+            )
             event.save()
 
             stu = Student.objects.get(case_id=id)
@@ -657,24 +679,29 @@ def share(request):
     # check to see if the user is logged in
     # if not make the user login
     status, id, cookie = check_login(request, '/scheduler/instructor/')
-    setcookie = False
+    # setcookie = False
     if status is False:
         return redirect_to_cas('/scheduler/instructor/')
-    if cookie != "":
-        setcookie = True
+    # if cookie != "":
+    #    setcookie = True
     share_ids = Shares.objects.values_list('shareid', flat=True)
     rand = random.randint(1111111111, 9999999999)
     while rand in share_ids:
         rand = random.randint(1111111111, 9999999999)
 
 
-# This function does no require login and
-# checks the database for a shared schedule
-# with the same share id it has, then displays
-# the shared schedule.
+def export(request):
+    status, id, cookie = check_login(request, '/scheduler/instructor/')
+    enrollment = Enrollment.objects.filter(student_id=id)
+    l = [e.event for e in enrollment]
+    return HttpResponse(l)
 
 
 def shareview(request, share):
+    """
+    This function does no require login and checks the database for a shared
+    schedule with the same share id it has, then displays the shared schedule.
+    """
     colors = ['#FF0000', '#32E01B', '#003CFF', '#FF9D00', '#00B7FF', '#9D00FF',
               '#FF00EA', '#B5AA59', '#79BF6B', '#CFA27E']
 
@@ -701,21 +728,21 @@ def shareview(request, share):
     response = render(request, 'view.html', {'events': toSend})
     return response
 
-#   This function is the validation function for
-#   the times field in EventForm. It uses regexes
-#   to check that the user's passed time is in a form
-#   such as 9:00am-10:00 pm. If the times input does not
-#   match the regex, or if the end date is before
-#   the start date, we raise a validationError,
-#   which refuses the user's submission
-#   and supplies the appropriate error message.
-#   See https://docs.djangoproject.com/en/dev/ref/validators/
-
 
 def validate_time(value):
+    """
+    This function is the validation function for the times field in EventForm.
+    It uses regexes to check that the user's passed time is in a form such as
+    9:00am-10:00 pm. If the times input does not match the regex, or if the end
+    date is before the start date, we raise a validationError, which refuses
+    the user's submission and supplies the appropriate error message.
+    See https://docs.djangoproject.com/en/dev/ref/validators/
+    """
     validAMs = '([6-9]|10|11|12):[0-5][0-9](am|AM)'
     validPMs = '([1-9]|12):[0-5][0-9](pm|PM)'
-    validTimes = '(' + validAMs + '( )*-( )*' + validAMs + ')|(' + validAMs + '( )*-( )*' + validPMs + ')|(' + validPMs + '( )*-( )*' + validPMs + ')'
+    validTimes = '(' + validAMs + '( )*-( )*' + validAMs + ')|(' + validAMs + \
+                 '( )*-( )*' + validPMs + ')|(' + validPMs + '( )*-( )*' + \
+                 validPMs + ')'
 
     patt = re.compile(validTimes)
     if not patt.match(value):
@@ -732,17 +759,16 @@ def validate_time(value):
     if actSTime >= actETime:
         raise ValidationError('Start Time must be after end Time!')
 
-#   This function is the validation function for
-#   the days field in EventForm. It uses regexes
-#   to check that the user's passed days is in a form
-#   such as MWF or FSu. If the days input does not
-#   match the regex, we raise a validationError,
-#   which refuses the user's submission
-#   and supplies the appropriate error message.
-#   See https://docs.djangoproject.com/en/dev/ref/validators/
-
 
 def validate_day(value):
+    """
+    This function is the validation function for the days field in EventForm.
+    It uses regexes to check that the user's passed days is in a form such as
+    MWF or FSu. If the days input does not match the regex, we raise a
+    validationError, which refuses the user's submission and supplies the
+    appropriate error message.
+    See https://docs.djangoproject.com/en/dev/ref/validators/
+    """
     validDays = '((Su)|(M)|(Tu)|(W)|(Th)|(F)|(Sa))+'
     patt = re.compile(validDays)
     if not patt.match(value):
@@ -751,19 +777,14 @@ def validate_day(value):
     if not "" == (re.sub(validDays, "", value)):
         raise ValidationError('%s is not a valid day format!' % value)
 
-#   The parse_time function
-#   is a helper function that
-#   takes in an array whose
-#   first index is a start time
-#   and whose second index is
-#   an end time. It then converts
-#   those strings to python datetime.time
-#   objects and returns two arrays, one
-#   for the converted starttime and one
-#   for the converted endtime
-
 
 def parse_time(array):
+    """
+    The parse_time function is a helper function that takes in an array whose
+    first index is a start time and whose second index is an end time. It then
+    converts those strings to python datetime.time objects and returns two
+    arrays, one for the converted starttime and one for the converted endtime
+    """
     timeArr = array.split('-')
     timeArr[0] = re.sub(r'( )+', "", timeArr[0])
     timeArr[1] = re.sub(r'( )+', "", timeArr[1])
@@ -785,19 +806,16 @@ def parse_time(array):
             endTimeArr[0] = endTimeArr[0] + 12
     return startTimeArr, endTimeArr
 
-#   The EventForm class is a simple
-#   instance of a forms.Form. Every
-#   field we want the user to supply
-#   data for is set an a member attribute
-#   of this class. Two of the fields, location
-#   and days, are given their own custom validators
-#   since we allow any chars to be entered but we
-#   want those strings to have a certain form, eg
-#   MWF is valid for days but CANDV is not.
-#   See https://docs.djangoproject.com/en/dev/topics/forms/?from=olddocs
-
 
 class EventForm(forms.Form):
+    """
+    The EventForm class is a simple instance of a forms.Form. Every field we
+    want the user to supply data for is set an a member attribute of this
+    class. Two of the fields, location and days, are given their own custom
+    validators since we allow any chars to be entered but we want those strings
+    to have a certain form, eg MWF is valid for days but CANDV is not.
+    See https://docs.djangoproject.com/en/dev/topics/forms/?from=olddocs
+    """
     event_title = forms.CharField(max_length=100)
     location = forms.CharField(max_length=100, required=False)
     times = forms.CharField(max_length=20, validators=[validate_time])

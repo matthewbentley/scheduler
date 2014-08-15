@@ -39,4 +39,5 @@ urlpatterns = patterns(
         name='calendar_test'),
     url(r'^scheduler/event_json$', 'course_scheduler.views.event_json',
         name='event_json'),
+    url(r'^scheduler/export$', 'course_scheduler.views.export', name='export'),
 )
