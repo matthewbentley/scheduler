@@ -8,6 +8,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.db.models import Q
 from django.core.exceptions import ValidationError
+from django.conf import settings
 import datetime
 import re
 import random
@@ -35,10 +36,10 @@ def schedule(request):
     """
     # check to see if the user is logged in
     # if not make the user login
-    status, id, cookie = check_login(request, '/scheduler/')
+    status, id, cookie = check_login(request, settings.LOCATION + '/scheduler/')
     setcookie = False
     if status is False:
-        return redirect_to_cas('/scheduler/')
+        return redirect_to_cas(settings.LOCATION + '/scheduler/')
     if cookie != "":
         setcookie = True
 
@@ -75,10 +76,10 @@ def schedule(request):
 
 def event_json(request):
     status, id, cookie = check_login(
-        request, 'http://scheduler.acm.case.edu/scheduler/')
+        request, settings.LOCATION + '/scheduler/')
     setcookie = False
     if status is False:
-        return redirect_to_cas('http://scheduler.acm.case.edu/scheduler/')
+        return redirect_to_cas(settings.LOCATION + '/scheduler/')
     if cookie != "":
         setcookie = True
     enrolls = Enrollment.objects.filter(student__case_id=id)

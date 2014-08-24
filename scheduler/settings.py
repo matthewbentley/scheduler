@@ -12,6 +12,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+LOCATION = 'http://sylvester-203.case.edu'
+
 if DEBUG is False:
     DATABASES = {
         'default': {
